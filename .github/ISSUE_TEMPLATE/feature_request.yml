@@ -1,5 +1,5 @@
 name: ✨ Feature request
-description: Have a new idea or feature for activist? Please suggest!
+description: Have a new idea or feature for Amaken? Please suggest!
 labels: ["feature"]
 projects: ["amakentech/enibo-core-ui"]
 body:
@@ -10,7 +10,7 @@ body:
       options:
         - label: I have searched [open and closed feature requests](https://github.com/amakentech/enibo-core-ui/issues?q=is%3Aissue+label%3Afeature)
           required: true
-        - label: I agree to follow activist's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
+        - label: I agree to follow Amaken's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
           required: true
   - type: textarea
     id: description
