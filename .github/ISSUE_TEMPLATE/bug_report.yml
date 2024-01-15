@@ -1,5 +1,5 @@
 name: 🐞 Bug report
-description: Report a bug to help us improve activist.org.
+description: Report a bug to help us improve Enibo core.
 labels: ["bug"]
 projects: ["amakentech/enibo-core-ui"]
 body:
@@ -10,7 +10,7 @@ body:
       options:
         - label: I have searched all [open bug reports](https://github.com/amakentech/enibo-core-ui/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
           required: true
-        - label: I agree to follow activist's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
+        - label: I agree to follow Amaken's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
           required: true
   - type: textarea
     attributes:

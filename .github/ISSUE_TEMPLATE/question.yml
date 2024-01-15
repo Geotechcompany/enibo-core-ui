@@ -9,7 +9,7 @@ body:
       options:
         - label: I have searched [open and closed issues](https://github.com/amakentech/enibo-core-ui/issues?q=is%3Aissue)
           required: true
-        - label: I agree to follow activist's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
+        - label: I agree to follow Amaken's [Code of Conduct](https://github.com/amakentech/enibo-core-ui/blob/main/.github/CODE_OF_CONDUCT.md)
           required: true
   - type: textarea
     id: issue
