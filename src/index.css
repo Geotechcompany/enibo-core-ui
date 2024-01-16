@@ -1,6 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: barlow;
+  src: url(./assets/fonts/BarlowCondensed-Regular.ttf);
+}
+
+@font-face {
+  font-family: barlow-medium;
+  src: url(./assets/fonts/BarlowCondensed-Medium.ttf);
+}
+
+@font-face {
+  font-family: barlow-semibold;
+  src: url(./assets/fonts/BarlowCondensed-SemiBold.ttf);
+}
  
 @layer base {
   :root {
@@ -72,5 +87,35 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: barlow, sans-serif;
+  }
+  p {
+    @apply leading-8 [&:not(:first-child)]:mt-6;
+  }
+
+  ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  ol {
+    @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+  }
+  
+  .link {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+
+  .responsive-h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+    font-family: barlow-semibold, sans-serif;
+  }
+
+  .responsive-h2 {
+    @apply mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+    font-family: barlow-medium, sans-serif;
+  }
+  .responsive-h3 {
+    @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight;
+    font-family: barlow, sans-serif;
   }
 }

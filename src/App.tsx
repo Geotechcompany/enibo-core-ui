@@ -1,11 +1,19 @@
-
+import { Route, Routes } from "react-router";
+import { ThemeProvider } from "./components/theme-provider";
+import MainLayout from "./components/main-layout";
 
 function App() {
 
   return (
-    <>
-      <div><h1>Demo test</h1></div>
-    </>
+    <ThemeProvider>
+      <Routes>
+          <Route path="/" element={
+            <MainLayout>
+              
+            </MainLayout>
+          } />
+      </Routes>
+    </ThemeProvider>
   )
 }
 
