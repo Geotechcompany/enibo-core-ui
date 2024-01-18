@@ -3,6 +3,8 @@ import { ThemeProvider } from "./components/theme-provider";
 import Login from "./Pages/Login/Login";
 import MainLayout from "./components/main-layout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import Administration from "./Pages/Administration/Administration";
+import Branches from "./Pages/Branches/Branches";
 
 function App() {
   return (
@@ -14,6 +16,22 @@ function App() {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration"
+          element={
+            <MainLayout>
+              <Administration />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/branches"
+          element={
+            <MainLayout>
+              <Branches />
             </MainLayout>
           }
         />
