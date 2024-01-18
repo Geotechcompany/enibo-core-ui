@@ -27,7 +27,7 @@ describe("Login", () => {
         // Assert that error messages are displayed for email and password
         expect(await screen.findByText(/Email is required/i)).toBeInTheDocument();
         expect(
-          await screen.findByText(/Password must be at least 8 characters/i)
+          await screen.findByText(/Password is required/i)
         ).toBeInTheDocument();
     });
 })
