@@ -5,6 +5,7 @@ import MainLayout from "./components/main-layout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Administration from "./Pages/Administration/Administration";
 import Branches from "./Pages/Branches/Branches";
+import NewBranch from "./Pages/Branches/NewBranch";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
           element={
             <MainLayout>
               <Branches />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/branches/new-branch"
+          element={
+            <MainLayout>
+              <NewBranch />
             </MainLayout>
           }
         />

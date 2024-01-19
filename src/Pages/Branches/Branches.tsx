@@ -1,10 +1,11 @@
 import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import branchList from "@/components/branch-list/branches.json"
 
 import { Branch} from "@/components/branch-list/schema";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -13,6 +14,9 @@ interface BranchesProps {}
 const Branches: FC<BranchesProps> = () => {
 
   const branches: Branch[] =  branchList;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || { pathname: "/administration/branches/new-branch" };
   
   return (
     <div>
@@ -38,8 +42,9 @@ const Branches: FC<BranchesProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="my-4">
-          <h1 className="text-4xl text-[#36459C]">Branches</h1>
+        <div className="flex items-center justify-between my-4" >
+          <div className=""><h1 className="text-4xl text-[#36459C]">Branches</h1></div>
+          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
         </div>
         <div>
           {branches && (
