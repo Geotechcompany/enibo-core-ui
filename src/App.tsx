@@ -6,6 +6,7 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import Administration from "./Pages/Administration/Administration";
 import Branches from "./Pages/Branches/Branches";
 import NewBranch from "./Pages/Branches/NewBranch";
+import Customers from "./Pages/Customers/Customers";
 
 function App() {
   return (
@@ -41,6 +42,14 @@ function App() {
           element={
             <MainLayout>
               <NewBranch />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers"
+          element={
+            <MainLayout>
+              <Customers />
             </MainLayout>
           }
         />

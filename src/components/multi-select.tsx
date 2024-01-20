@@ -30,7 +30,7 @@ export type OptionType = {
 
 interface MultiSelectProps {
   options: OptionType[];
-  selected: OptionType[];
+  selected: OptionType[] | [];
   placeholder: string;
   className: string;
   onChange: (selected: OptionType[]) => void;
@@ -73,15 +73,15 @@ function MultiSelect({
                     {selected.length} selected
                   </Badge>
                 ) : (
-                    selected.map((item) => (
-                      <Badge
-                        variant="secondary"
-                        key={item.label}
-                        className="px-1 font-normal rounded-sm"
-                      >
-                        {item.label}
-                      </Badge>
-                    ))
+                  selected.map((item) => (
+                    <Badge
+                      variant="secondary"
+                      key={item.label}
+                      className="px-1 font-normal rounded-sm"
+                    >
+                      {item.label}
+                    </Badge>
+                  ))
                 )}
               </div>
             </>
@@ -97,15 +97,29 @@ function MultiSelect({
             <CommandEmpty>No results found</CommandEmpty>
             <CommandGroup className="overflow-auto max-h-64">
               {options.map((option) => {
-                const isSelected = selected?.some((item) => item.value === option.value);
-                console.log("isSelected", isSelected);
+                const isSelected = selected?.some(
+                  (item) => item.value === option.value
+                );
+                
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
-                      console.log("selected", option.value);
+                      
                       //add option to selected
-                      onChange([option]);
+                      const updatedSelected = selected || [];
+                      const isOptionSelected = updatedSelected.some(
+                        (item) => item.value === option.value
+                      );
+
+                      // Toggle selection status
+                      const updatedSelection = isOptionSelected
+                        ? updatedSelected.filter(
+                            (item) => item.value !== option.value
+                          ) // Unselect
+                        : [...updatedSelected, option]; // Select
+
+                      onChange(updatedSelection);
                       setOpen(true);
                     }}
                   >
@@ -124,7 +138,7 @@ function MultiSelect({
                 );
               })}
             </CommandGroup>
-            {selected?.length > 0 && (
+            {selected && selected?.length > 0 && (
               <>
                 <CommandSeparator />
                 <CommandGroup>
