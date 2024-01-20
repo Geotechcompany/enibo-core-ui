@@ -1,4 +1,4 @@
-import NewBranchForm from "@/components/new-branch-form";
+
 import NewProductTypeForm from "@/components/new-product-type";
 import { FC } from "react";
 import { Link } from "react-router-dom";
