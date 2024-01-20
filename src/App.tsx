@@ -7,6 +7,8 @@ import Administration from "./Pages/Administration/Administration";
 import Branches from "./Pages/Branches/Branches";
 import NewBranch from "./Pages/Branches/NewBranch";
 import Customers from "./Pages/Customers/Customers";
+import ProductTypes from "./Pages/Products/ProductTypes";
+import NewProductType from "./Pages/Products/NewProductType";
 
 function App() {
   return (
@@ -42,6 +44,22 @@ function App() {
           element={
             <MainLayout>
               <NewBranch />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/products/product-types"
+          element={
+            <MainLayout>
+              <ProductTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/products/product-types/new-product-type"
+          element={
+            <MainLayout>
+              <NewProductType />
             </MainLayout>
           }
         />

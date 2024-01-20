@@ -48,8 +48,8 @@ const Administration: FC<AdministrationProps> = () => {
               <h3 className="text-base uppercase">Product Management</h3>
             </div>
             <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/product-types" className="py-1 hover:bg-gray-300">Product Types</Link>
-              <Link to="/administration/products" className="py-1 hover:bg-gray-300">Manage Accounts</Link>
+              <Link to="/administration/products/product-types" className="py-1 hover:bg-gray-300">Product Types</Link>
+              <Link to="/administration/products" className="py-1 hover:bg-gray-300">Manage Products</Link>
             </div>
           </div>
           <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">

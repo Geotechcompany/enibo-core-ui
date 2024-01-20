@@ -41,3 +41,19 @@ export type Customer = {
     retail?: Retail;
     business?: Business;
 }
+
+export type ProductType = {
+    productTypeCode: string;
+    productType: string;
+    productTypeDescription: string;
+    activeFlag: boolean;
+    interestBearing: boolean;
+    fixedInterestRate: number | null; // It can be a number or null if not applicable
+    effectiveDate: string;
+    fees: boolean;
+    feeTypes: string[]; // Assuming it's an array of strings, modify as needed
+    riskRating: string;
+    prefix: string;
+    numberSchema: string;
+    accountNumberStartingValue: number;
+};
