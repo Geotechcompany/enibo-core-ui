@@ -57,3 +57,21 @@ export type ProductType = {
     numberSchema: string;
     accountNumberStartingValue: number;
 };
+
+export type LedgerAccount = {
+    ledgerAccountNumber: string;
+    exportLedgerAccountNumber: string;
+    description: string;
+    ledgerAccountType: 'Customer' | 'Internal';
+    customerAccountNumber: string;
+    branchCode: string;
+    ledgerAccountCategory: string;
+    chartString: string;
+};
+
+export type TransactionType = {
+    transactionTypeName: string;
+    transactionTypeCode: string;
+    transactionTypeDescription: string;
+    currency: string;
+};

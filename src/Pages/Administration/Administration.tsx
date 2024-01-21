@@ -68,7 +68,7 @@ const Administration: FC<AdministrationProps> = () => {
               <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Countries</Link>
               <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Currencies</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Fee Types</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Transaction Types</Link>
+              <Link to="/administration/static-data/transaction-types" className="py-1 hover:bg-gray-300">Transaction Types</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Business Calendars</Link>
             </div>
           </div>
@@ -80,7 +80,7 @@ const Administration: FC<AdministrationProps> = () => {
               <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">
                 Ledger Account Categories
               </Link>
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Ledger Accounts</Link>
+              <Link to="/administration/ledger-management/ledger-accounts" className="py-1 hover:bg-gray-300">Ledger Accounts</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Ledger Rules</Link>
             </div>
           </div>
