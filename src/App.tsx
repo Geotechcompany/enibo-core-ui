@@ -13,6 +13,7 @@ import TransactionTypes from "./Pages/Transactions/TransactionTypes";
 import NewTransactionType from "./Pages/Transactions/NewTransactionType";
 import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
+import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 
 function App() {
   return (
@@ -64,6 +65,14 @@ function App() {
           element={
             <MainLayout>
               <NewProductType />
+            </MainLayout>
+          }
+        />
+         <Route
+          path="administration/static-data/fee-types"
+          element={
+            <MainLayout>
+              <FeeTypes />
             </MainLayout>
           }
         />
