@@ -1,23 +1,20 @@
-import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
-import { FC } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import branchList from "@/components/branch-list/branches.json"
-
-import { Branch} from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
+import { FC } from "react";
+import customerList from "@/components/customer-list/customers.json";
+import { useLocation, useNavigate } from "react-router";
+import { Customer } from "@/types/global";
+import { Link } from "react-router-dom";
+import { columns } from "@/components/customer-list/columns";
 
+interface CustomersProps {}
 
+const Customers: FC<CustomersProps> = () => {
 
-interface BranchesProps {}
-
-const Branches: FC<BranchesProps> = () => {
-
-  const branches: Branch[] =  branchList;
-  const location = useLocation();
-  const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/branches/new-branch" };
-  
+    const customers: Customer[] =  customerList as Customer[];
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from || { pathname: "/customers" };
   return (
     <div>
       <div className="mx-4">
@@ -42,21 +39,25 @@ const Branches: FC<BranchesProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Branches</h1></div>
-          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Customers</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              Add new
+            </Button>
+          </div>
         </div>
-        <div>
-          {branches && (
-            <DataTable
-              columns={columns}
-                data={branches}
-            />
-            )}
-        </div>
+        <div>{customers && <DataTable columns={columns} data={customers} />}</div>
       </div>
     </div>
   );
 };
 
-export default Branches;
+export default Customers;

@@ -60,13 +60,13 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild className="bg-[#EB001B]">
+      <PopoverTrigger asChild className="bg-[#F91B19]">
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
           aria-label="Select a team"
-          className={cn("w-[200px] justify-between", className)}
+          className={cn("w-[200px] justify-between hover:bg-[#EB001B] hover:text-white border-2 border-gray-300 dark:bg-[#BF0000] dark:hover:bg-[#EB001B]", className)}
         >
           <Avatar className="w-5 h-5 mr-2">
             <AvatarImage

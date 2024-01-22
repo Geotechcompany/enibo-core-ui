@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { Branch } from "../branch-list/schema";
+import { LedgerAccount } from "@/types/global";
 
  
 
-export const columns: ColumnDef<Branch>[] = [
+export const columns: ColumnDef<LedgerAccount>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,14 +32,50 @@ export const columns: ColumnDef<Branch>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "branchName",
+    accessorKey: "ledgerAccountNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Branch Name" />
+      <DataTableColumnHeader column={column} title="Ledger Account  Number" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("branchName")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("ledgerAccountNumber")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
+    {
+        accessorKey: "exportLedgerAccountNumber",
+        header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Export Ledger Account Number" />
+        ),
+        cell: ({ row }) => <div className="">{row.getValue("branchCode")}</div>,
+        enableSorting: true,
+        enableHiding: true,
+    },
+    {
+        accessorKey: "description",
+        header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Description" />
+        ),
+        cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
+        enableSorting: true,
+        enableHiding: true,
+    },
+    {
+        accessorKey: "ledgerAccountType",
+        header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ledger Account Type" />
+        ),
+        cell: ({ row }) => <div className="">{row.getValue("ledgerAccountType")}</div>,
+        enableSorting: true,
+        enableHiding: true,
+    },
+    {
+        accessorKey: "customerAccountNumber",
+        header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Customer Account Number" />
+        ),
+        cell: ({ row }) => <div className="">{row.getValue("customerAccountNumber")}</div>,
+        enableSorting: true,
+        enableHiding: true,
+    },
     {
         accessorKey: "branchCode",
         header: ({ column }) => (
@@ -50,65 +86,20 @@ export const columns: ColumnDef<Branch>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "SWIFTCode",
+        accessorKey: "ledgerAccountCategory",
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="SWIFT Code" />
+        <DataTableColumnHeader column={column} title="Ledger Account Category" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("SWIFTCode")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("ledgerAccountCategory")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-        accessorKey: "localBankCode",
+        accessorKey: "chartString",
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Local Bank Code" />
+        <DataTableColumnHeader column={column} title="Chart String" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("localBankCode")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "country",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Country" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("country")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "countrySubdivision",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Country Subdivision" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("countrySubdivision")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "streetName",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Street Name" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("streetName")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "buildingNumber",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Building Number" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("buildingNumber")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "buildingName",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Building Name" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("buildingName")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("chartString")}</div>,
         enableSorting: true,
         enableHiding: true,
     },

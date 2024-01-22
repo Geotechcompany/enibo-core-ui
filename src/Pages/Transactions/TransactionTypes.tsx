@@ -1,23 +1,18 @@
-import { columns } from "@/components/branch-list/columns";
-import { DataTable } from "@/components/datatable/data-table";
+import { TransactionType } from "@/types/global";
 import { FC } from "react";
+import transactionTypeList from "@/components/transaction-type-list/transaction-types.json";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import branchList from "@/components/branch-list/branches.json"
-
-import { Branch} from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
+import { columns } from "@/components/transaction-type-list/columns";
+import { DataTable } from "@/components/datatable/data-table";
 
+interface TransactionTypesProps {}
 
-
-interface BranchesProps {}
-
-const Branches: FC<BranchesProps> = () => {
-
-  const branches: Branch[] =  branchList;
+const TransactionTypes: FC<TransactionTypesProps> = () => {
+  const transactionTypes: TransactionType[] = transactionTypeList;
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/branches/new-branch" };
-  
+  const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
   return (
     <div>
       <div className="mx-4">
@@ -36,27 +31,35 @@ const Branches: FC<BranchesProps> = () => {
               </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  Branches
+                  Transactions Types
                 </Link>
               </li>
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Branches</h1></div>
-          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Transaction Types</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              Add new
+            </Button>
+          </div>
         </div>
         <div>
-          {branches && (
-            <DataTable
-              columns={columns}
-                data={branches}
-            />
-            )}
+          {transactionTypes && (
+            <DataTable columns={columns} data={transactionTypes} />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Branches;
+export default TransactionTypes;

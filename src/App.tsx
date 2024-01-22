@@ -5,6 +5,14 @@ import MainLayout from "./components/main-layout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Administration from "./Pages/Administration/Administration";
 import Branches from "./Pages/Branches/Branches";
+import NewBranch from "./Pages/Branches/NewBranch";
+import Customers from "./Pages/Customers/Customers";
+import ProductTypes from "./Pages/Products/ProductTypes";
+import NewProductType from "./Pages/Products/NewProductType";
+import TransactionTypes from "./Pages/Transactions/TransactionTypes";
+import NewTransactionType from "./Pages/Transactions/NewTransactionType";
+import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
+import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 
 function App() {
   return (
@@ -35,6 +43,71 @@ function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="administration/branches/new-branch"
+          element={
+            <MainLayout>
+              <NewBranch />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/products/product-types"
+          element={
+            <MainLayout>
+              <ProductTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/products/product-types/new-product-type"
+          element={
+            <MainLayout>
+              <NewProductType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/static-data/transaction-types"
+          element={
+            <MainLayout>
+              <TransactionTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/static-data/transaction-types/new-transaction-type"
+          element={
+            <MainLayout>
+              <NewTransactionType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-accounts"
+          element={
+            <MainLayout>
+              <LedgerAccounts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-accounts/new-ledger-account"
+          element={
+            <MainLayout>
+              <NewLedgerAccount />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers"
+          element={
+            <MainLayout>
+              <Customers />
+            </MainLayout>
+          }
+        />
+        
       </Routes>
     </ThemeProvider>
   );
