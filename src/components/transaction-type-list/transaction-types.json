@@ -1,0 +1,62 @@
+[
+    {
+        "transactionTypeCode": "T001",
+        "transactionTypeDescription": "Deposit",
+        "currency": "USD",
+        "transactionTypeName": "Credit Transaction"
+    },
+    {
+        "transactionTypeCode": "T002",
+        "transactionTypeDescription": "Withdrawal",
+        "currency": "EUR",
+        "transactionTypeName": "Debit Transaction"
+    },
+    {
+        "transactionTypeCode": "T003",
+        "transactionTypeDescription": "Transfer",
+        "currency": "GBP",
+        "transactionTypeName": "Internal Transfer"
+    },
+    {
+        "transactionTypeCode": "T004",
+        "transactionTypeDescription": "Purchase",
+        "currency": "JPY",
+        "transactionTypeName": "Buy Transaction"
+    },
+    {
+        "transactionTypeCode": "T005",
+        "transactionTypeDescription": "Sale",
+        "currency": "CAD",
+        "transactionTypeName": "Sell Transaction"
+    },
+    {
+        "transactionTypeCode": "T006",
+        "transactionTypeDescription": "Expense",
+        "currency": "AUD",
+        "transactionTypeName": "Expense Payment"
+    },
+    {
+        "transactionTypeCode": "T007",
+        "transactionTypeDescription": "Income",
+        "currency": "INR",
+        "transactionTypeName": "Income Receipt"
+    },
+    {
+        "transactionTypeCode": "T008",
+        "transactionTypeDescription": "Refund",
+        "currency": "CNY",
+        "transactionTypeName": "Refund Transaction"
+    },
+    {
+        "transactionTypeCode": "T009",
+        "transactionTypeDescription": "Credit",
+        "currency": "SGD",
+        "transactionTypeName": "Credit Payment"
+    },
+    {
+        "transactionTypeCode": "T010",
+        "transactionTypeDescription": "Debit",
+        "currency": "NZD",
+        "transactionTypeName": "Debit Payment"
+    }
+]
