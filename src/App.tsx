@@ -13,6 +13,7 @@ import TransactionTypes from "./Pages/Transactions/TransactionTypes";
 import NewTransactionType from "./Pages/Transactions/NewTransactionType";
 import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
+import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 
 function App() {
   return (
@@ -88,6 +89,14 @@ function App() {
           element={
             <MainLayout>
               <LedgerAccounts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-accounts/:accountId"
+          element={
+            <MainLayout>
+              <LedgerAccountsSummary />
             </MainLayout>
           }
         />

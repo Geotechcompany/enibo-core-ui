@@ -75,3 +75,27 @@ export type TransactionType = {
     transactionTypeDescription: string;
     currency: string;
 };
+
+export type Transaction = {
+    id: string;
+    status: string;
+    transactionType: string;
+    normalBalance: string;
+    amount: number;
+    accountId: string;
+    createdAt: string;
+    updatedAt: string;
+    expiresAt: string;
+}
+
+export type Entry = {
+    accountId: string;
+    amount: string;
+    createdAt: string
+    description: string;
+    direction: string
+    discardedAt: string;
+    id: string;
+    status: string;
+    transactionId: string;
+};
