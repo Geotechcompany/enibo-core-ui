@@ -67,7 +67,7 @@ const Administration: FC<AdministrationProps> = () => {
             <div className="flex flex-col gap-1 my-2">
               <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Countries</Link>
               <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Currencies</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Fee Types</Link>
+              <Link to="/administration/static-data/fee-types" className="py-1 hover:bg-gray-300">Fee Types</Link>
               <Link to="/administration/static-data/transaction-types" className="py-1 hover:bg-gray-300">Transaction Types</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Business Calendars</Link>
             </div>

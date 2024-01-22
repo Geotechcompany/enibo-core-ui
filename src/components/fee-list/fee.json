@@ -1,0 +1,839 @@
+[
+        {
+          "feeName": "Officer",
+          "description": "withdrawal transaction at Halvorson - Nicolas using card ending with ***(...4659) for PKR 969.65 in account ***17537998",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2001-10-26T10:35:51.290Z",
+          "fixedRate": 73,
+          "feeCode": "1"
+        },
+        {
+          "feeName": "Borders",
+          "description": "payment transaction at Kunde - Schuster using card ending with ***(...6329) for USD 900.71 in account ***05836212",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2089-02-09T15:09:06.306Z",
+          "fixedRate": 35,
+          "feeCode": "2"
+        },
+        {
+          "feeName": "hardware",
+          "description": "payment transaction at Hettinger - Beatty using card ending with ***(...0398) for CUC 622.87 in account ***85437669",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2044-10-09T00:09:00.373Z",
+          "fixedRate": 73,
+          "feeCode": "3"
+        },
+        {
+          "feeName": "man",
+          "description": "withdrawal transaction at Green Group using card ending with ***(...7646) for BND 829.92 in account ***73788415",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "1998-02-07T06:29:46.294Z",
+          "fixedRate": 59,
+          "feeCode": "4"
+        },
+        {
+          "feeName": "Botswana",
+          "description": "deposit transaction at Heaney, Wolf and Flatley using card ending with ***(...4390) for XBC 275.92 in account ***54179098",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2026-12-13T23:01:44.692Z",
+          "fixedRate": 60,
+          "feeCode": "5"
+        },
+        {
+          "feeName": "Elegant",
+          "description": "invoice transaction at Mosciski and Sons using card ending with ***(...5053) for GIP 151.51 in account ***87234467",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2053-10-13T15:13:41.744Z",
+          "fixedRate": 21,
+          "feeCode": "6"
+        },
+        {
+          "feeName": "or",
+          "description": "payment transaction at Okuneva, Franey and Schroeder using card ending with ***(...6889) for UZS 315.89 in account ***51602114",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2047-06-15T02:05:50.262Z",
+          "fixedRate": 2,
+          "feeCode": "7"
+        },
+        {
+          "feeName": "East",
+          "description": "deposit transaction at Collins Group using card ending with ***(...8343) for AWG 769.66 in account ***37667337",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2002-06-06T06:06:38.706Z",
+          "fixedRate": 90,
+          "feeCode": "8"
+        },
+        {
+          "feeName": "infrastructures",
+          "description": "deposit transaction at Adams Group using card ending with ***(...8826) for GIP 693.67 in account ***46705710",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2004-09-16T00:48:07.742Z",
+          "fixedRate": 54,
+          "feeCode": "9"
+        },
+        {
+          "feeName": "sexy",
+          "description": "payment transaction at Mills, Hickle and Kilback using card ending with ***(...1324) for BRL 474.16 in account ***12818334",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2058-08-11T01:16:32.004Z",
+          "fixedRate": 35,
+          "feeCode": "10"
+        },
+        {
+          "feeName": "dreamily",
+          "description": "payment transaction at Leuschke - Swift using card ending with ***(...3526) for KYD 921.66 in account ***03081573",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "1996-03-03T06:24:29.675Z",
+          "fixedRate": 55,
+          "feeCode": "11"
+        },
+        {
+          "feeName": "North",
+          "description": "payment transaction at Oberbrunner - Okuneva using card ending with ***(...3605) for UAH 478.80 in account ***26091088",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2073-01-07T05:52:13.699Z",
+          "fixedRate": 81,
+          "feeCode": "12"
+        },
+        {
+          "feeName": "transmit",
+          "description": "invoice transaction at Casper - Ledner using card ending with ***(...3684) for NGN 127.70 in account ***03019940",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2027-06-18T11:39:32.153Z",
+          "fixedRate": 38,
+          "feeCode": "13"
+        },
+        {
+          "feeName": "Cotton",
+          "description": "invoice transaction at Bashirian, Ryan and Rohan using card ending with ***(...6291) for CZK 226.99 in account ***50369739",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2071-01-01T17:02:33.109Z",
+          "fixedRate": 50,
+          "feeCode": "14"
+        },
+        {
+          "feeName": "female",
+          "description": "payment transaction at Rodriguez - Rice using card ending with ***(...2016) for NOK 398.79 in account ***97999518",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2097-05-23T07:18:26.884Z",
+          "fixedRate": 98,
+          "feeCode": "15"
+        },
+        {
+          "feeName": "Classical",
+          "description": "payment transaction at Runolfsson Inc using card ending with ***(...5129) for ARS 892.48 in account ***88561919",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "1995-06-07T01:28:25.011Z",
+          "fixedRate": 59,
+          "feeCode": "16"
+        },
+        {
+          "feeName": "copy",
+          "description": "deposit transaction at Emmerich - Pouros using card ending with ***(...6393) for XPD 113.25 in account ***33970974",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2066-03-27T01:54:14.736Z",
+          "fixedRate": 92,
+          "feeCode": "17"
+        },
+        {
+          "feeName": "likely",
+          "description": "invoice transaction at Wisozk, Hansen and Douglas using card ending with ***(...7552) for BRL 273.59 in account ***26593177",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2056-12-31T13:15:44.795Z",
+          "fixedRate": 80,
+          "feeCode": "18"
+        },
+        {
+          "feeName": "Latvian",
+          "description": "invoice transaction at Green - Hackett using card ending with ***(...0003) for MXN 254.88 in account ***78790687",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.591Z",
+          "effectiveDate": "2017-01-25T10:14:13.505Z",
+          "fixedRate": 77,
+          "feeCode": "19"
+        },
+        {
+          "feeName": "orchid",
+          "description": "deposit transaction at Lebsack, Langosh and Witting using card ending with ***(...6476) for BND 149.61 in account ***81869417",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2049-04-03T03:57:05.943Z",
+          "fixedRate": 96,
+          "feeCode": "20"
+        },
+        {
+          "feeName": "Integration",
+          "description": "payment transaction at Kertzmann and Sons using card ending with ***(...5426) for AOA 696.05 in account ***23307650",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2035-01-10T23:26:34.037Z",
+          "fixedRate": 53,
+          "feeCode": "21"
+        },
+        {
+          "feeName": "bus",
+          "description": "withdrawal transaction at Batz - Hoeger using card ending with ***(...4881) for NOK 93.66 in account ***74534727",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2047-12-26T11:12:26.269Z",
+          "fixedRate": 65,
+          "feeCode": "22"
+        },
+        {
+          "feeName": "Indium",
+          "description": "deposit transaction at Beahan, Braun and Hilll using card ending with ***(...5522) for KWD 779.89 in account ***80117413",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2024-11-08T20:01:36.966Z",
+          "fixedRate": 69,
+          "feeCode": "23"
+        },
+        {
+          "feeName": "Concrete",
+          "description": "withdrawal transaction at Conroy, Runte and Herman using card ending with ***(...3077) for JMD 67.64 in account ***41666136",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2034-01-09T02:43:33.619Z",
+          "fixedRate": 93,
+          "feeCode": "24"
+        },
+        {
+          "feeName": "Awesome",
+          "description": "withdrawal transaction at Johnston, Stoltenberg and Williamson using card ending with ***(...5069) for TWD 972.84 in account ***28001503",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2025-03-07T22:15:36.982Z",
+          "fixedRate": 92,
+          "feeCode": "25"
+        },
+        {
+          "feeName": "indexing",
+          "description": "payment transaction at Lowe Inc using card ending with ***(...6032) for GBP 902.09 in account ***54992418",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2001-09-13T09:54:08.406Z",
+          "fixedRate": 74,
+          "feeCode": "26"
+        },
+        {
+          "feeName": "Island",
+          "description": "invoice transaction at Cole - McClure using card ending with ***(...6825) for XDR 355.67 in account ***40150798",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "1997-08-08T06:46:29.707Z",
+          "fixedRate": 48,
+          "feeCode": "27"
+        },
+        {
+          "feeName": "whenever",
+          "description": "invoice transaction at Kuhn, Lehner and Considine using card ending with ***(...9585) for XAF 954.93 in account ***87421598",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.592Z",
+          "effectiveDate": "2060-07-21T06:14:01.752Z",
+          "fixedRate": 40,
+          "feeCode": "28"
+        },
+        {
+          "feeName": "Investor",
+          "description": "payment transaction at D'Amore Group using card ending with ***(...0141) for KPW 76.09 in account ***51781169",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2086-01-15T15:37:46.496Z",
+          "fixedRate": 24,
+          "feeCode": "29"
+        },
+        {
+          "feeName": "Checking",
+          "description": "payment transaction at Kiehn Group using card ending with ***(...2684) for ERN 36.05 in account ***73654218",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2041-11-27T15:51:46.826Z",
+          "fixedRate": 1,
+          "feeCode": "30"
+        },
+        {
+          "feeName": "Rubber",
+          "description": "deposit transaction at Huel - Waters using card ending with ***(...2999) for GEL 270.03 in account ***51342500",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2067-05-13T19:25:27.942Z",
+          "fixedRate": 97,
+          "feeCode": "31"
+        },
+        {
+          "feeName": "codon",
+          "description": "withdrawal transaction at Dach - Howell using card ending with ***(...9686) for ILS 358.75 in account ***24677696",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2081-09-16T11:23:22.493Z",
+          "fixedRate": 62,
+          "feeCode": "32"
+        },
+        {
+          "feeName": "standardization",
+          "description": "invoice transaction at Tromp - Beier using card ending with ***(...2155) for AFN 21.43 in account ***45179928",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2041-03-12T21:56:48.593Z",
+          "fixedRate": 90,
+          "feeCode": "33"
+        },
+        {
+          "feeName": "um",
+          "description": "invoice transaction at Effertz, Steuber and Wyman using card ending with ***(...0768) for SVC 747.97 in account ***75219116",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2012-10-30T06:34:57.410Z",
+          "fixedRate": 50,
+          "feeCode": "34"
+        },
+        {
+          "feeName": "Island",
+          "description": "withdrawal transaction at Jacobson, Wilderman and Schinner using card ending with ***(...7401) for ZWL 942.19 in account ***73869962",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2015-10-10T13:29:50.934Z",
+          "fixedRate": 68,
+          "feeCode": "35"
+        },
+        {
+          "feeName": "Recycled",
+          "description": "withdrawal transaction at Gleason, Schamberger and Crona using card ending with ***(...5376) for VES 661.39 in account ***68931495",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2033-07-02T02:42:17.374Z",
+          "fixedRate": 58,
+          "feeCode": "36"
+        },
+        {
+          "feeName": "JBOD",
+          "description": "payment transaction at Kuhlman, Skiles and Nienow using card ending with ***(...4453) for IRR 456.54 in account ***22637948",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2096-09-11T20:15:35.541Z",
+          "fixedRate": 22,
+          "feeCode": "37"
+        },
+        {
+          "feeName": "Music",
+          "description": "payment transaction at Torp Inc using card ending with ***(...6892) for ILS 172.91 in account ***88681758",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2004-05-17T12:07:35.069Z",
+          "fixedRate": 68,
+          "feeCode": "38"
+        },
+        {
+          "feeName": "svelte",
+          "description": "deposit transaction at Orn, Mayer and Dibbert using card ending with ***(...9176) for MAD 940.15 in account ***89623707",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2036-02-24T20:43:41.500Z",
+          "fixedRate": 49,
+          "feeCode": "39"
+        },
+        {
+          "feeName": "Associate",
+          "description": "invoice transaction at Morar, Luettgen and Lynch using card ending with ***(...9426) for TMT 543.96 in account ***85331769",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2080-08-25T09:14:26.220Z",
+          "fixedRate": 8,
+          "feeCode": "40"
+        },
+        {
+          "feeName": "elated",
+          "description": "withdrawal transaction at Harvey LLC using card ending with ***(...9401) for LYD 57.04 in account ***97482560",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2011-02-04T00:12:26.958Z",
+          "fixedRate": 9,
+          "feeCode": "41"
+        },
+        {
+          "feeName": "Bicycle",
+          "description": "invoice transaction at Thiel Inc using card ending with ***(...9606) for BWP 20.42 in account ***40297803",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2029-03-27T21:19:43.259Z",
+          "fixedRate": 0,
+          "feeCode": "42"
+        },
+        {
+          "feeName": "Delaware",
+          "description": "payment transaction at Stehr, Langworth and Oberbrunner using card ending with ***(...3170) for MUR 585.35 in account ***97590137",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2040-10-24T10:34:48.352Z",
+          "fixedRate": 45,
+          "feeCode": "43"
+        },
+        {
+          "feeName": "Markets",
+          "description": "withdrawal transaction at Wisozk Group using card ending with ***(...2523) for ZWL 376.60 in account ***60748184",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2026-03-20T13:36:41.998Z",
+          "fixedRate": 39,
+          "feeCode": "44"
+        },
+        {
+          "feeName": "grey",
+          "description": "invoice transaction at Crona Inc using card ending with ***(...3312) for JOD 594.69 in account ***85933055",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2047-03-29T10:13:37.885Z",
+          "fixedRate": 56,
+          "feeCode": "45"
+        },
+        {
+          "feeName": "Pizza",
+          "description": "payment transaction at Hills LLC using card ending with ***(...5150) for SYP 670.80 in account ***09507371",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2054-03-01T13:51:03.187Z",
+          "fixedRate": 44,
+          "feeCode": "46"
+        },
+        {
+          "feeName": "maiores",
+          "description": "payment transaction at Bergnaum Inc using card ending with ***(...6119) for UGX 952.81 in account ***66502388",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2045-12-05T04:19:09.792Z",
+          "fixedRate": 75,
+          "feeCode": "47"
+        },
+        {
+          "feeName": "yard",
+          "description": "payment transaction at Reichel - Sauer using card ending with ***(...3922) for SOS 969.77 in account ***98796987",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2060-09-24T06:37:34.191Z",
+          "fixedRate": 38,
+          "feeCode": "48"
+        },
+        {
+          "feeName": "katal",
+          "description": "invoice transaction at Welch, Berge and Kuphal using card ending with ***(...1757) for GHS 447.36 in account ***39162938",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2033-02-11T04:50:18.261Z",
+          "fixedRate": 4,
+          "feeCode": "49"
+        },
+        {
+          "feeName": "that",
+          "description": "invoice transaction at Pollich - Bernhard using card ending with ***(...4643) for BSD 238.34 in account ***16871891",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.593Z",
+          "effectiveDate": "2036-11-13T23:55:30.526Z",
+          "fixedRate": 93,
+          "feeCode": "50"
+        },
+        {
+          "feeName": "Electric",
+          "description": "invoice transaction at Koepp LLC using card ending with ***(...0235) for CVE 570.13 in account ***08699969",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2067-10-04T20:13:13.210Z",
+          "fixedRate": 43,
+          "feeCode": "51"
+        },
+        {
+          "feeName": "Kuwait",
+          "description": "withdrawal transaction at Schamberger and Sons using card ending with ***(...2677) for BBD 317.64 in account ***73031380",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2094-10-08T07:24:31.999Z",
+          "fixedRate": 10,
+          "feeCode": "52"
+        },
+        {
+          "feeName": "Iron",
+          "description": "payment transaction at Friesen, Considine and Crist using card ending with ***(...8033) for HNL 665.97 in account ***93756905",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2045-10-15T22:32:01.263Z",
+          "fixedRate": 22,
+          "feeCode": "53"
+        },
+        {
+          "feeName": "Orleans",
+          "description": "deposit transaction at Dickinson - Kreiger using card ending with ***(...3066) for WST 377.66 in account ***57470097",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2087-01-27T20:34:15.813Z",
+          "fixedRate": 76,
+          "feeCode": "54"
+        },
+        {
+          "feeName": "stable",
+          "description": "payment transaction at Fisher - Nolan using card ending with ***(...1925) for XOF 372.66 in account ***94745020",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2082-12-18T19:28:29.578Z",
+          "fixedRate": 61,
+          "feeCode": "55"
+        },
+        {
+          "feeName": "Representative",
+          "description": "payment transaction at Romaguera - Reilly using card ending with ***(...4652) for HRK 733.71 in account ***65589355",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2024-03-04T19:58:40.825Z",
+          "fixedRate": 50,
+          "feeCode": "56"
+        },
+        {
+          "feeName": "Southwest",
+          "description": "withdrawal transaction at Hilll - Buckridge using card ending with ***(...1832) for ERN 180.23 in account ***02821785",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2033-12-26T13:03:33.737Z",
+          "fixedRate": 47,
+          "feeCode": "57"
+        },
+        {
+          "feeName": "payment",
+          "description": "deposit transaction at Hackett LLC using card ending with ***(...9464) for SAR 560.98 in account ***03912625",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2054-09-21T18:14:45.334Z",
+          "fixedRate": 38,
+          "feeCode": "58"
+        },
+        {
+          "feeName": "amidst",
+          "description": "invoice transaction at Wilderman, Gulgowski and Gottlieb using card ending with ***(...8912) for PGK 170.79 in account ***94743668",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2087-01-10T09:40:32.300Z",
+          "fixedRate": 18,
+          "feeCode": "59"
+        },
+        {
+          "feeName": "synergy",
+          "description": "invoice transaction at Wyman Inc using card ending with ***(...5051) for NIO 491.87 in account ***76150774",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2054-08-09T23:45:20.127Z",
+          "fixedRate": 93,
+          "feeCode": "60"
+        },
+        {
+          "feeName": "Iron",
+          "description": "payment transaction at Kuhic - Zboncak using card ending with ***(...7430) for MUR 847.93 in account ***07521545",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2073-01-27T09:55:57.776Z",
+          "fixedRate": 25,
+          "feeCode": "61"
+        },
+        {
+          "feeName": "male",
+          "description": "invoice transaction at McGlynn - Legros using card ending with ***(...4380) for BGN 206.91 in account ***83607312",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2073-10-23T18:18:18.072Z",
+          "fixedRate": 41,
+          "feeCode": "62"
+        },
+        {
+          "feeName": "um",
+          "description": "payment transaction at Buckridge LLC using card ending with ***(...1095) for BND 115.37 in account ***80935284",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2041-01-03T18:18:02.924Z",
+          "fixedRate": 7,
+          "feeCode": "63"
+        },
+        {
+          "feeName": "equally",
+          "description": "invoice transaction at Rempel - Weissnat using card ending with ***(...8870) for SHP 63.67 in account ***23142778",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2018-01-04T19:59:20.445Z",
+          "fixedRate": 83,
+          "feeCode": "64"
+        },
+        {
+          "feeName": "whoa",
+          "description": "withdrawal transaction at Mertz - VonRueden using card ending with ***(...1173) for SOS 811.29 in account ***80191132",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2099-09-19T08:33:11.744Z",
+          "fixedRate": 24,
+          "feeCode": "65"
+        },
+        {
+          "feeName": "female",
+          "description": "deposit transaction at Watsica - Runolfsson using card ending with ***(...9012) for RUB 246.74 in account ***70915591",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2082-01-10T03:29:41.480Z",
+          "fixedRate": 57,
+          "feeCode": "66"
+        },
+        {
+          "feeName": "ampere",
+          "description": "payment transaction at King, Pouros and Fritsch using card ending with ***(...9395) for KES 532.49 in account ***09133190",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2095-06-05T08:25:54.459Z",
+          "fixedRate": 76,
+          "feeCode": "67"
+        },
+        {
+          "feeName": "Fresh",
+          "description": "payment transaction at Auer, Hirthe and Treutel using card ending with ***(...5785) for FKP 337.75 in account ***63374047",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "2007-03-17T03:29:04.323Z",
+          "fixedRate": 99,
+          "feeCode": "68"
+        },
+        {
+          "feeName": "Ball",
+          "description": "payment transaction at Heathcote - Green using card ending with ***(...7783) for ZMW 614.32 in account ***01236627",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "1990-02-05T06:31:13.982Z",
+          "fixedRate": 28,
+          "feeCode": "69"
+        },
+        {
+          "feeName": "Avon",
+          "description": "invoice transaction at Gleason, Oberbrunner and Graham using card ending with ***(...4353) for LRD 618.74 in account ***34003911",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.594Z",
+          "effectiveDate": "1995-09-01T17:08:52.371Z",
+          "fixedRate": 70,
+          "feeCode": "70"
+        },
+        {
+          "feeName": "indexing",
+          "description": "payment transaction at Parisian - Vandervort using card ending with ***(...9266) for GMD 387.75 in account ***64532203",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2058-01-30T22:27:02.782Z",
+          "fixedRate": 39,
+          "feeCode": "71"
+        },
+        {
+          "feeName": "purple",
+          "description": "deposit transaction at Leannon, Koelpin and Stracke using card ending with ***(...0329) for BBD 925.15 in account ***36755497",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2053-11-12T21:46:30.066Z",
+          "fixedRate": 0,
+          "feeCode": "72"
+        },
+        {
+          "feeName": "Sausages",
+          "description": "payment transaction at Nitzsche LLC using card ending with ***(...5960) for PEN 87.46 in account ***99356413",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2033-12-14T21:45:24.906Z",
+          "fixedRate": 2,
+          "feeCode": "73"
+        },
+        {
+          "feeName": "Michigan",
+          "description": "invoice transaction at Bogisich - Moen using card ending with ***(...1999) for BAM 597.22 in account ***03391983",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2073-01-03T12:12:02.024Z",
+          "fixedRate": 15,
+          "feeCode": "74"
+        },
+        {
+          "feeName": "joule",
+          "description": "deposit transaction at Bins - Goldner using card ending with ***(...7338) for BGN 346.97 in account ***39177834",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2009-08-01T11:21:28.137Z",
+          "fixedRate": 25,
+          "feeCode": "75"
+        },
+        {
+          "feeName": "Northeast",
+          "description": "withdrawal transaction at Wisozk - Ondricka using card ending with ***(...3643) for LSL 438.85 in account ***13949314",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2077-02-16T19:54:29.968Z",
+          "fixedRate": 93,
+          "feeCode": "76"
+        },
+        {
+          "feeName": "Latin",
+          "description": "withdrawal transaction at Bechtelar and Sons using card ending with ***(...9112) for CNY 832.00 in account ***51783358",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2027-09-07T02:27:06.323Z",
+          "fixedRate": 49,
+          "feeCode": "77"
+        },
+        {
+          "feeName": "whereas",
+          "description": "deposit transaction at Hane, Jast and Fay using card ending with ***(...2509) for SAR 270.62 in account ***28804179",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2092-02-19T11:10:11.624Z",
+          "fixedRate": 81,
+          "feeCode": "78"
+        },
+        {
+          "feeName": "Loan",
+          "description": "withdrawal transaction at Blick - Anderson using card ending with ***(...3347) for PAB 100.36 in account ***02398279",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2076-10-01T16:20:03.042Z",
+          "fixedRate": 96,
+          "feeCode": "79"
+        },
+        {
+          "feeName": "Peso",
+          "description": "withdrawal transaction at Langworth, Jast and Bartoletti using card ending with ***(...5165) for ILS 56.11 in account ***21183449",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2060-06-21T11:04:46.723Z",
+          "fixedRate": 83,
+          "feeCode": "80"
+        },
+        {
+          "feeName": "hybrid",
+          "description": "payment transaction at Braun, Hane and King using card ending with ***(...4375) for WST 562.49 in account ***37881752",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2082-02-15T02:53:05.365Z",
+          "fixedRate": 72,
+          "feeCode": "81"
+        },
+        {
+          "feeName": "Northeast",
+          "description": "deposit transaction at Turner Inc using card ending with ***(...3742) for XBD 264.93 in account ***49240595",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2053-10-13T09:30:01.542Z",
+          "fixedRate": 22,
+          "feeCode": "82"
+        },
+        {
+          "feeName": "Diesel",
+          "description": "deposit transaction at Schoen LLC using card ending with ***(...0144) for CLP 641.22 in account ***29243911",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "1996-01-08T15:11:45.933Z",
+          "fixedRate": 16,
+          "feeCode": "83"
+        },
+        {
+          "feeName": "Smart",
+          "description": "deposit transaction at Bartoletti, Haley and Huels using card ending with ***(...1400) for CVE 85.86 in account ***38535031",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2027-11-09T12:06:51.346Z",
+          "fixedRate": 11,
+          "feeCode": "84"
+        },
+        {
+          "feeName": "Recumbent",
+          "description": "deposit transaction at Nitzsche, Schroeder and Dickens using card ending with ***(...5418) for AED 815.73 in account ***20272281",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2022-04-06T03:20:25.086Z",
+          "fixedRate": 4,
+          "feeCode": "85"
+        },
+        {
+          "feeName": "Metal",
+          "description": "invoice transaction at Klein, Cronin and Towne using card ending with ***(...6086) for LKR 933.23 in account ***20714362",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2013-03-02T22:43:02.954Z",
+          "fixedRate": 28,
+          "feeCode": "86"
+        },
+        {
+          "feeName": "yuck",
+          "description": "deposit transaction at Wilkinson - VonRueden using card ending with ***(...6739) for CNY 779.68 in account ***81112804",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "1994-12-30T14:56:16.612Z",
+          "fixedRate": 4,
+          "feeCode": "87"
+        },
+        {
+          "feeName": "open",
+          "description": "invoice transaction at Cartwright - Champlin using card ending with ***(...6111) for WST 588.84 in account ***80973804",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2040-08-23T12:54:03.749Z",
+          "fixedRate": 13,
+          "feeCode": "88"
+        },
+        {
+          "feeName": "markets",
+          "description": "deposit transaction at Rolfson and Sons using card ending with ***(...3582) for TOP 737.20 in account ***53522099",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2047-08-30T13:15:26.230Z",
+          "fixedRate": 51,
+          "feeCode": "89"
+        },
+        {
+          "feeName": "siemens",
+          "description": "deposit transaction at Walter LLC using card ending with ***(...1598) for BYN 604.21 in account ***86394771",
+          "transactionType": "payment",
+          "paymentFrequency": "2024-01-18T14:06:58.595Z",
+          "effectiveDate": "2053-04-30T07:20:32.126Z",
+          "fixedRate": 71,
+          "feeCode": "90"
+        },
+        {
+          "feeName": "transmitting",
+          "description": "invoice transaction at Leuschke, Bruen and Abernathy using card ending with ***(...0904) for BOB 727.05 in account ***71597190",
+          "transactionType": "invoice",
+          "paymentFrequency": "2024-01-18T14:06:58.596Z",
+          "effectiveDate": "2021-04-16T22:06:14.304Z",
+          "fixedRate": 26,
+          "feeCode": "91"
+        },
+        {
+          "feeName": "accusantium",
+          "description": "withdrawal transaction at Medhurst, Leuschke and Bergnaum using card ending with ***(...5076) for TRY 705.71 in account ***56417163",
+          "transactionType": "deposit",
+          "paymentFrequency": "2024-01-18T14:06:58.596Z",
+          "effectiveDate": "2024-02-10T15:11:31.387Z",
+          "fixedRate": 16,
+          "feeCode": "92"
+        },
+        {
+          "feeName": "pfft",
+          "description": "withdrawal transaction at Schiller, Wunsch and Wisoky using card ending with ***(...8854) for SOS 128.24 in account ***50804615",
+          "transactionType": "withdrawal",
+          "paymentFrequency": "2024-01-18T14:06:58.596Z",
+          "effectiveDate": "2040-08-10T21:39:55.885Z",
+          "fixedRate": 43,
+          "feeCode": "93"
+        }
+      ]
