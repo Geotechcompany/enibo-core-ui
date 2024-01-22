@@ -65,11 +65,11 @@ const Administration: FC<AdministrationProps> = () => {
               <h3 className="text-base uppercase">Static Data</h3>
             </div>
             <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Countries</Link>
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Currencies</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Fee Types</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Transaction Types</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Business Calendars</Link>
+              <Link to="/administration/countries" className="py-1 hover:bg-gray-300">Countries</Link>
+              <Link to="/administration/currencies" className="py-1 hover:bg-gray-300">Currencies</Link>
+              <Link to="/administration/fee-types" className="py-1 hover:bg-gray-300">Fee Types</Link>
+              <Link to="/administration/transaction-types" className="py-1 hover:bg-gray-300">Transaction Types</Link>
+              <Link to="/administration/business-calendar" className="py-1 hover:bg-gray-300">Business Calendars</Link>
             </div>
           </div>
           <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
