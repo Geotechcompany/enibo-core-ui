@@ -16,6 +16,7 @@ import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
+import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 
 function App() {
   return (
@@ -107,6 +108,14 @@ function App() {
           element={
             <MainLayout>
               <LedgerAccounts />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-rules"
+          element={
+            <MainLayout>
+              <LedgerRules />
             </MainLayout>
           }
         />

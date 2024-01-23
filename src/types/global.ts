@@ -109,3 +109,18 @@ export type FeeType = {
     effectiveDate: string;
     fixedRate: number;
 };
+
+export type LedgerRule = {
+    priority: string;
+    ruleName: string;
+    description: string;
+    transactionType: string;
+    transactionsDescriptionContains: string;
+    transactionDescriptionDoesNotContain: string;
+    from: string;
+    to: string;
+    debitLedgerAccount: string;
+    creditLedgerAccount: string;
+    modifiedBy: string;
+    modifiedOn: string;
+}
