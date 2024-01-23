@@ -18,6 +18,8 @@ import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary"
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
 import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
+import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
+import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
 
 function App() {
   return (
@@ -141,6 +143,22 @@ function App() {
           element={
             <MainLayout>
               <NewLedgerAccount />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-account-categories"
+          element={
+            <MainLayout>
+              <LedgerAccountCategories />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-account-categories/new-ledger-account-category"
+          element={
+            <MainLayout>
+              <NewLedgerAccountCategory />
             </MainLayout>
           }
         />

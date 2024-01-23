@@ -124,3 +124,11 @@ export type LedgerRule = {
     modifiedBy: string;
     modifiedOn: string;
 }
+
+export type LedgerCategory = {
+    ledgerCategory: string;
+    ledgerCategoryDescription: string;
+    categoryNumber: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
