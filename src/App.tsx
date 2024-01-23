@@ -17,6 +17,7 @@ import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
 import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
+import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
 
 function App() {
   return (
@@ -71,7 +72,7 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="administration/static-data/fee-types"
           element={
             <MainLayout>
@@ -120,6 +121,14 @@ function App() {
           }
         />
         <Route
+          path="administration/ledger-management/ledger-rules/new-ledger-rule"
+          element={
+            <MainLayout>
+              <NewLedgerRule />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/ledger-management/ledger-accounts/:accountId"
           element={
             <MainLayout>
@@ -143,10 +152,9 @@ function App() {
             </MainLayout>
           }
         />
-        
       </Routes>
     </ThemeProvider>
   );
 }
 
-export default App
+export default App;
