@@ -14,6 +14,7 @@ import NewTransactionType from "./Pages/Transactions/NewTransactionType";
 import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
+import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
 
 function App() {
   return (
@@ -45,6 +46,14 @@ function App() {
           }
         />
         <Route
+          path="/administration/branch-details"
+          element={
+            <MainLayout>
+              <BranchDetailsPage />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/branches/new-branch"
           element={
             <MainLayout>
@@ -52,6 +61,7 @@ function App() {
             </MainLayout>
           }
         />
+        
         <Route
           path="administration/products/product-types"
           element={
