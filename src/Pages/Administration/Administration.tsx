@@ -41,6 +41,7 @@ const Administration: FC<AdministrationProps> = () => {
                 Branch Types
               </Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Manage Branches</Link>
+              <Link to="/administration/branch-details" className="py-1 hover:bg-gray-300">Branch Details</Link>
             </div>
           </div>
           <div className="flex flex-col px-4 pt-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
