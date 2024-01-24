@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FeeTypes } from "./schema";
+import { FeeType } from "@/types/global";
 
-export const columns: ColumnDef<FeeTypes>[] = [
+export const columns: ColumnDef<FeeType>[] = [
   {
     id: "select",
     header: ({ table }) => (

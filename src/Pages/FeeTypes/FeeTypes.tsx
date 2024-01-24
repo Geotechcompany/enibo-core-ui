@@ -1,15 +1,20 @@
 import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
-import { Link } from "react-router-dom";
-import feeList from "@/components/fee-list/fee.json"
-import { columns } from "@/components/fee-list/columns";
-import { FeeTypes } from "@/components/fee-list/schema";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import feeList from "@/components/fee-type-list/fee.json"
+import { columns } from "@/components/fee-type-list/columns";
+import { FeeType } from "@/types/global";
+import { Button } from "@/components/ui/button";
 
 interface FeeProps {}
 
 const FeeTypes: FC<FeeProps> = () => {
 
-  const feeTypes: FeeTypes[] =  feeList;
+  const feeTypes: FeeType[] =  feeList;
+  //administration/static-data/fee-types/new-fee-type
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/administration/static-data/fee-types/new-fee-type";
   
   return (
     <div>
@@ -35,9 +40,12 @@ const FeeTypes: FC<FeeProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="my-4">
+        <div className="flex items-center justify-between my-4">
+        <div className="">
           <h1 className="text-4xl text-[#36459C]">Fee Types</h1>
         </div>
+        <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+      </div>
         <div>
           { feeTypes && (
             <DataTable

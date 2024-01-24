@@ -1,8 +1,8 @@
-export type CustomerType = "Retail" | "Business" 
+export type CustomerType = "Retail" | "Business"
 
 enum RetailType {
     Personal,
-    Joint 
+    Joint
 }
 
 type AccountMandate = {
@@ -74,4 +74,38 @@ export type TransactionType = {
     transactionTypeCode: string;
     transactionTypeDescription: string;
     currency: string;
+};
+
+export type Transaction = {
+    id: string;
+    status: string;
+    transactionType: string;
+    normalBalance: string;
+    amount: number;
+    accountId: string;
+    createdAt: string;
+    updatedAt: string;
+    expiresAt: string;
+}
+
+export type Entry = {
+    accountId: string;
+    amount: string;
+    createdAt: string
+    description: string;
+    direction: string
+    discardedAt: string;
+    id: string;
+    status: string;
+    transactionId: string;
+};
+
+export type FeeType = {
+    feeCode: string;
+    feeName: string;
+    description: string;
+    transactionType: string;
+    paymentFrequency: string;
+    effectiveDate: string;
+    fixedRate: number;
 };
