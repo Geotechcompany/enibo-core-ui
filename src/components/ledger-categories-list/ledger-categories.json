@@ -1,0 +1,44 @@
+[
+  {
+    "ledgerCategory": "Expense",
+    "ledgerCategoryDescription": "Expenses related to operational costs",
+    "categoryNumber": "1001",
+    "modifiedBy": "JohnDoe",
+    "modifiedOn": "2024-01-22T12:00:00Z"
+  },
+    {
+        "ledgerCategory": "Revenue",
+        "ledgerCategoryDescription": "Revenue generated from sales",
+        "categoryNumber": "2001",
+        "modifiedBy": "JohnDoe",
+        "modifiedOn": "2024-01-22T12:00:00Z"
+    },
+    {
+        "ledgerCategory": "Asset",
+        "ledgerCategoryDescription": "Assets owned by the company",
+        "categoryNumber": "3001",
+        "modifiedBy": "JohnDoe",
+        "modifiedOn": "2024-01-22T12:00:00Z"
+    },
+    {
+        "ledgerCategory": "Liability",
+        "ledgerCategoryDescription": "Liabilities owed by the company",
+        "categoryNumber": "4001",
+        "modifiedBy": "JohnDoe",
+        "modifiedOn": "2024-01-22T12:00:00Z"
+    },
+    {
+        "ledgerCategory": "Equity",
+        "ledgerCategoryDescription": "Equity owned by the company",
+        "categoryNumber": "5001",
+        "modifiedBy": "JohnDoe",
+        "modifiedOn": "2024-01-22T12:00:00Z"
+    },
+    {
+        "ledgerCategory": "Other",
+        "ledgerCategoryDescription": "Other",
+        "categoryNumber": "6001",
+        "modifiedBy": "JohnDoe",
+        "modifiedOn": "2024-01-22T12:00:00Z"
+    }
+]
