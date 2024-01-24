@@ -132,3 +132,11 @@ export type LedgerCategory = {
     modifiedBy: string;
     modifiedOn: string;
 };
+
+export type KYCType = {
+    kycTypeName: string;
+    kycTypeDescription: string;
+    kycTypeCode: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
