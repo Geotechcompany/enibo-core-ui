@@ -17,6 +17,12 @@ import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
 import BranchTypes from "./Pages/Branches/BranchTypes";
 import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
+import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
+import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
+import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
+import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
+import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
+import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
 
 function App() {
   return (
@@ -95,11 +101,19 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="administration/static-data/fee-types"
           element={
             <MainLayout>
               <FeeTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/static-data/fee-types/new-fee-type"
+          element={
+            <MainLayout>
+              <NewFeeTypes />
             </MainLayout>
           }
         />
@@ -128,10 +142,50 @@ function App() {
           }
         />
         <Route
+          path="administration/ledger-management/ledger-rules"
+          element={
+            <MainLayout>
+              <LedgerRules />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-rules/new-ledger-rule"
+          element={
+            <MainLayout>
+              <NewLedgerRule />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-accounts/:accountId"
+          element={
+            <MainLayout>
+              <LedgerAccountsSummary />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/ledger-management/ledger-accounts/new-ledger-account"
           element={
             <MainLayout>
               <NewLedgerAccount />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-account-categories"
+          element={
+            <MainLayout>
+              <LedgerAccountCategories />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-account-categories/new-ledger-account-category"
+          element={
+            <MainLayout>
+              <NewLedgerAccountCategory />
             </MainLayout>
           }
         />
@@ -143,10 +197,9 @@ function App() {
             </MainLayout>
           }
         />
-        
       </Routes>
     </ThemeProvider>
   );
 }
 
-export default App
+export default App;

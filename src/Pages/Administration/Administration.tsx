@@ -76,11 +76,11 @@ const Administration: FC<AdministrationProps> = () => {
               <h3 className="text-base uppercase">Ledger Management</h3>
             </div>
             <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">
+              <Link to="/administration/ledger-management/ledger-account-categories" className="py-1 hover:bg-gray-300">
                 Ledger Account Categories
               </Link>
               <Link to="/administration/ledger-management/ledger-accounts" className="py-1 hover:bg-gray-300">Ledger Accounts</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Ledger Rules</Link>
+              <Link to="/administration/ledger-management/ledger-rules" className="py-1 hover:bg-gray-300">Ledger Rules</Link>
             </div>
           </div>
           <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">

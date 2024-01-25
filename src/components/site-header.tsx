@@ -15,7 +15,7 @@ const SiteHeader = () => {
           </div>
           <BranchSwitcher />
           <Navigation className="mx-6" />
-          <div className="flex items-center ml-auto space-x-4">
+          <div className="flex items-center ml-auto ">
             <Search />
             <ModeToggle />
             <UserNav />
