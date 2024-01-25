@@ -37,9 +37,7 @@ const Administration: FC<AdministrationProps> = () => {
               <h3 className="text-base uppercase">Branch Management</h3>
             </div>
             <div className="flex flex-col gap-1">
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">
-                Branch Types
-              </Link>
+            <Link to="/administration/branches/branch-types" className="py-1 hover:bg-gray-300">Branch Types</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Manage Branches</Link>
               <Link to="/administration/branch-details" className="py-1 hover:bg-gray-300">Branch Details</Link>
             </div>

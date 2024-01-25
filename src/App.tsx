@@ -15,6 +15,8 @@ import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
+import BranchTypes from "./Pages/Branches/BranchTypes";
+import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
 
 function App() {
   return (
@@ -61,7 +63,22 @@ function App() {
             </MainLayout>
           }
         />
-        
+         <Route
+          path="/administration/branches/branch-types"
+          element={
+            <MainLayout>
+              <BranchTypes/>
+            </MainLayout>
+          }
+        />
+         <Route
+          path="administration/branches/new-branch-type"
+          element={
+            <MainLayout>
+              <NewBranchTypes/>
+            </MainLayout>
+          }
+        />        
         <Route
           path="administration/products/product-types"
           element={
