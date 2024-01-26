@@ -25,6 +25,11 @@ import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCat
 import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
 import UserDetailsPage from "./Pages/Users.tsx/UserDetailsPage";
 import NewUser from "./Pages/Users.tsx/NewUser";
+import CountriesList from "./Pages/Countries/CountryList";
+import CountryDetails from "./Pages/Countries/CountryDetailsPage";
+import CurrenciesList from "./Pages/Currencies/CurrenciesList";
+import CalendarList from "./Pages/Calendar/CalendarPage";
+import CalendarDetail from "./Pages/Calendar/CalendarDetails";
 
 function App() {
   return (
@@ -212,6 +217,54 @@ function App() {
           element={
             <MainLayout>
              <NewUser />
+            </MainLayout>
+          }
+        />
+         <Route
+          path="/administration/countries-list"
+          element={
+            <MainLayout>
+             <CountriesList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/countries-list/countries-details-form"
+          element={
+            <MainLayout>
+             <CountryDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/currencies-list"
+          element={
+            <MainLayout>
+             <CurrenciesList/>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/currencies-list/currencies-details-form"
+          element={
+            <MainLayout>
+             <CountryDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/static-data/calendar-list"
+          element={
+            <MainLayout>
+             <CalendarList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/static-data/calendar-list/calendar-details-form"
+          element={
+            <MainLayout>
+             <CalendarDetail />
             </MainLayout>
           }
         />
