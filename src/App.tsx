@@ -15,7 +15,7 @@ import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
-import BranchTypes from "./Pages/Branches/BranchTypes";
+import BranchTypes from "./Pages/Branches/BranchTypesPage";
 import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
