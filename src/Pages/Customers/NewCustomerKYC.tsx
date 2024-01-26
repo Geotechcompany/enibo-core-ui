@@ -1,12 +1,12 @@
-import NewBusinessRetailForm from "@/components/new-business-retail-form";
-import NewCustomerRetailForm from "@/components/new-customer-retail-form";
+import NewKYCBusinessForm from "@/components/new-KYC-business-form";
+import NewKYCIndividualForm from "@/components/new-KYC-individual-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
-interface NewCustomerProps {}
+interface NewCustomerKYCProps {}
 
-const NewCustomer: FC<NewCustomerProps> = () => {
+const NewCustomerKYC: FC<NewCustomerKYCProps> = () => {
   return (
     <section className="px-4">
       <div className="pt-2">
@@ -24,7 +24,7 @@ const NewCustomer: FC<NewCustomerProps> = () => {
             </li>
             <li className="m-0">
               <Link to="#" className="text-gray-500" aria-current="page">
-                Customer Details
+                Customer KYC Details
               </Link>
             </li>
           </ol>
@@ -32,20 +32,20 @@ const NewCustomer: FC<NewCustomerProps> = () => {
       </div>
       <div className="flex items-center justify-between my-4">
         <div className="">
-          <h1 className="text-4xl text-[#36459C]">Customer Details</h1>
+          <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
         </div>
       </div>
       <div>
-        <Tabs defaultValue="Retail">
+        <Tabs defaultValue="Individual">
           <TabsList>
-            <TabsTrigger value="Retail">Retail</TabsTrigger>
+            <TabsTrigger value="Individual">Individual</TabsTrigger>
             <TabsTrigger value="Business">Business</TabsTrigger>
           </TabsList>
-          <TabsContent value="Retail">
-            <NewCustomerRetailForm />
+          <TabsContent value="Individual">
+            <NewKYCIndividualForm />
           </TabsContent>
           <TabsContent value="Business">
-            <NewBusinessRetailForm />
+            <NewKYCBusinessForm />
           </TabsContent>
         </Tabs>
       </div>
@@ -53,4 +53,4 @@ const NewCustomer: FC<NewCustomerProps> = () => {
   );
 };
 
-export default NewCustomer;
+export default NewCustomerKYC;

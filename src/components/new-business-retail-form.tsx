@@ -103,11 +103,11 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
-          <div className="flex flex-col">
+          <div className="flex flex-col px-2 pt-1 pb-4 my-4 border">
             <div>
               <h3>BUSINESS DETAILS</h3>
             </div>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="businessKYC">Business KYC</Label>
                 <Controller
@@ -164,7 +164,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col px-2 pt-1 pb-4 my-4 border">
             <div>
               <h3>ACCOUNT DETAILS</h3>
             </div>
@@ -248,8 +248,8 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col">
-            <div>
+          <div className="flex flex-col px-2 pt-1 pb-4 my-4 border">
+            <div className="flex items-center justify-between">
               <h3>ACCOUNT MANDATES</h3>
               <Button
                 variant="link"
@@ -265,7 +265,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
             </div>
             {accountMandates.map((mandate, index) => (
               <div className="flex gap-4">
-                <div>
+                <div className="w-[50%]">
                   <Label
                     htmlFor="signatory"
                     className={index > 0 ? "sr-only" : ""}
@@ -297,7 +297,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label
                     htmlFor="mandateType"
                     className={index > 0 ? "sr-only" : ""}
@@ -329,7 +329,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label
                     htmlFor="category"
                     className={index > 0 ? "sr-only" : ""}
@@ -360,10 +360,11 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[5%] flex items-end">
                   <Button
-                    variant="link"
+                    variant="outline"
                     size="icon"
+                    className="mb-6"
                     onClick={() => {
                       setAccountMandates((prev) => {
                         const newMandates = [...prev];
@@ -378,13 +379,13 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
               </div>
             ))}
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col px-2 pt-1 pb-4 my-4 border">
             <div>
               <h3>SIGNING MANDATE DETAILS</h3>
             </div>
             {mandateDetails.map((mandate, index) => (
               <div className="flex gap-4">
-                <div>
+                <div className="w-[50%]">
                   <Label htmlFor="signingMandateType">Mandate Type</Label>
                   <Controller
                     control={control}
@@ -411,7 +412,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label htmlFor="signingRule">Signing Rule</Label>
                   <Input
                     type="text"
@@ -424,7 +425,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label htmlFor="minimumPaymentAmount">
                     Minimum Payment Amount
                   </Label>
@@ -439,7 +440,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label htmlFor="maximumPaymentAmount">
                     Maximum Payment Amount
                   </Label>
@@ -454,7 +455,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[50%]">
                   <Label htmlFor="maximumDailyLimit">Maximum Daily Limit</Label>
                   <Input
                     type="number"
@@ -467,10 +468,11 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="w-[5%] flex items-end">
                   <Button
-                    variant="link"
+                    variant="outline"
                     size="icon"
+                    className="mb-6"
                     onClick={() => {
                       setMandateDetails((prev) => {
                         const newMandateRules = [...prev];
@@ -486,8 +488,8 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
             ))}
           </div>
         </div>
-        <div className="flex justify-end mt-4">
-          <Button type="submit">Create Customer Retail</Button>
+        <div className="mt-4">
+          <Button type="submit">Submit</Button>
           <Button variant="outline" className="ml-2">
             Cancel
           </Button>

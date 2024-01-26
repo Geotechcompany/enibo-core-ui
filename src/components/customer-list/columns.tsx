@@ -2,6 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
 import { Customer } from "@/types/global";
+import { Link } from "react-router-dom";
 
  
 
@@ -28,6 +29,16 @@ export const columns: ColumnDef<Customer>[] = [
         />
       </div>
     ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "id",
+    accessorFn: (row) => row.business?.businessKYC || row.retail?.individualKYC,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Customer ID" />
+    ),
+    cell: ({ row }) => <div className=""><Link to={`/customers/${row.getValue("id")}`}>{row.getValue("id")}</Link></div>,
     enableSorting: true,
     enableHiding: true,
   },
