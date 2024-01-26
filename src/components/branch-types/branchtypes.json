@@ -1,0 +1,138 @@
+[
+    {
+      "branchTypeID": 1,
+      "branchTypeName": "Branch 1",
+      "description": "Description for Branch 1",
+      "createdBy": "User A",
+      "createdAt": "2024-01-24T12:00:00Z",
+      "effectiveDate": "2024-01-25T00:00:00Z"
+    },
+    {
+      "branchTypeID": 2,
+      "branchTypeName": "Branch 2",
+      "description": "Description for Branch 2",
+      "createdBy": "User B",
+      "createdAt": "2024-01-24T13:00:00Z",
+      "effectiveDate": "2024-01-26T00:00:00Z"
+    },
+    {
+        "branchTypeID": 5,
+        "branchTypeName": "Branch 5",
+        "description": "Description for Branch 5",
+        "createdBy": "User E",
+        "createdAt": "2024-01-25T14:30:00Z",
+        "effectiveDate": "2024-01-31T00:00:00Z"
+      },
+      {
+        "branchTypeID": 6,
+        "branchTypeName": "Branch 6",
+        "description": "Description for Branch 6",
+        "createdBy": "User F",
+        "createdAt": "2024-01-25T15:45:00Z",
+        "effectiveDate": "2024-02-01T00:00:00Z"
+      },
+      {
+        "branchTypeID": 7,
+        "branchTypeName": "Branch 7",
+        "description": "Description for Branch 7",
+        "createdBy": "User G",
+        "createdAt": "2024-01-26T09:00:00Z",
+        "effectiveDate": "2024-02-02T00:00:00Z"
+      },
+      {
+        "branchTypeID": 8,
+        "branchTypeName": "Branch 8",
+        "description": "Description for Branch 8",
+        "createdBy": "User H",
+        "createdAt": "2024-01-26T10:15:00Z",
+        "effectiveDate": "2024-02-03T00:00:00Z"
+      },
+      {
+        "branchTypeID": 9,
+        "branchTypeName": "Branch 9",
+        "description": "Description for Branch 9",
+        "createdBy": "User I",
+        "createdAt": "2024-01-26T11:30:00Z",
+        "effectiveDate": "2024-02-04T00:00:00Z"
+      },
+      {
+        "branchTypeID": 10,
+        "branchTypeName": "Branch 10",
+        "description": "Description for Branch 10",
+        "createdBy": "User J",
+        "createdAt": "2024-01-26T12:45:00Z",
+        "effectiveDate": "2024-02-05T00:00:00Z"
+      },
+      {
+        "branchTypeID": 11,
+        "branchTypeName": "Branch 11",
+        "description": "Description for Branch 11",
+        "createdBy": "User K",
+        "createdAt": "2024-01-27T14:00:00Z",
+        "effectiveDate": "2024-02-06T00:00:00Z"
+      },
+      {
+        "branchTypeID": 12,
+        "branchTypeName": "Branch 12",
+        "description": "Description for Branch 12",
+        "createdBy": "User L",
+        "createdAt": "2024-01-27T15:15:00Z",
+        "effectiveDate": "2024-02-07T00:00:00Z"
+      },
+      {
+        "branchTypeID": 13,
+        "branchTypeName": "Branch 13",
+        "description": "Description for Branch 13",
+        "createdBy": "User M",
+        "createdAt": "2024-01-27T16:30:00Z",
+        "effectiveDate": "2024-02-08T00:00:00Z"
+      },
+      {
+        "branchTypeID": 14,
+        "branchTypeName": "Branch 14",
+        "description": "Description for Branch 14",
+        "createdBy": "User N",
+        "createdAt": "2024-01-28T18:45:00Z",
+        "effectiveDate": "2024-02-09T00:00:00Z"
+      },
+    {
+      "branchTypeID": 60,
+      "branchTypeName": "Branch 60",
+      "description": "Description for Branch 60",
+      "createdBy": "User XYZ",
+      "createdAt": "2024-01-24T15:00:00Z",
+      "effectiveDate": "2024-01-28T00:00:00Z"
+    },
+    {
+        "branchTypeID": 9,
+        "branchTypeName": "Branch 9",
+        "description": "Description for Branch 9",
+        "createdBy": "User I",
+        "createdAt": "2024-01-26T11:30:00Z",
+        "effectiveDate": "2024-02-04T00:00:00Z"
+      },
+      {
+        "branchTypeID": 10,
+        "branchTypeName": "Branch 10",
+        "description": "Description for Branch 10",
+        "createdBy": "User J",
+        "createdAt": "2024-01-26T12:45:00Z",
+        "effectiveDate": "2024-02-05T00:00:00Z"
+      },
+      {
+        "branchTypeID": 11,
+        "branchTypeName": "Branch 11",
+        "description": "Description for Branch 11",
+        "createdBy": "User K",
+        "createdAt": "2024-01-27T14:00:00Z",
+        "effectiveDate": "2024-02-06T00:00:00Z"
+      },
+      {
+        "branchTypeID": 12,
+        "branchTypeName": "Branch 12",
+        "description": "Description for Branch 12",
+        "createdBy": "User L",
+        "createdAt": "2024-01-27T15:15:00Z",
+        "effectiveDate": "2024-02-07T00:00:00Z"
+      }
+  ]
