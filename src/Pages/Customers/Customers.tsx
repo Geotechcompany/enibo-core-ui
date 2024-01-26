@@ -14,7 +14,7 @@ const Customers: FC<CustomersProps> = () => {
     const customers: Customer[] =  customerList as Customer[];
     const location = useLocation();
     const navigate = useNavigate();
-    const from = location.state?.from || { pathname: "/customers" };
+    const from = location.state?.from || { pathname: "/customers/new-customer" };
   return (
     <div>
       <div className="mx-4">

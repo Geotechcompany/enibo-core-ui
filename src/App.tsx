@@ -20,6 +20,7 @@ import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
 import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
 import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
+import NewCustomer from "./Pages/Customers/NewCustomer";
 
 function App() {
   return (
@@ -167,6 +168,14 @@ function App() {
           element={
             <MainLayout>
               <Customers />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/new-customer"
+          element={
+            <MainLayout>
+              <NewCustomer />
             </MainLayout>
           }
         />
