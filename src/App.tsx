@@ -23,8 +23,14 @@ import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
 import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
 import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
-import UserDetailsPage from "./Pages/Users.tsx/UserDetailsPage";
-import NewUser from "./Pages/Users.tsx/NewUser";
+import NewCustomer from "./Pages/Customers/NewCustomer";
+import CustomerSummary from "./Pages/Customers/CustomerSummary";
+import CustomerKYCS from "./Pages/Customers/CustomerKYCS";
+import NewCustomerKYC from "./Pages/Customers/NewCustomerKYC";
+import KYCTypes from "./Pages/Customers/KYCTypes";
+import NewKYCType from "./Pages/Customers/NewKYCType";
+import CustomerMandateTypes from "./Pages/Customers/CustomerMandateTypes";
+import NewCustomerMandateType from "./Pages/Customers/NewCustomerMandateType";
 
 function App() {
   return (
@@ -71,22 +77,22 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="/administration/branches/branch-types"
           element={
             <MainLayout>
-              <BranchTypes/>
+              <BranchTypes />
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="administration/branches/new-branch-type"
           element={
             <MainLayout>
-              <NewBranchTypes/>
+              <NewBranchTypes />
             </MainLayout>
           }
-        />        
+        />
         <Route
           path="administration/products/product-types"
           element={
@@ -200,23 +206,70 @@ function App() {
           }
         />
         <Route
-          path="/administration/user-details"
+          path="customers/new-customer"
           element={
             <MainLayout>
-              <UserDetailsPage />
+              <NewCustomer />
             </MainLayout>
           }
         />
         <Route
-          path="/administration/user-details/user-details-form"
+          path="customers/:customerId"
           element={
             <MainLayout>
-             <NewUser />
+              <CustomerSummary />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs"
+          element={
+            <MainLayout>
+              <CustomerKYCS />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs/new-kyc"
+          element={
+            <MainLayout>
+              <NewCustomerKYC />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types"
+          element={
+            <MainLayout>
+              <KYCTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types/new-kyc-type"
+          element={
+            <MainLayout>
+              <NewKYCType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types"
+          element={
+            <MainLayout>
+              <CustomerMandateTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types/new-mandate-type"
+          element={
+            <MainLayout>
+              <NewCustomerMandateType />
             </MainLayout>
           }
         />
       </Routes>
-      
     </ThemeProvider>
   );
 }

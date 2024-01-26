@@ -40,6 +40,11 @@ export type Customer = {
     customerType: CustomerType;
     retail?: Retail;
     business?: Business;
+    signingMandateRules: {
+        signingRules: string;
+        minimumPaymentAmount: number;
+        maximumPaymentAmount: number;
+    };
 }
 
 export type ProductType = {
@@ -131,4 +136,77 @@ export type LedgerCategory = {
     categoryNumber: string;
     modifiedBy: string;
     modifiedOn: string;
+};
+
+export type KYCType = {
+    kycTypeName: string;
+    kycTypeDescription: string;
+    kycTypeCode: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
+export type MandateType = {
+    mandateTypeCode: string;
+    mandateTypeName: string;
+    mandateTypeDescription: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
+
+type KYCIndividual = {
+    kycType: "Individual";
+    designation: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    phoneNumber: string;
+    emailAddress: string;
+    postalAddress: string;
+    physicalAddress: string;
+    country: string;
+    taxNumber: string;
+    idType: string;
+    idNumber: string;
+    sex: "Male" | "Female" | "Other";
+    nationality: string;
+    riskRating: string;
+    attachDocumentsField: string[];
+    signature: string;
+    modifiedBy: string;
+    modifiedOn: string;
+  };
+  
+  type KYCBusiness = {
+    kycType: "Business";
+    legalEntityName: string;
+    legalStatus:
+      | "Sole Proprietor"
+      | "Partnership"
+      | "Limited Company"
+      | "Government Entity"
+      | "Society/Association/Club/Trust"
+      | "NGO/International Charity"
+      | "Other (specify)";
+    dateOfIncorporation: string;
+    registrationNumber: string;
+    natureOfBusiness: string;
+    entityNationality: string;
+    entityPINNumber: string;
+    entityTaxNumber: string;
+    telephoneNumber: string;
+    emailAddress: string;
+    postalAddress: string;
+    physicalAddress: string;
+    riskRating: string;
+    attachDocumentsField: string[];
+    modifiedBy: string;
+    modifiedOn: string;
+  };
+
+ 
+  
+export type KYC = {
+    KYCType: "Individual" | "Business";
+    individual?: KYCIndividual;
+    business?: KYCBusiness;
 };

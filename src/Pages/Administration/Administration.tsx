@@ -1,3 +1,4 @@
+import AdminNavigationCard from "@/components/admin-navigation-card";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -31,66 +32,84 @@ const Administration: FC<AdministrationProps> = () => {
         <div className="my-4">
           <h1 className="text-4xl text-[#36459C]">Administration</h1>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="flex flex-col px-4 pt-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">Branch Management</h3>
-            </div>
-            <div className="flex flex-col gap-1">
-            <Link to="/administration/branches/branch-types" className="py-1 hover:bg-gray-300">Branch Types</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Manage Branches</Link>
-              <Link to="/administration/branch-details" className="py-1 hover:bg-gray-300">Branch Details</Link>
-            </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+          <div className="flex flex-col">
+            <AdminNavigationCard
+              title="Branch Management"
+              urlItems={[
+                {
+                  name: "Branch Types",
+                  url: "/administration/branches/branch-types",
+                },
+                { name: "Manage Branches", url: "/administration/branches" },
+                {
+                  name: "Branch Details",
+                  url: "/administration/branch-details",
+                },
+              ]}
+            />
+            <AdminNavigationCard
+              title="Product Management"
+              urlItems={[
+                {
+                  name: "Product Types",
+                  url: "/administration/products/product-types",
+                },
+              ]}
+            />
+            <AdminNavigationCard
+              title="Customer Management"
+              urlItems={[
+                { name: "Customers", url: "/customers" },
+                { name: "KYC Types", url: "/customers/kyc-types" },
+                { name: "KYCs", url: "/customers/customer-kycs" },
+                {
+                  name: "Account Mandate Types",
+                  url: "/customers/account-mandate-types",
+                },
+              ]}
+            />
           </div>
-          <div className="flex flex-col px-4 pt-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">Product Management</h3>
-            </div>
-            <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/products/product-types" className="py-1 hover:bg-gray-300">Product Types</Link>
-              <Link to="/administration/products" className="py-1 hover:bg-gray-300">Manage Products</Link>
-            </div>
+          <div className="flex flex-col">
+            <AdminNavigationCard
+              title="Static Data"
+              urlItems={[
+                { name: "Countries", url: "/administration/countries" },
+                { name: "Currencies", url: "/administration/currencies" },
+                { name: "Fee Types", url: "/administration/fee-types" },
+                {
+                  name: "Transaction Types",
+                  url: "/administration/transaction-types",
+                },
+                {
+                  name: "Business Calendars",
+                  url: "/administration/business-calendars",
+                },
+              ]}
+            />
+            <AdminNavigationCard
+              title="Ledger Management"
+              urlItems={[
+                {
+                  name: "Ledger Account Categories",
+                  url: "/administration/ledger-account-categories",
+                },
+                {
+                  name: "Ledger Accounts",
+                  url: "/administration/ledger-accounts",
+                },
+                { name: "Ledger Rules", url: "/administration/ledger-rules" },
+              ]}
+            />
           </div>
-          <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">Customer Management</h3>
-            </div>
-            <div className="flex flex-col gap-1 my-2">
-              <Link to="/customers" className="py-1 hover:bg-gray-300">Manage Customers</Link>
-            </div>
-          </div>
-          <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">Static Data</h3>
-            </div>
-            <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Countries</Link>
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">Currencies</Link>
-              <Link to="/administration/static-data/fee-types" className="py-1 hover:bg-gray-300">Fee Types</Link>
-              <Link to="/administration/static-data/transaction-types" className="py-1 hover:bg-gray-300">Transaction Types</Link>
-              <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Business Calendars</Link>
-            </div>
-          </div>
-          <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">Ledger Management</h3>
-            </div>
-            <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/ledger-management/ledger-account-categories" className="py-1 hover:bg-gray-300">
-                Ledger Account Categories
-              </Link>
-              <Link to="/administration/ledger-management/ledger-accounts" className="py-1 hover:bg-gray-300">Ledger Accounts</Link>
-              <Link to="/administration/ledger-management/ledger-rules" className="py-1 hover:bg-gray-300">Ledger Rules</Link>
-            </div>
-          </div>
-          <div className="flex flex-col px-4 py-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
-            <div className="border-[#36459C] border-b-2 my-2">
-              <h3 className="text-base uppercase">User Management</h3>
-            </div>
-            <div className="flex flex-col gap-1 my-2">
-              <Link to="/administration/user-details" className="py-1 hover:bg-gray-300">Manage Users</Link>
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">User Profiles</Link>
-            </div>
+          <div className="flex flex-col">
+            <AdminNavigationCard
+              title="User Management"
+              urlItems={[
+                { name: "Manage Users", url: "/administration/users" },
+                { name: "User Profiles", url: "/administration/user-profiles" },
+              ]}
+            />
           </div>
         </div>
       </div>
