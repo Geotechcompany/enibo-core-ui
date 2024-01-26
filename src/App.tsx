@@ -63,7 +63,22 @@ function App() {
             </MainLayout>
           }
         />
-        
+        <Route
+          path="/administration/branches/branch-types"
+          element={
+            <MainLayout>
+              <BranchTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/branches/new-branch-type"
+          element={
+            <MainLayout>
+              <NewBranchTypes />
+            </MainLayout>
+          }
+        />
         <Route
           path="administration/products/product-types"
           element={
@@ -80,7 +95,7 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="administration/static-data/fee-types"
           element={
             <MainLayout>
@@ -121,6 +136,22 @@ function App() {
           }
         />
         <Route
+          path="administration/ledger-management/ledger-rules"
+          element={
+            <MainLayout>
+              <LedgerRules />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-rules/new-ledger-rule"
+          element={
+            <MainLayout>
+              <NewLedgerRule />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/ledger-management/ledger-accounts/:accountId"
           element={
             <MainLayout>
@@ -137,6 +168,22 @@ function App() {
           }
         />
         <Route
+          path="administration/ledger-management/ledger-account-categories"
+          element={
+            <MainLayout>
+              <LedgerAccountCategories />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-account-categories/new-ledger-account-category"
+          element={
+            <MainLayout>
+              <NewLedgerAccountCategory />
+            </MainLayout>
+          }
+        />
+        <Route
           path="customers"
           element={
             <MainLayout>
@@ -144,10 +191,73 @@ function App() {
             </MainLayout>
           }
         />
-        
+        <Route
+          path="customers/new-customer"
+          element={
+            <MainLayout>
+              <NewCustomer />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/:customerId"
+          element={
+            <MainLayout>
+              <CustomerSummary />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs"
+          element={
+            <MainLayout>
+              <CustomerKYCS />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs/new-kyc"
+          element={
+            <MainLayout>
+              <NewCustomerKYC />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types"
+          element={
+            <MainLayout>
+              <KYCTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types/new-kyc-type"
+          element={
+            <MainLayout>
+              <NewKYCType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types"
+          element={
+            <MainLayout>
+              <CustomerMandateTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types/new-mandate-type"
+          element={
+            <MainLayout>
+              <NewCustomerMandateType />
+            </MainLayout>
+          }
+        />
       </Routes>
     </ThemeProvider>
   );
 }
 
-export default App
+export default App;

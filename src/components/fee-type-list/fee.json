@@ -72,7 +72,7 @@
           "feeCode": "8"
         },
         {
-          "feeName": "infrastructures",
+          "feeName": "Infrastructures",
           "description": "deposit transaction at Adams Group using card ending with ***(...8826) for GIP 693.67 in account ***46705710",
           "transactionType": "deposit",
           "paymentFrequency": "2024-01-18T14:06:58.591Z",
@@ -81,7 +81,7 @@
           "feeCode": "9"
         },
         {
-          "feeName": "sexy",
+          "feeName": "Transaction fee",
           "description": "payment transaction at Mills, Hickle and Kilback using card ending with ***(...1324) for BRL 474.16 in account ***12818334",
           "transactionType": "invoice",
           "paymentFrequency": "2024-01-18T14:06:58.591Z",

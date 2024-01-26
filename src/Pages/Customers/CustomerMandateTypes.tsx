@@ -1,20 +1,20 @@
 import { DataTable } from "@/components/datatable/data-table";
+import { columns } from "@/components/mandate-type-list/columns";
 import { Button } from "@/components/ui/button";
+import { MandateType } from "@/types/global";
 import { FC } from "react";
-import customerList from "@/components/customer-list/customers.json";
-import { useLocation, useNavigate } from "react-router";
-import { Customer } from "@/types/global";
-import { Link } from "react-router-dom";
-import { columns } from "@/components/customer-list/columns";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import mandateTypesList from "@/components/mandate-type-list/mandate-types.json";
 
-interface CustomersProps {}
+interface CustomerMandateTypesProps {}
 
-const Customers: FC<CustomersProps> = () => {
-
-    const customers: Customer[] =  customerList as Customer[];
-    const location = useLocation();
-    const navigate = useNavigate();
-    const from = location.state?.from || { pathname: "/customers/new-customer" };
+const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
+  const mandateTypes: MandateType[] = mandateTypesList as MandateType[];
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || {
+    pathname: "/customers/account-mandate-types/new-mandate-type",
+  };
   return (
     <div>
       <div className="mx-4">
@@ -33,7 +33,7 @@ const Customers: FC<CustomersProps> = () => {
               </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  Branches
+                  Mandate Types
                 </Link>
               </li>
             </ol>
@@ -41,7 +41,7 @@ const Customers: FC<CustomersProps> = () => {
         </div>
         <div className="flex items-center justify-between my-4">
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">Customers</h1>
+            <h1 className="text-4xl text-[#36459C]">Mandate Types</h1>
           </div>
           <div className="">
             <Button
@@ -54,10 +54,12 @@ const Customers: FC<CustomersProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{customers && <DataTable columns={columns} data={customers} />}</div>
+        <div>
+          {mandateTypes && <DataTable columns={columns} data={mandateTypes} />}
+        </div>
       </div>
     </div>
   );
 };
 
-export default Customers;
+export default CustomerMandateTypes;
