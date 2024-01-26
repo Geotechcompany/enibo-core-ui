@@ -15,7 +15,7 @@ import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
-import BranchTypes from "./Pages/Branches/BranchTypes";
+import BranchTypes from "./Pages/Branches/BranchTypesPage";
 import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
@@ -23,6 +23,8 @@ import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
 import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
 import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
+import UserDetailsPage from "./Pages/Users.tsx/UserDetailsPage";
+import NewUser from "./Pages/Users.tsx/NewUser";
 
 function App() {
   return (
@@ -197,7 +199,24 @@ function App() {
             </MainLayout>
           }
         />
+        <Route
+          path="/administration/user-details"
+          element={
+            <MainLayout>
+              <UserDetailsPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/user-details/user-details-form"
+          element={
+            <MainLayout>
+             <NewUser />
+            </MainLayout>
+          }
+        />
       </Routes>
+      
     </ThemeProvider>
   );
 }
