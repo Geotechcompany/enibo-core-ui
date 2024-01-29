@@ -32,11 +32,11 @@ export const currenciesColumns: ColumnDef<CurrencyInput>[] = [
       enableHiding: true,
     },
     {
-      accessorKey: "currencyCode",
+      accessorKey: "currencySymbol",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Currency Code" />
+        <DataTableColumnHeader column={column} title="Currency Symbol" />
       ),
-      cell: ({ row }) => <div className="">{row.getValue("currencyCode")}</div>,
+      cell: ({ row }) => <div className="">{row.getValue("currencySymbol")}</div>,
       enableSorting: true,
       enableHiding: true,
     },

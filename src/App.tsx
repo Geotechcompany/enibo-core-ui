@@ -30,6 +30,7 @@ import CountryDetails from "./Pages/Countries/CountryDetailsPage";
 import CurrenciesList from "./Pages/Currencies/CurrenciesList";
 import CalendarList from "./Pages/Calendar/CalendarPage";
 import CalendarDetail from "./Pages/Calendar/CalendarDetails";
+import CurrenciesDetail from "./Pages/Currencies/CurrenciesDetails";
 
 function App() {
   return (
@@ -248,7 +249,7 @@ function App() {
           path="/administration/currencies-list/currencies-details-form"
           element={
             <MainLayout>
-             <CountryDetails />
+            <CurrenciesDetail />
             </MainLayout>
           }
         />
