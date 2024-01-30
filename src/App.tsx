@@ -14,17 +14,23 @@ import NewTransactionType from "./Pages/Transactions/NewTransactionType";
 import LedgerAccounts from "./Pages/LedgerAccounts/LedgerAccounts";
 import NewLedgerAccount from "./Pages/LedgerAccounts/NewLedgerAccount";
 import FeeTypes from "./Pages/FeeTypes/FeeTypes";
-import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
-import BranchTypes from "./Pages/Branches/BranchTypesPage";
-import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
-import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
-import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
+import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
+import NewCustomerMandateType from "./Pages/Customers/NewCustomerMandateType";
+import CustomerMandateTypes from "./Pages/Customers/CustomerMandateTypes";
+import NewKYCType from "./Pages/Customers/NewKYCType";
+import KYCTypes from "./Pages/Customers/KYCTypes";
+import NewCustomerKYC from "./Pages/Customers/NewCustomerKYC";
+import CustomerKYCS from "./Pages/Customers/CustomerKYCS";
+import CustomerSummary from "./Pages/Customers/CustomerSummary";
+import NewCustomer from "./Pages/Customers/NewCustomer";
 import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
 import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
-import UserDetailsPage from "./Pages/Users.tsx/UserDetailsPage";
-import NewUser from "./Pages/Users.tsx/NewUser";
+import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
+import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
+import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
+import Approvals from "./Pages/Approval Rules/Approvals";
 import CountriesList from "./Pages/Countries/CountryList";
 import CountryDetails from "./Pages/Countries/CountryDetailsPage";
 import CurrenciesList from "./Pages/Currencies/CurrenciesList";
@@ -79,22 +85,22 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="/administration/branches/branch-types"
           element={
             <MainLayout>
-              <BranchTypes/>
+              <Branches />
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="administration/branches/new-branch-type"
           element={
             <MainLayout>
-              <NewBranchTypes/>
+              <NewBranchTypes />
             </MainLayout>
           }
-        />        
+        />
         <Route
           path="administration/products/product-types"
           element={
@@ -208,18 +214,74 @@ function App() {
           }
         />
         <Route
-          path="/administration/user-details"
+          path="customers/new-customer"
           element={
             <MainLayout>
-              <UserDetailsPage />
+              <NewCustomer />
             </MainLayout>
           }
         />
         <Route
-          path="/administration/user-details/user-details-form"
+          path="customers/:customerId"
           element={
             <MainLayout>
-             <NewUser />
+              <CustomerSummary />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs"
+          element={
+            <MainLayout>
+              <CustomerKYCS />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/customer-kycs/new-kyc"
+          element={
+            <MainLayout>
+              <NewCustomerKYC />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types"
+          element={
+            <MainLayout>
+              <KYCTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types/new-kyc-type"
+          element={
+            <MainLayout>
+              <NewKYCType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types"
+          element={
+            <MainLayout>
+              <CustomerMandateTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/account-mandate-types/new-mandate-type"
+          element={
+            <MainLayout>
+              <NewCustomerMandateType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/approvals"
+          element={
+            <MainLayout>
+              <Approvals />
             </MainLayout>
           }
         />
@@ -288,7 +350,6 @@ function App() {
         }
           />
       </Routes>
-      
     </ThemeProvider>
   );
 }
