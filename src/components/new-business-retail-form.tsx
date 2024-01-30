@@ -263,7 +263,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                 Add Mandate
               </Button>
             </div>
-            {accountMandates.map((mandate, index) => (
+            {accountMandates.map((_mandate, index) => (
               <div className="flex gap-4">
                 <div className="w-[50%]">
                   <Label
@@ -383,7 +383,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
             <div>
               <h3>SIGNING MANDATE DETAILS</h3>
             </div>
-            {mandateDetails.map((mandate, index) => (
+            {mandateDetails.map((_mandate, index) => (
               <div className="flex gap-4">
                 <div className="w-[50%]">
                   <Label htmlFor="signingMandateType">Mandate Type</Label>
