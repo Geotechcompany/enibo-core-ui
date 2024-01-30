@@ -39,7 +39,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
     formState: { errors },
   } = useForm<UserDetailsInput>({
     resolver: zodResolver(userDetailsSchema),
-    defaultValues: user, // Populate form fields when editing an existing user
+    defaultValues: user, 
   });
 
   const onSubmit = (data: UserDetailsInput) => {

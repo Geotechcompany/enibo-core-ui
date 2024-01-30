@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../datatable/datatable-column-header";
 import { UserDetails } from "./schema";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { Checkbox } from "../ui/checkbox";
 
 export const userColumns: ColumnDef<UserDetails>[] = [
     {

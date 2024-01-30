@@ -39,7 +39,7 @@ const Administration: FC<AdministrationProps> = () => {
             <div className="flex flex-col gap-1">
             <Link to="/administration/branches/branch-types" className="py-1 hover:bg-gray-300">Branch Types</Link>
               <Link to="/administration/branches" className="py-1 hover:bg-gray-300">Manage Branches</Link>
-              <Link to="/administration/branch-details" className="py-1 hover:bg-gray-300">Branch Details</Link>
+              {/* <Link to="/administration/branch-details" className="py-1 hover:bg-gray-300">Branch Details</Link> */}
             </div>
           </div>
           <div className="flex flex-col px-4 pt-2 border border-l-8 rounded-sm shadow-md border-l-red-500">
@@ -89,7 +89,7 @@ const Administration: FC<AdministrationProps> = () => {
             </div>
             <div className="flex flex-col gap-1 my-2">
               <Link to="/administration/user-details" className="py-1 hover:bg-gray-300">Manage Users</Link>
-              <Link to="/administration/branch-types" className="py-1 hover:bg-gray-300">User Profiles</Link>
+              <Link to="/administration/user-management/profile-list" className="py-1 hover:bg-gray-300">User Profiles</Link>
             </div>
           </div>
         </div>

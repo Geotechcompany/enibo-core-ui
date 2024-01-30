@@ -1,0 +1,22 @@
+[
+    { "profileName": "JohnSmith", "description": "Experienced Manager" },
+    { "profileName": "EmilyJones", "description": "Compliance Expert" },
+    { "profileName": "MichaelBrown", "description": "Efficiency Specialist" },
+    { "profileName": "JenniferMiller", "description": "Risk Analyst" },
+    { "profileName": "DanielDavis", "description": "Customer Service" },
+    { "profileName": "SophiaTaylor", "description": "Operations Leader" },
+    { "profileName": "WilliamWilson", "description": "Data Governance" },
+    { "profileName": "EmmaMoore", "description": "Innovation Advocate" },
+    { "profileName": "DavidClark", "description": "Financial Strategist" },
+    { "profileName": "OliviaBaker", "description": "Regulatory Guru" },
+    { "profileName": "JamesHill", "description": "Tech-savvy Admin" },
+    { "profileName": "AvaCarter", "description": "Client Relations" },
+    { "profileName": "BenjaminMitchell", "description": "Quality Assurance" },
+    { "profileName": "MiaLopez", "description": "Security Specialist" },
+    { "profileName": "EthanWard", "description": "Audit Trailblazer" },
+    { "profileName": "IsabellaYoung", "description": "Financial Planner" },
+    { "profileName": "AlexanderFisher", "description": "Complaints Handler" },
+    { "profileName": "SophieReid", "description": "Policy Advocate" },
+    { "profileName": "SamuelTurner", "description": "Team Collaboration" },
+    { "profileName": "GraceCooper", "description": "Regulatory Liaison" }
+  ]

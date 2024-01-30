@@ -31,6 +31,8 @@ import CurrenciesList from "./Pages/Currencies/CurrenciesList";
 import CalendarList from "./Pages/Calendar/CalendarPage";
 import CalendarDetail from "./Pages/Calendar/CalendarDetails";
 import CurrenciesDetail from "./Pages/Currencies/CurrenciesDetails";
+import UserProfile from "./Pages/Users.tsx/UserProfileList";
+import NewProfile from "./Pages/Users.tsx/NewProfile";
 
 function App() {
   return (
@@ -269,6 +271,22 @@ function App() {
             </MainLayout>
           }
         />
+        <Route
+        path="/administration/user-management/profile-list"
+        element={
+          <MainLayout>
+            <UserProfile />
+          </MainLayout>
+        }
+          />
+           <Route
+        path="/administration/user-management/profile-list/profile-form"
+        element={
+          <MainLayout>
+            <NewProfile />
+          </MainLayout>
+        }
+          />
       </Routes>
       
     </ThemeProvider>
