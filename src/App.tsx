@@ -17,6 +17,20 @@ import FeeTypes from "./Pages/FeeTypes/FeeTypes";
 import LedgerAccountsSummary from "./Pages/LedgerAccounts/LedgerAccountsSummary";
 import NewFeeTypes from "./Pages/FeeTypes/NewFeeTypes";
 import BranchDetailsPage from "./Pages/Branches/BranchDetailsPage";
+import NewCustomerMandateType from "./Pages/Customers/NewCustomerMandateType";
+import CustomerMandateTypes from "./Pages/Customers/CustomerMandateTypes";
+import NewKYCType from "./Pages/Customers/NewKYCType";
+import KYCTypes from "./Pages/Customers/KYCTypes";
+import NewCustomerKYC from "./Pages/Customers/NewCustomerKYC";
+import CustomerKYCS from "./Pages/Customers/CustomerKYCS";
+import CustomerSummary from "./Pages/Customers/CustomerSummary";
+import NewCustomer from "./Pages/Customers/NewCustomer";
+import NewLedgerAccountCategory from "./Pages/LedgerAccounts/NewLedgerAccountCategory";
+import LedgerAccountCategories from "./Pages/LedgerAccounts/LedgerAccountCategories";
+import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
+import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
+import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
+import Approvals from "./Pages/Approval Rules/Approvals";
 
 function App() {
   return (
@@ -67,7 +81,7 @@ function App() {
           path="/administration/branches/branch-types"
           element={
             <MainLayout>
-              <BranchTypes />
+              <Branches />
             </MainLayout>
           }
         />
@@ -252,6 +266,14 @@ function App() {
           element={
             <MainLayout>
               <NewCustomerMandateType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/approvals"
+          element={
+            <MainLayout>
+              <Approvals />
             </MainLayout>
           }
         />

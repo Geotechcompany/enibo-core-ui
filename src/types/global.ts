@@ -210,3 +210,16 @@ export type KYC = {
     individual?: KYCIndividual;
     business?: KYCBusiness;
 };
+
+export type ApprovalRule = {
+    module: string;
+    subModule: string;
+    status: string;
+    approvalRule: string;
+    requestedBy: string;
+    requestedOn: string; // You might want to use a Date type here if the date is involved
+    note: string;
+    pendingApprovers: string[];
+    approvedBy: string | null; // Assuming it could be null if not approved yet
+    rejectionReason: string | null; // Assuming it could be null if not rejected
+  }
