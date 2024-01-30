@@ -1,18 +1,19 @@
-import { TransactionType } from "@/types/global";
-import { FC } from "react";
-import transactionTypeList from "@/components/transaction-type-list/transaction-types.json";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import CurrenciesTable from "@/components/currencies/currencies-table";
 import { Button } from "@/components/ui/button";
-import { columns } from "@/components/transaction-type-list/columns";
-import { DataTable } from "@/components/datatable/data-table";
+import { FC } from "react";
+import { FaPlus } from "react-icons/fa";
 
-interface TransactionTypesProps {}
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const TransactionTypes: FC<TransactionTypesProps> = () => {
-  const transactionTypes: TransactionType[] = transactionTypeList;
+interface CurrenciesProps {}
+
+const CurrenciesList: FC<CurrenciesProps> = () => {
+    
+
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
+  const from = location.state?.from || { pathname: "/administration/currencies-list/currencies-details-form" };
+  
   return (
     <div>
       <div className="mx-4">
@@ -20,7 +21,7 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-              <Link to="/administration">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -41,35 +42,30 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
             </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  Transactions Types
+                  Currencies List
                 </Link>
               </li>
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4">
+        <div className="flex items-center justify-between my-4" >
+          <div className=""><h1 className="text-4xl text-[#36459C]">Currencies List</h1></div>
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">Transaction Types</h1>
-          </div>
-          <div className="">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => navigate(from, { replace: true })}
-            >
-              Add new
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="bg-[#36459C] text-white py-5 px-8"
+            onClick={() => navigate(from, { replace: true })}
+          >
+            <FaPlus className="mr-1 text-white" /> New Currency
+          </Button></div>
         </div>
         <div>
-          {transactionTypes && (
-            <DataTable columns={columns} data={transactionTypes} />
-          )}
+        <CurrenciesTable />
         </div>
       </div>
     </div>
   );
 };
 
-export default TransactionTypes;
+export default CurrenciesList;
