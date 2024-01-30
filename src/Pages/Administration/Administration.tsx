@@ -58,14 +58,11 @@ const Administration: FC<AdministrationProps> = () => {
               ]}
             />
             <AdminNavigationCard
-              title="Customer Management"
+              title="Approval Management"
               urlItems={[
-                { name: "Customers", url: "/customers" },
-                { name: "KYC Types", url: "/customers/kyc-types" },
-                { name: "KYCs", url: "/customers/customer-kycs" },
                 {
-                  name: "Account Mandate Types",
-                  url: "/customers/account-mandate-types",
+                  name: "Approvals",
+                  url: "/administration/approvals",
                 },
               ]}
             />
@@ -108,6 +105,18 @@ const Administration: FC<AdministrationProps> = () => {
               urlItems={[
                 { name: "Manage Users", url: "/administration/users" },
                 { name: "User Profiles", url: "/administration/user-profiles" },
+              ]}
+            />
+            <AdminNavigationCard
+              title="Customer Management"
+              urlItems={[
+                { name: "Customers", url: "/customers" },
+                { name: "KYC Types", url: "/customers/kyc-types" },
+                { name: "KYCs", url: "/customers/customer-kycs" },
+                {
+                  name: "Account Mandate Types",
+                  url: "/customers/account-mandate-types",
+                },
               ]}
             />
           </div>

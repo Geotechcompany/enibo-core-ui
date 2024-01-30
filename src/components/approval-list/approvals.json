@@ -1,0 +1,62 @@
+[
+    {
+      "module": "Finance",
+      "subModule": "Expense Approval",
+      "status": "Pending",
+      "approvalRule": "Manager Approval",
+      "requestedBy": "John Doe",
+      "requestedOn": "2024-01-26T12:30:00Z",
+      "note": "Please review and approve.",
+      "pendingApprovers": ["Manager1", "Manager2"],
+      "approvedBy": null,
+      "rejectionReason": null
+    },
+    {
+      "module": "HR",
+      "subModule": "Leave Request",
+      "status": "Approved",
+      "approvalRule": "Supervisor Approval",
+      "requestedBy": "Jane Smith",
+      "requestedOn": "2024-01-27T09:45:00Z",
+      "note": "Taking a week off for personal reasons.",
+      "pendingApprovers": [],
+      "approvedBy": "SupervisorA",
+      "rejectionReason": null
+    },
+    {
+      "module": "IT",
+      "subModule": "Software Purchase",
+      "status": "Rejected",
+      "approvalRule": "IT Manager Approval",
+      "requestedBy": "Robert Johnson",
+      "requestedOn": "2024-01-28T15:20:00Z",
+      "note": "Need new software for the development team.",
+      "pendingApprovers": [],
+      "approvedBy": null,
+      "rejectionReason": "Budget constraints"
+    },
+    {
+      "module": "Marketing",
+      "subModule": "Campaign Launch",
+      "status": "Pending",
+      "approvalRule": "Marketing Head Approval",
+      "requestedBy": "Emily Davis",
+      "requestedOn": "2024-01-29T11:10:00Z",
+      "note": "Proposing a new marketing campaign.",
+      "pendingApprovers": ["MarketingHead"],
+      "approvedBy": null,
+      "rejectionReason": null
+    },
+    {
+      "module": "Operations",
+      "subModule": "Equipment Purchase",
+      "status": "Pending",
+      "approvalRule": "Operations Manager Approval",
+      "requestedBy": "Michael Wilson",
+      "requestedOn": "2024-01-30T14:50:00Z",
+      "note": "Need to purchase new equipment for the warehouse.",
+      "pendingApprovers": ["OpsManager1", "OpsManager2"],
+      "approvedBy": null,
+      "rejectionReason": null
+    }
+  ]
