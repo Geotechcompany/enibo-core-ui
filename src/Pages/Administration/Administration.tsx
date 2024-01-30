@@ -71,16 +71,16 @@ const Administration: FC<AdministrationProps> = () => {
             <AdminNavigationCard
               title="Static Data"
               urlItems={[
-                { name: "Countries", url: "/administration/countries" },
-                { name: "Currencies", url: "/administration/currencies" },
-                { name: "Fee Types", url: "/administration/fee-types" },
+                { name: "Countries", url: "/administration/countries-list" },
+                { name: "Currencies", url: "/administration/currencies-list" },
+                { name: "Fee Types", url: "/administration/static-data/fee-types" },
                 {
                   name: "Transaction Types",
-                  url: "/administration/transaction-types",
+                  url: "/administration/static-data/transaction-types",
                 },
                 {
                   name: "Business Calendars",
-                  url: "/administration/business-calendars",
+                  url: "/administration/static-data/calendar-list",
                 },
               ]}
             />
@@ -103,9 +103,10 @@ const Administration: FC<AdministrationProps> = () => {
             <AdminNavigationCard
               title="User Management"
               urlItems={[
-                { name: "Manage Users", url: "/administration/users" },
-                { name: "User Profiles", url: "/administration/user-profiles" },
+                { name: "Manage Users", url: "/administration/user-details"},
+                { name: "User Profiles", url: "/administration/user-management/profile-list" },
               ]}
+              
             />
             <AdminNavigationCard
               title="Customer Management"

@@ -31,6 +31,14 @@ import NewLedgerRule from "./Pages/LedgerAccounts/NewLedgerRule";
 import LedgerRules from "./Pages/LedgerAccounts/LedgerRules";
 import NewBranchTypes from "./Pages/Branches/NewBranchTypes";
 import Approvals from "./Pages/Approval Rules/Approvals";
+import CountriesList from "./Pages/Countries/CountryList";
+import CountryDetails from "./Pages/Countries/CountryDetailsPage";
+import CurrenciesList from "./Pages/Currencies/CurrenciesList";
+import CalendarList from "./Pages/Calendar/CalendarPage";
+import CalendarDetail from "./Pages/Calendar/CalendarDetails";
+import CurrenciesDetail from "./Pages/Currencies/CurrenciesDetails";
+import UserProfile from "./Pages/Users.tsx/UserProfileList";
+import NewProfile from "./Pages/Users.tsx/NewProfile";
 
 function App() {
   return (
@@ -277,6 +285,70 @@ function App() {
             </MainLayout>
           }
         />
+         <Route
+          path="/administration/countries-list"
+          element={
+            <MainLayout>
+             <CountriesList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/countries-list/countries-details-form"
+          element={
+            <MainLayout>
+             <CountryDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/currencies-list"
+          element={
+            <MainLayout>
+             <CurrenciesList/>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/currencies-list/currencies-details-form"
+          element={
+            <MainLayout>
+            <CurrenciesDetail />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/static-data/calendar-list"
+          element={
+            <MainLayout>
+             <CalendarList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/static-data/calendar-list/calendar-details-form"
+          element={
+            <MainLayout>
+             <CalendarDetail />
+            </MainLayout>
+          }
+        />
+        <Route
+        path="/administration/user-management/profile-list"
+        element={
+          <MainLayout>
+            <UserProfile />
+          </MainLayout>
+        }
+          />
+           <Route
+        path="/administration/user-management/profile-list/profile-form"
+        element={
+          <MainLayout>
+            <NewProfile />
+          </MainLayout>
+        }
+          />
       </Routes>
     </ThemeProvider>
   );

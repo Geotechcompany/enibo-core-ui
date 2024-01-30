@@ -1,0 +1,134 @@
+[
+  {
+    "id": "REF-1",
+    "moduleName": "Administration",
+    "view": false,
+    "edit": false,
+    "subRows": [
+      {
+        "moduleName": "UserProfileManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "UserManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "TransactionTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "FeeTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "BranchTypes",
+        "view": true,
+        "edit": true
+      }
+    ]
+  },
+  {
+    "id": "REF-2",
+    "moduleName": "Reporting",
+    "view": true,
+    "edit": true,
+    "subRows": [
+      {
+        "moduleName": "UserProfileManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "UserManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "TransactionTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "FeeTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "BranchTypes",
+        "view": true,
+        "edit": true
+      }
+    ]
+  },
+  {
+    "id": "REF-3",
+    "moduleName": "Connectors/Utilities",
+    "view": true,
+    "edit": true,
+    "subRows": [
+      {
+        "moduleName": "UserProfileManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "UserManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "TransactionTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "FeeTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "BranchTypes",
+        "view": true,
+        "edit": true
+      }
+    ]
+  },
+  {
+    "id": "REF-4",
+    "moduleName": "Approvals",
+    "view": true,
+    "edit": true,
+    "subRows": [
+      {
+        "moduleName": "UserProfileManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "UserManagement",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "TransactionTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "FeeTypes",
+        "view": true,
+        "edit": true
+      },
+      {
+        "moduleName": "BranchTypes",
+        "view": true,
+        "edit": true
+      }
+    ]
+  }
+]
