@@ -8,6 +8,8 @@ import { useToast } from '../ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/button';
+import { v4 as uuid } from 'uuid';
+
 
 function ManageInput() {
   const { toast } = useToast();
@@ -111,7 +113,11 @@ function ManageInput() {
       expanded,
     },
     onExpandedChange: setExpanded,
-    getSubRows: (row) => row.subRows,
+    getSubRows: (row) =>
+    row.subRows?.map((subRow) => ({
+      ...subRow,
+      id: uuid(), 
+    })),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -186,6 +192,7 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current!.indeterminate = !rest.checked && indeterminate;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, indeterminate]);
 
   return (

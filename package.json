@@ -30,6 +30,7 @@
     "@reduxjs/toolkit": "^2.0.1",
     "@tanstack/react-table": "^8.11.6",
     "@types/react-table": "^7.7.19",
+    "@types/uuid": "^9.0.8",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -49,7 +50,8 @@
     "redux": "^5.0.1",
     "remixicon": "^4.1.0",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
