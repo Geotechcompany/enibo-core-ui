@@ -4,7 +4,7 @@ import NewCountry from "@/components/countries/country-detail";
 
 interface NewUserProps {}
 
-const NewUser: FC<NewUserProps> = () => {
+const AddCountry: FC<NewUserProps> = () => {
   return (
     <section className="px-4">
       <div className="pt-2">
@@ -38,4 +38,4 @@ const NewUser: FC<NewUserProps> = () => {
   );
 };
 
-export default NewUser;
+export default AddCountry;
