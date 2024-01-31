@@ -113,7 +113,7 @@ const Administration: FC<AdministrationProps> = () => {
             <AdminNavigationCard
               title="App Settings"
               urlItems={[
-                { name: "App Settings list", url: "/app-settings" },
+                { name: "App Settings list", url: "/administration/app-settings" },
 
               ]}
             />
