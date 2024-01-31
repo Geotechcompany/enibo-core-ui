@@ -39,6 +39,8 @@ import CalendarDetail from "./Pages/Calendar/CalendarDetails";
 import CurrenciesDetail from "./Pages/Currencies/CurrenciesDetails";
 import UserProfile from "./Pages/Users.tsx/UserProfileList";
 import NewProfile from "./Pages/Users.tsx/NewProfile";
+import Users from "./Pages/Users.tsx/UserDetailsPage";
+import NewUser from "./Pages/Users.tsx/NewUser";
 
 function App() {
   return (
@@ -346,6 +348,22 @@ function App() {
         element={
           <MainLayout>
             <NewProfile />
+          </MainLayout>
+        }
+          />
+          <Route
+        path="/administration/user-details"
+        element={
+          <MainLayout>
+            <Users />
+          </MainLayout>
+        }
+          />
+          <Route
+        path="/administration/user-details/user-details-form"
+        element={
+          <MainLayout>
+            <NewUser />
           </MainLayout>
         }
           />
