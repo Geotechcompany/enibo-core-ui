@@ -40,6 +40,11 @@ export type Customer = {
     customerType: CustomerType;
     retail?: Retail;
     business?: Business;
+    signingMandateRules: {
+        signingRules: string;
+        minimumPaymentAmount: number;
+        maximumPaymentAmount: number;
+    };
 }
 
 export type ProductType = {
@@ -132,3 +137,89 @@ export type LedgerCategory = {
     modifiedBy: string;
     modifiedOn: string;
 };
+
+export type KYCType = {
+    kycTypeName: string;
+    kycTypeDescription: string;
+    kycTypeCode: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
+export type MandateType = {
+    mandateTypeCode: string;
+    mandateTypeName: string;
+    mandateTypeDescription: string;
+    modifiedBy: string;
+    modifiedOn: string;
+};
+
+type KYCIndividual = {
+    kycType: "Individual";
+    designation: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    phoneNumber: string;
+    emailAddress: string;
+    postalAddress: string;
+    physicalAddress: string;
+    country: string;
+    taxNumber: string;
+    idType: string;
+    idNumber: string;
+    sex: "Male" | "Female" | "Other";
+    nationality: string;
+    riskRating: string;
+    attachDocumentsField: string[];
+    signature: string;
+    modifiedBy: string;
+    modifiedOn: string;
+  };
+  
+  type KYCBusiness = {
+    kycType: "Business";
+    legalEntityName: string;
+    legalStatus:
+      | "Sole Proprietor"
+      | "Partnership"
+      | "Limited Company"
+      | "Government Entity"
+      | "Society/Association/Club/Trust"
+      | "NGO/International Charity"
+      | "Other (specify)";
+    dateOfIncorporation: string;
+    registrationNumber: string;
+    natureOfBusiness: string;
+    entityNationality: string;
+    entityPINNumber: string;
+    entityTaxNumber: string;
+    telephoneNumber: string;
+    emailAddress: string;
+    postalAddress: string;
+    physicalAddress: string;
+    riskRating: string;
+    attachDocumentsField: string[];
+    modifiedBy: string;
+    modifiedOn: string;
+  };
+
+ 
+  
+export type KYC = {
+    KYCType: "Individual" | "Business";
+    individual?: KYCIndividual;
+    business?: KYCBusiness;
+};
+
+export type ApprovalRule = {
+    module: string;
+    subModule: string;
+    status: string;
+    approvalRule: string;
+    requestedBy: string;
+    requestedOn: string; // You might want to use a Date type here if the date is involved
+    note: string;
+    pendingApprovers: string[];
+    approvedBy: string | null; // Assuming it could be null if not approved yet
+    rejectionReason: string | null; // Assuming it could be null if not rejected
+  }

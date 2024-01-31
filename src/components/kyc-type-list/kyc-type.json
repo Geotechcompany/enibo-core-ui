@@ -1,0 +1,72 @@
+[
+  {
+    "kycTypeName": "Individual",
+    "kycTypeDescription": "Individual KYC Information",
+    "kycTypeCode": "IND",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T12:30:00Z"
+  },
+  {
+    "kycTypeName": "Business",
+    "kycTypeDescription": "Business KYC Information",
+    "kycTypeCode": "BUS",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T13:15:00Z"
+  },
+  {
+    "kycTypeName": "Non-Profit Organization",
+    "kycTypeDescription": "KYC Information for Non-Profits",
+    "kycTypeCode": "NPO",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T14:00:00Z"
+  },
+  {
+    "kycTypeName": "Government Entity",
+    "kycTypeDescription": "KYC Information for Government Entities",
+    "kycTypeCode": "GOV",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T14:45:00Z"
+  },
+  {
+    "kycTypeName": "Trust",
+    "kycTypeDescription": "KYC Information for Trusts",
+    "kycTypeCode": "TRU",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T15:30:00Z"
+  },
+  {
+    "kycTypeName": "Educational Institution",
+    "kycTypeDescription": "KYC Information for Schools and Universities",
+    "kycTypeCode": "EDU",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T16:15:00Z"
+  },
+  {
+    "kycTypeName": "Healthcare Provider",
+    "kycTypeDescription": "KYC Information for Healthcare Organizations",
+    "kycTypeCode": "HCP",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T17:00:00Z"
+  },
+  {
+    "kycTypeName": "Real Estate",
+    "kycTypeDescription": "KYC Information for Real Estate Companies",
+    "kycTypeCode": "REA",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T17:45:00Z"
+  },
+  {
+    "kycTypeName": "Financial Institution",
+    "kycTypeDescription": "KYC Information for Banks and Financial Organizations",
+    "kycTypeCode": "FIN",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T18:30:00Z"
+  },
+  {
+    "kycTypeName": "Transportation",
+    "kycTypeDescription": "KYC Information for Transportation Companies",
+    "kycTypeCode": "TRA",
+    "modifiedBy": "Admin",
+    "modifiedOn": "2024-01-26T19:15:00Z"
+  }
+]

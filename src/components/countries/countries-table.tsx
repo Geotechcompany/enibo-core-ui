@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"; // Assuming you have axios installed
 import { DataTable } from "../datatable/data-table";
 import  { columns } from "@/components/countries/colums"

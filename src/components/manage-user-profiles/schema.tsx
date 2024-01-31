@@ -5,12 +5,11 @@ export const manageUserSchema = z.object({
     moduleName: z.string(),
     view: z.boolean(),
     edit: z.boolean(),
-    subRows: z.object({
-        moduleName: z.string(),
-        view: z.boolean(),
-        edit: z.boolean(),
-      }),
-
+    subRows: z.array(z.object({
+      moduleName: z.string(),
+      view: z.boolean(),
+      edit: z.boolean(),
+    })).optional(),
 });
 
 export type manageUserInput = z.infer <typeof manageUserSchema>

@@ -1,12 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { Customer } from "@/types/global";
-import { Link } from "react-router-dom";
+import { KYC } from "@/types/global";
 
  
 
-export const columns: ColumnDef<Customer>[] = [
+export const columns: ColumnDef<KYC>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -33,29 +32,19 @@ export const columns: ColumnDef<Customer>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "id",
-    accessorFn: (row) => row.business?.businessKYC || row.retail?.individualKYC,
+    accessorKey: "kycType",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer ID" />
+      <DataTableColumnHeader column={column} title="KYC Type" />
     ),
-    cell: ({ row }) => <div className=""><Link to={`/customers/${row.getValue("id")}`}>{row.getValue("id")}</Link></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "customerType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Customer Type" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("customerType")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("kycType")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
     {
         accessorKey: "customer",
-        accessorFn: (row) => row.business?.legalEntityName || `${row.retail?.firstName + " " + row.retail?.lastName}`,
+        accessorFn: (row) => row.business?.legalEntityName || `${row.individual?.firstName + " " + row.individual?.lastName}`,
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer" />
+        <DataTableColumnHeader column={column} title="Name" />
         ),
         cell: ({ row }) => <div className="">{row.getValue("customer")}</div>,
         enableSorting: true,
@@ -63,7 +52,7 @@ export const columns: ColumnDef<Customer>[] = [
     },
     {
         accessorKey: "riskRating",
-        accessorFn: (row) => row.business?.riskRating || row.retail?.riskRating,
+        accessorFn: (row) => row.business?.riskRating || row.individual?.riskRating,
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Risk Rating" />
         ),
@@ -72,22 +61,25 @@ export const columns: ColumnDef<Customer>[] = [
         enableHiding: true,
     },
     {
-      accessorKey: "accountCurrency",
-      accessorFn: (row) => row.business?.accountCurrency || row.retail?.accountCurrency,
+      accessorKey: "emailAddress",
+      accessorFn: (row) => row.business?.emailAddress || row.individual?.emailAddress,
       header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Currency" />
+      <DataTableColumnHeader column={column} title="Email Address" />
       ),
-      cell: ({ row }) => <div className="">{row.getValue("accountCurrency")}</div>,
+      cell: ({ row }) => <div className="">{row.getValue("emailAddress")}</div>,
       enableSorting: true,
       enableHiding: true,
   },
   {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
+    accessorKey: "phoneNumber",
+    accessorFn: (row) => row.business?.telephoneNumber || row.individual?.phoneNumber,
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Phone Number" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("phoneNumber")}</div>,
     enableSorting: true,
     enableHiding: true,
-  },
+},
   {
     accessorKey: "accountNumber",
     header: () => (<div></div>),
