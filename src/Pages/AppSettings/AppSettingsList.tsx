@@ -2,7 +2,7 @@ import { AppSettingsFields } from "@/components/app-settings/schema";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { FaPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import appSettingsList from "@/components/app-settings/settings-records.json";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/app-settings/columns";
@@ -13,9 +13,9 @@ interface AppSettingsProps {}
 
 const AppSettingsList: FC<AppSettingsProps> = () => {
     const appSettings: AppSettingsFields[] = appSettingsList;
-    // const location = useLocation();
-    // const navigate = useNavigate();
-    // const from = location.state?.from || { pathname: "/administration/app-settings/app-details"};
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from || { pathname: "/administration/app-settings/app-details"};
 
     return (
         <div>
@@ -58,7 +58,7 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
               size="sm"
               variant="outline"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => {}}
+              onClick={() => navigate(from, { replace: true })}
             >
               <FaPlus className="mr-1 text-white" /> New App Setting
             </Button></div>
