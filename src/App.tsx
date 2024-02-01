@@ -41,6 +41,8 @@ import UserProfile from "./Pages/Users.tsx/UserProfileList";
 import NewProfile from "./Pages/Users.tsx/NewProfile";
 import Users from "./Pages/Users.tsx/UserDetailsPage";
 import NewUser from "./Pages/Users.tsx/NewUser";
+import AppSettingsList from "./Pages/AppSettings/AppSettingsList";
+import AppSettingsDetails from "./Pages/AppSettings/AppSettingsDetails";
 
 function App() {
   return (
@@ -367,6 +369,23 @@ function App() {
           </MainLayout>
         }
           />
+          <Route
+        path="/administration/app-settings"
+        element={
+          <MainLayout>
+           <AppSettingsList />
+          </MainLayout>
+        }
+          />
+          <Route
+        path="/administration/app-settings/app-details"
+        element={
+          <MainLayout>
+           <AppSettingsDetails />
+          </MainLayout>
+        }
+          />
+         
       </Routes>
     </ThemeProvider>
   );
