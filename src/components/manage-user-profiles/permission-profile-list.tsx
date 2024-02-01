@@ -172,7 +172,7 @@ function ManageInput() {
 
         <div className="flex gap-2 mt-4">
           <Button type="submit">Submit</Button>
-          <Button type="button" variant="outline" onClick={() => {}}>
+          <Button type="button"  onClick={() => {}}>
             Cancel
           </Button>
         </div>

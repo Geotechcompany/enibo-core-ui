@@ -5,6 +5,7 @@ import { KYCType } from "@/types/global";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import kycTypesList from "@/components/kyc-type-list/kyc-type.json";
+import { FaPlus } from "react-icons/fa";
 
 interface KYCTypesProps {}
 
@@ -22,7 +23,7 @@ const KYCTypes: FC<KYCTypesProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-                <Link to="#">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -44,13 +45,12 @@ const KYCTypes: FC<KYCTypesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">KYC Types</h1>
           </div>
           <div className="">
-            <Button
+          <Button
               size="sm"
-              variant="outline"
-              className="border-[#36459C]"
+              className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              Add new
+              <FaPlus className="mr-1 text-white" />  Add new
             </Button>
           </div>
         </div>

@@ -43,6 +43,8 @@ import Users from "./Pages/Users.tsx/UserDetailsPage";
 import NewUser from "./Pages/Users.tsx/NewUser";
 import AppSettingsList from "./Pages/AppSettings/AppSettingsList";
 import AppSettingsDetails from "./Pages/AppSettings/AppSettingsDetails";
+import NewKYCIndividualForm from "./components/new-KYC-individual-form";
+import NewKYCBusinessForm from "./components/new-KYC-business-form";
 
 function App() {
   return (
@@ -254,6 +256,22 @@ function App() {
           element={
             <MainLayout>
               <KYCTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types/individual-form"
+          element={
+            <MainLayout>
+              <NewKYCIndividualForm />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="customers/kyc-types/business-form"
+          element={
+            <MainLayout>
+              <NewKYCBusinessForm/>
             </MainLayout>
           }
         />

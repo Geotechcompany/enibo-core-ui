@@ -289,7 +289,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           <Button type="submit" size="lg" className="">
             Submit
           </Button>
-          <Button variant="outline" size="lg">
+          <Button  size="lg">
             Cancel
           </Button>
         </div>

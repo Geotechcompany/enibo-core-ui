@@ -139,6 +139,7 @@ export type LedgerCategory = {
 };
 
 export type KYCType = {
+    kycType: "Individual" | "Business";
     kycTypeName: string;
     kycTypeDescription: string;
     kycTypeCode: string;

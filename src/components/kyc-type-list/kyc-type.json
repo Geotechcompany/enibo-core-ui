@@ -1,26 +1,30 @@
 [
-  {
-    "kycTypeName": "Individual",
+  { 
+    "kycType": "Individual",
+    "kycTypeName": "Personal",
     "kycTypeDescription": "Individual KYC Information",
     "kycTypeCode": "IND",
     "modifiedBy": "Admin",
     "modifiedOn": "2024-01-26T12:30:00Z"
   },
   {
-    "kycTypeName": "Business",
+    "kycType": "Business",
+    "kycTypeName": "Government",
     "kycTypeDescription": "Business KYC Information",
     "kycTypeCode": "BUS",
     "modifiedBy": "Admin",
     "modifiedOn": "2024-01-26T13:15:00Z"
   },
   {
+    "kycType": "Business",
     "kycTypeName": "Non-Profit Organization",
     "kycTypeDescription": "KYC Information for Non-Profits",
     "kycTypeCode": "NPO",
     "modifiedBy": "Admin",
     "modifiedOn": "2024-01-26T14:00:00Z"
   },
-  {
+  { 
+    "kycType": "Business",
     "kycTypeName": "Government Entity",
     "kycTypeDescription": "KYC Information for Government Entities",
     "kycTypeCode": "GOV",
@@ -28,6 +32,7 @@
     "modifiedOn": "2024-01-26T14:45:00Z"
   },
   {
+    "kycType": "Business",
     "kycTypeName": "Trust",
     "kycTypeDescription": "KYC Information for Trusts",
     "kycTypeCode": "TRU",
@@ -35,6 +40,7 @@
     "modifiedOn": "2024-01-26T15:30:00Z"
   },
   {
+    "kycType": "Individual",
     "kycTypeName": "Educational Institution",
     "kycTypeDescription": "KYC Information for Schools and Universities",
     "kycTypeCode": "EDU",
@@ -42,6 +48,7 @@
     "modifiedOn": "2024-01-26T16:15:00Z"
   },
   {
+    "kycType": "Individual",
     "kycTypeName": "Healthcare Provider",
     "kycTypeDescription": "KYC Information for Healthcare Organizations",
     "kycTypeCode": "HCP",
@@ -49,6 +56,7 @@
     "modifiedOn": "2024-01-26T17:00:00Z"
   },
   {
+    "kycType": "Business",
     "kycTypeName": "Real Estate",
     "kycTypeDescription": "KYC Information for Real Estate Companies",
     "kycTypeCode": "REA",
@@ -56,6 +64,7 @@
     "modifiedOn": "2024-01-26T17:45:00Z"
   },
   {
+    "kycType": "Business",
     "kycTypeName": "Financial Institution",
     "kycTypeDescription": "KYC Information for Banks and Financial Organizations",
     "kycTypeCode": "FIN",
@@ -63,6 +72,7 @@
     "modifiedOn": "2024-01-26T18:30:00Z"
   },
   {
+    "kycType": "Business",
     "kycTypeName": "Transportation",
     "kycTypeDescription": "KYC Information for Transportation Companies",
     "kycTypeCode": "TRA",

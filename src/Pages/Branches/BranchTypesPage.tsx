@@ -4,17 +4,19 @@ import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import brancheTypesList from "@/components/branch-types/branchtypes.json"
+import brancheTypesList from "@/components/branch-types/branchtypes.json";
+import { FaPlus } from "react-icons/fa";
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
-
-  const branches: BranchTypes[] =  brancheTypesList;
+  const branches: BranchTypes[] = brancheTypesList;
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/branches/new-branch-type" };
-  
+  const from = location.state?.from || {
+    pathname: "/administration/branches/new-branch-type",
+  };
+
   return (
     <div>
       <div className="mx-4">
@@ -39,18 +41,21 @@ const Branches: FC<BranchesProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Branche Types</h1></div>
-          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Branche Types</h1>
+          </div>
+          <div className="">
+          <Button
+              size="sm"
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" />  Add
+            </Button>
+          </div>
         </div>
-        <div>
-          {branches && (
-            <DataTable
-              columns={columns}
-                data={branches}
-            />
-            )}
-        </div>
+        <div>{branches && <DataTable columns={columns} data={branches} />}</div>
       </div>
     </div>
   );

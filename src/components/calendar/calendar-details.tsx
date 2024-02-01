@@ -125,7 +125,7 @@ export const newCalendarSchema = z.object({
             >
               Submit
             </Button>
-            <Button variant="outline" size="lg">
+            <Button  size="lg">
               Cancel
             </Button>
           </div>

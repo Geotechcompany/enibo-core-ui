@@ -51,8 +51,7 @@ const CountriesList: FC<CountriesProps> = () => {
           <div className=""><h1 className="text-4xl text-[#36459C]">Country List</h1></div>
           <div className="">
           <Button
-            size="sm"
-            variant="outline"
+            size="sm"           
             className="bg-[#36459C] text-white py-5 px-8"
             onClick={() => navigate(from, { replace: true })}
           >

@@ -50,7 +50,7 @@ function MultiSelect({
     <Popover open={open} onOpenChange={setOpen} {...props}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          
           size="default"
           className="justify-between w-full h-10"
         >

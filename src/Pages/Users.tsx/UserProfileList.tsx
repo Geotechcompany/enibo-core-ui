@@ -45,13 +45,13 @@ const UserProfile: FC<UsersProps> = () => {
           <div className=""><h1 className="text-4xl text-[#36459C]">User Profiles</h1></div>
           <div className="">
           <Button
-            size="sm"
-            variant="outline"
-            className="border-[#36459C] text-[#36459C] py-5 px-8"
-            onClick={() => navigate(from, { replace: true })}
-          >
-            <FaPlus className="mr-1 text-[#36459C]" /> Add
-          </Button></div>
+              size="sm"    
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" />  Add
+            </Button>
+            </div>
         </div>
         <div>
         {users && (

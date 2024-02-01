@@ -21,7 +21,7 @@ const NewBranch: FC<NewBranchProps> = () => {
               </svg>
             </li>
             <li className="flex items-center m-0">
-              <Link to="#">Branches</Link>
+              <Link to="/administration/branches">Branches</Link>
               <svg
                 className="w-3 h-3 mx-3 fill-current"
                 xmlns="http://www.w3.org/2000/svg"

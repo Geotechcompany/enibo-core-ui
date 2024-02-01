@@ -362,7 +362,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                 </div>
                 <div className="w-[5%] flex items-end">
                   <Button
-                    variant="outline"
+                    
                     size="icon"
                     className="mb-6"
                     onClick={() => {
@@ -470,7 +470,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                 </div>
                 <div className="w-[5%] flex items-end">
                   <Button
-                    variant="outline"
+                    
                     size="icon"
                     className="mb-6"
                     onClick={() => {
@@ -490,7 +490,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button variant="outline" className="ml-2">
+          <Button  className="ml-2">
             Cancel
           </Button>
         </div>

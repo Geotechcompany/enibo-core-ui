@@ -12,7 +12,7 @@ const Administration: FC<AdministrationProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="m-0">
-                <Link to="#" className="text-gray-500" aria-current="page">
+                <Link to="/administration" className="text-gray-500" aria-current="page">
                   Administration
                 </Link>
               </li>
@@ -79,13 +79,13 @@ const Administration: FC<AdministrationProps> = () => {
               urlItems={[
                 {
                   name: "Ledger Account Categories",
-                  url: "/administration/ledger-account-categories",
+                  url: "/administration/ledger-management/ledger-account-categories",
                 },
                 {
                   name: "Ledger Accounts",
-                  url: "/administration/ledger-accounts",
+                  url: "/administration/ledger-management/ledger-accounts",
                 },
-                { name: "Ledger Rules", url: "/administration/ledger-rules" },
+                { name: "Ledger Rules", url: "/administration/ledger-management/ledger-rules" },
               ]}
             />
           </div>

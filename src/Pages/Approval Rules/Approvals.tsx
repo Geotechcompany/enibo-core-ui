@@ -2,21 +2,21 @@ import { columns } from "@/components/approval-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import approvalsList from "@/components/approval-list/approvals.json"
+import approvalsList from "@/components/approval-list/approvals.json";
 import { Button } from "@/components/ui/button";
 import { ApprovalRule } from "@/types/global";
-
-
+import { FaPlus } from "react-icons/fa";
 
 interface ApprovalsProps {}
 
 const Approvals: FC<ApprovalsProps> = () => {
-
-  const approvals: ApprovalRule[] =  approvalsList;
+  const approvals: ApprovalRule[] = approvalsList;
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/approvals/new-approval-rule" };
-  
+  const from = location.state?.from || {
+    pathname: "/administration/approvals/new-approval-rule",
+  };
+
   return (
     <div>
       <div className="mx-4">
@@ -24,7 +24,7 @@ const Approvals: FC<ApprovalsProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-                <Link to="#">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -41,17 +41,22 @@ const Approvals: FC<ApprovalsProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Approvals</h1></div>
-          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Approvals</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm"
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" />  Add
+            </Button>
+          </div>
         </div>
         <div>
-          {approvals && (
-            <DataTable
-              columns={columns}
-                data={approvals}
-            />
-            )}
+          {approvals && <DataTable columns={columns} data={approvals} />}
         </div>
       </div>
     </div>

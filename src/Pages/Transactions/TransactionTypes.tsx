@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { columns } from "@/components/transaction-type-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
+import { FaPlus } from "react-icons/fa";
 
 interface TransactionTypesProps {}
 
@@ -52,13 +53,13 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Transaction Types</h1>
           </div>
           <div className="">
-            <Button
+          <Button
               size="sm"
-              variant="outline"
-              className="border-[#36459C]"
+              
+              className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              Add new
+              <FaPlus className="mr-1 text-white" />  Add
             </Button>
           </div>
         </div>

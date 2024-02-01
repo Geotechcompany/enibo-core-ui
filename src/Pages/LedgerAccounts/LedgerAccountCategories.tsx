@@ -5,6 +5,7 @@ import { LedgerCategory } from '@/types/global';
 import { FC } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ledgerAccountCategoryList from '@/components/ledger-categories-list/ledger-categories.json';
+import { FaPlus } from 'react-icons/fa';
 
 interface LedgerAccountCategoriesProps {
   
@@ -22,7 +23,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
             <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
               <ol className="inline-flex p-0 m-0 list-none">
                 <li className="flex items-center m-0">
-                  <Link to="#">Administration</Link>
+                  <Link to="/administration">Administration</Link>
                   <svg
                     className="w-3 h-3 mx-3 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
@@ -54,14 +55,13 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
               <h1 className="text-4xl text-[#36459C]">Ledger Account Categories</h1>
             </div>
             <div className="">
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-[#36459C]"
-                onClick={() => navigate(from, { replace: true })}
-              >
-                Add new
-              </Button>
+            <Button
+              size="sm"
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" />  Add
+            </Button>
             </div>
           </div>
           <div>

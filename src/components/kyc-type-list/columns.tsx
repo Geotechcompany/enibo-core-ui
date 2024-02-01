@@ -40,6 +40,15 @@ export const columns: ColumnDef<KYCType>[] = [
     enableSorting: true,
     enableHiding: true,
 },
+{
+  accessorKey: "kycType",
+  header: ({ column }) => (
+  <DataTableColumnHeader column={column} title="KYC Type" />
+  ),
+  cell: ({ row }) => <div className="">{row.getValue("kycType")}</div>,
+  enableSorting: true,
+  enableHiding: true,
+},
   {
     accessorKey: "kycTypeName",
     header: ({ column }) => (

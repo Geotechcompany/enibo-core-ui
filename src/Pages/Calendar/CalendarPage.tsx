@@ -55,7 +55,6 @@ const CalendarList: FC<CalendarProps> = () => {
           <div className="">
           <Button
             size="sm"
-            variant="outline"
             className="bg-[#36459C] text-white py-5 px-8"
             onClick={() => navigate(from, { replace: true })}
           >

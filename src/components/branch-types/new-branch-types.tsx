@@ -76,7 +76,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           >
             Submit
           </Button>
-          <Button variant="outline" size="lg">
+          <Button  size="lg">
             Cancel
           </Button>
         </div>
