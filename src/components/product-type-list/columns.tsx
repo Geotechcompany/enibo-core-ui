@@ -65,7 +65,7 @@ export const columns: ColumnDef<ProductType>[] = [
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Active" />
         ),
-        cell: ({ row }) => <div className=""><Badge variant="outline">{row.getValue("activeFlag")}</Badge></div>,
+        cell: ({ row }) => <div className=""><Badge >{row.getValue("activeFlag")}</Badge></div>,
         enableSorting: true,
         enableHiding: true,
     },

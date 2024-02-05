@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Link } from "react-router-dom";
 
 /**
  * 
@@ -45,7 +46,7 @@ const newKYCIndividualSchema = z.object({
   taxNumber: z.string().min(3, { message: "Entity Tax Number is required" }),
   idType: z.string().min(3, { message: "Id Type is required" }),
   idNumber: z.string().min(3, { message: "Id Number is required" }),
-  sex: z.string().min(3, { message: "Sex is required" }),
+  sex: z.string().min(3, { message: "Demographic data required" }),
   nationality: z.string().min(3, { message: "Nationality is required" }),
   postalAddress: z.string().min(3, { message: "Postal Address is required" }),
   physicalAddress: z
@@ -84,15 +85,41 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
   };
   return (
     <section>
+       <div className="pt-2 ml-4">
+        <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
+          <ol className="inline-flex p-0 m-0 list-none">
+            <li className="flex items-center m-0">
+              <Link to="/customers/customer-kycs">Customer Management</Link>
+              <svg
+                className="w-3 h-3 mx-3 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+              >
+                <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+              </svg>
+            </li>
+            <li className="m-0">
+              <Link to="#" className="text-gray-500" aria-current="page">
+                Customer KYC Details
+              </Link>
+            </li>
+          </ol>
+        </nav>
+        <div className="flex items-center justify-between my-4">
+        <div className="">
+          <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
+        </div>
+      </div>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 border">
-            <div>
+            <div className="p-4">
               <h3>PERSONAL DETAILS</h3>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
               <div>
-                <Label htmlFor="designation">Designation</Label>
+                <Label htmlFor="designation">Designation e.g. Mr, Mrs, Dr, Rev, etc</Label>
                 <Input
                   id="designation"
                   type="text"
@@ -161,8 +188,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
                   </div>
                 )}
               </div>
-            </div>
-            <div>
+              <div>
                 <Label htmlFor="phoneNumber">Phone Number</Label>
                 <Input
                   id="phoneNumber"
@@ -176,12 +202,14 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
                   </div>
                 )}
             </div>
+            </div>
+            
           </div>
-          <div className="flex flex-col gap-4 border">
-            <div>
+          <div className="flex flex-col gap-4 border-l border-r">
+            <div className="p-4">
               <h3>LOCATION DETAILS</h3>
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4">
               <div>
                 <Label htmlFor="postalAddress">Postal Address</Label>
                 <Input
@@ -224,11 +252,11 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 border">
-            <div>
+          <div className="flex flex-col gap-4 border border-b-0">
+            <div className="p-4">
               <h3>IDENTIFICATION DETAILS</h3>
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
               <div>
                 <Label htmlFor="idType">ID Type</Label>
                 <Controller
@@ -281,11 +309,24 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
               </div>
               <div>
                 <Label htmlFor="sex">Sex</Label>
-                <Input 
-                 id="sex"
-                 type="text"
-                 {...register("sex", { required: true })}
-                    className="mt-1"
+                <Controller
+                    control={control}
+                    name="sex"
+                    render={({ field: { onChange, value } }) => (
+                      <Select>
+                        <SelectTrigger
+                          className="mt-1"
+                          value={value}
+                          onChange={onChange}
+                        >
+                          <SelectValue placeholder="Select Gender"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="male">Male</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                 />
                 {errors.sex && (
                     <div className="text-red-500">{errors.sex.message}</div>    
@@ -321,10 +362,10 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
           </div>
           <div className="flex flex-col gap-4 border">
             {/* TODO: add custom file upload */}
-            <div>
+            <div className="p-4">
               <h3>ATTACHMENT DETAILS</h3>
             </div>
-            <div className="grid grid-cols-1">
+            <div className="grid grid-cols-2 gap-10 mx-4 mb-8 -mt-4">
               <div>
                 <Label htmlFor="attachDocumentsField">Attach Documents</Label>
                 <Input
@@ -358,7 +399,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
         </div>
         <div className="flex justify-end mt-4">
           <Button type="submit">Submit</Button>
-          <Button variant="outline" className="ml-2">
+          <Button  className="ml-2">
             Cancel
           </Button>
         </div>

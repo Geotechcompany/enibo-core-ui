@@ -169,7 +169,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           >
             Submit
           </Button>
-          <Button variant="outline" size="lg">
+          <Button  size="lg">
             Cancel
           </Button>
         </div>

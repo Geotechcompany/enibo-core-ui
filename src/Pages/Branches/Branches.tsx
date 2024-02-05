@@ -2,22 +2,25 @@ import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import branchList from "@/components/branch-list/branches.json"
+import branchList from "@/components/branch-list/branches.json";
 
-import { Branch} from "@/components/branch-list/schema";
+import { Branch } from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
-
-
+import { FaPlus } from "react-icons/fa";
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
-
-  const branches: Branch[] =  branchList;
+  const branches: Branch[] = branchList;
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/branches/new-branch" };
-  
+  const from = location.state?.from || {
+    pathname: "/administration/branches/new-branch",
+  };
+  const to = location.state?.to || {
+    pathname: "/administration/branch-details",
+  };
+
   return (
     <div>
       <div className="mx-4">
@@ -25,7 +28,7 @@ const Branches: FC<BranchesProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-                <Link to="#">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -42,17 +45,63 @@ const Branches: FC<BranchesProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Branches</h1></div>
-          <div className=""><Button size="sm" variant="outline" className="border-[#36459C]" onClick={()=> navigate(from,{replace: true})}>Add new</Button></div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Branches</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm" 
+              variant="outline" 
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" />  Add
+            </Button>
+          </div>
         </div>
-        <div>
-          {branches && (
-            <DataTable
-              columns={columns}
-                data={branches}
-            />
-            )}
+        <div>{branches && <DataTable columns={columns} data={branches} />}</div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => navigate(to, { replace: true })}
+            >
+              View branch details
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
     </div>

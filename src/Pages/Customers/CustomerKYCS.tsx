@@ -1,26 +1,47 @@
 import { KYC } from "@/types/global";
-import { FC } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FC, Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/KYC-list/columns";
 import customerKYCList from "@/components/KYC-list/kyc.json";
+import { FaPlus } from "react-icons/fa";
+import { Dialog, Transition } from "@headlessui/react";
+import { IoCloseOutline } from "react-icons/io5";
 
 interface CustomerKYCSProps {}
 
 const CustomerKYCS: FC<CustomerKYCSProps> = () => {
   const customerKYCS: KYC[] = customerKYCList as KYC[];
-  const location = useLocation();
-  const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/customers/customer-kycs/new-kyc" };
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+  const [kycType, setKycType] = useState(''); // State to track the selected KYC type
+
+
+  const handleSubmission = () => {
+    if (kycType === 'business') {
+      window.location.href = '/customers/kyc-types/business-form';
+    } else if (kycType === 'individual') {
+      window.location.href = '/customers/kyc-types/individual-form';
+    }
+  };
   return (
+    <>
     <div>
       <div className="mx-4">
         <div className="pt-2">
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-                <Link to="#">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -49,16 +70,15 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
         </div>
         <div className="flex items-center justify-between my-4">
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">Customer KYC</h1>
+            <h1 className="text-4xl text-[#36459C]">KYC</h1>
           </div>
           <div className="">
-            <Button
+          <Button
               size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => navigate(from, { replace: true })}
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={openModal}
             >
-              Add new
+              <FaPlus className="mr-1 text-white" />  Add
             </Button>
           </div>
         </div>
@@ -67,6 +87,99 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
         </div>
       </div>
     </div>
+    
+    <Transition appear show={isOpen} as={Fragment}>
+    <Dialog as="div" className="relative z-10" onClose={() => {}}>
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div></div>
+      </Transition.Child>
+
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Title
+                as="h3"
+                className="text-lg font-medium leading-6 text-gray-900"
+              >
+                <div className="flex items-center justify-between my-4 border-b">
+                  <h1 className="text-4xl text-[#36459C] mb-2">
+                    KYC Type
+                  </h1>
+                  <IoCloseOutline onClick={closeModal} />
+                </div>
+                <div>
+                <div>
+            <label htmlFor="kycType" className="block text-sm font-medium text-gray-700">
+              Select KYC Type Name:
+            </label>
+            <select
+              id="kycTypeName"
+              name="kycTypeName"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#36459C]"
+            >
+              <option value="">Select</option>
+              <option value="">Non-Profit Orginization</option>
+              <option value="">Government</option>
+            </select>
+          </div>
+                <div>
+            <label htmlFor="kycType" className="block text-sm font-medium text-gray-700">
+              KYC Type:
+            </label>
+            <select
+              id="kycType"
+              name="kycType"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#36459C]"
+              onChange={(e) => setKycType(e.target.value)}
+              value={kycType}
+            >
+              <option value="">Select</option>
+              <option value="business">Business</option>
+              <option value="individual">Individual</option>
+            </select>
+          </div>
+          <div className="flex gap-2 mt-6">
+            <Button
+              type="submit"
+              size="lg"
+              className="bg-[#36459C] hover:bg-[#253285]"
+              onClick={handleSubmission}
+            >
+              Submit
+            </Button>
+            <Button size="lg" onClick={closeModal}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Dialog.Title>
+      <section className="px-4 mt-4">
+        
+      </section>
+    </Dialog.Panel>
+          </Transition.Child>
+        </div>
+      </div>
+    </Dialog>
+  </Transition>
+  </>
   );
 };
 

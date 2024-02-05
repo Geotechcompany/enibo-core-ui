@@ -277,7 +277,7 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button variant="outline" className="ml-2">
+          <Button  className="ml-2">
             Cancel
           </Button>
         </div>

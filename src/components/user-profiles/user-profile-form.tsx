@@ -82,7 +82,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
           >
             Save
           </Button>
-          <Button variant="outline" size="lg">
+          <Button  size="lg">
             Cancel
           </Button>
         </div>

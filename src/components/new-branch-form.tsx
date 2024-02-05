@@ -331,7 +331,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
             >
               Submit
             </Button>
-            <Button variant="outline" size="lg">
+            <Button  size="lg">
               Cancel
             </Button>
           </div>

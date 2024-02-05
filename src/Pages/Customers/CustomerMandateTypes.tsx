@@ -5,6 +5,7 @@ import { MandateType } from "@/types/global";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import mandateTypesList from "@/components/mandate-type-list/mandate-types.json";
+import { FaPlus } from "react-icons/fa";
 
 interface CustomerMandateTypesProps {}
 
@@ -22,7 +23,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
           <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
             <ol className="inline-flex p-0 m-0 list-none">
               <li className="flex items-center m-0">
-                <Link to="#">Administration</Link>
+                <Link to="/administration">Administration</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
@@ -44,13 +45,13 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Mandate Types</h1>
           </div>
           <div className="">
-            <Button
+          <Button
               size="sm"
-              variant="outline"
-              className="border-[#36459C]"
+              
+              className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              Add new
+              <FaPlus className="mr-1 text-white" />  Add
             </Button>
           </div>
         </div>

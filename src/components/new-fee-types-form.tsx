@@ -173,7 +173,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         </div>
         <div className="flex gap-2 mt-4">
             <Button type="submit">Submit</Button>
-            <Button variant="outline">Cancel</Button>
+            <Button >Cancel</Button>
         </div>
     </form>
   </section>
