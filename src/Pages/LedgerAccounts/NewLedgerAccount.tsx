@@ -11,7 +11,7 @@ const NewLedgerAccount: FC<NewLedgerAccountProps> = () => {
         <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
           <ol className="inline-flex p-0 m-0 list-none">
             <li className="flex items-center m-0">
-              <Link to="#">Administration</Link>
+              <Link to="/administration">Administration</Link>
               <svg
                 className="w-3 h-3 mx-3 fill-current"
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ const NewLedgerAccount: FC<NewLedgerAccountProps> = () => {
               </svg>
             </li>
             <li className="flex items-center m-0">
-              <Link to="#">Ledger Accounts</Link>
+              <Link to="/administration/ledger-management/ledger-accounts">Ledger Accounts</Link>
               <svg
                 className="w-3 h-3 mx-3 fill-current"
                 xmlns="http://www.w3.org/2000/svg"
