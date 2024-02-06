@@ -34,7 +34,7 @@ const Customers: FC<CustomersProps> = () => {
               </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  Branches
+                  Customer Management
                 </Link>
               </li>
             </ol>
