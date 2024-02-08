@@ -1,12 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 
-const store = configureStore({
-    reducer: {
-        
-    },
-});
+const client = new ApolloClient({
+    uri: 'http://139.144.183.163:5050/graphql',
+    cache: new InMemoryCache(),
+  });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export default store;
+export default client;

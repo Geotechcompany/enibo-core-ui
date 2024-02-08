@@ -45,12 +45,14 @@ import AppSettingsList from "./Pages/AppSettings/AppSettingsList";
 import AppSettingsDetails from "./Pages/AppSettings/AppSettingsDetails";
 import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
+import Signup from "./Pages/SignUp/SignUp";
 
 function App() {
   return (
     <ThemeProvider>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/dashboard"
           element={
