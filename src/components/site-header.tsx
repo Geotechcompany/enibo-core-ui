@@ -8,7 +8,7 @@ import logo from "@/assets/enibo-white-sm.svg";
 const SiteHeader = () => {
   return (
     <>
-      <div className="border-b bg-[#F91B19] text-white dark:bg-[#BF0000]">
+      <div className="border-b bg-[#2D3142] text-white">
         <div className="flex items-center h-16 px-4">
           <div className="flex items-center pr-2">
             <img src={logo} alt="Enibo" className="w-auto h-8" />
