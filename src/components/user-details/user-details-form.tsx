@@ -80,6 +80,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
         variables: {
           email: data.email,
           password: data.password,
+          confirmPassword: data.confirmPassword,
           username: data.username,
           firstName: data.firstName,
           middleName: data.middleName,
