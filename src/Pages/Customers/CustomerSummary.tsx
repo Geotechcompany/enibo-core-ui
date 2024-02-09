@@ -126,7 +126,7 @@ const CustomerSummary: FC<CustomerSummaryProps> = () => {
                 Customer Name
               </dt>
               <dd className="mb-2 text-base leading-none text-gray-900 dark:text-white">
-                Nyeri county - Kenya
+                Nairobi county - Kenya
               </dd>
               <dd className="leading-none text-blue-600 underline text-blue text-underline underline-offset-8 hover:text-blue-700 dark:hover:text-blue-500">
                 Edit Customer
