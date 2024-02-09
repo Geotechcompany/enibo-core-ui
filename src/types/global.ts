@@ -224,3 +224,23 @@ export type ApprovalRule = {
     approvedBy: string | null; // Assuming it could be null if not approved yet
     rejectionReason: string | null; // Assuming it could be null if not rejected
   }
+
+  export interface BranchData {
+    name: string;
+    activeCustomers: number;
+    transactionVolume: ChartData;
+    totalBalancesByRisk: {
+      High: number;
+      Medium: number;
+      Low: number;
+    };
+    activeAccountsByProductType: {
+      [key: string]: number;
+    };
+  }
+  
+  export interface ChartData {
+    labels: string[];
+    values: number[];
+  }
+  

@@ -4,6 +4,7 @@ const SIGNUP_MUTATION = gql`
 mutation SignUp(
   $email: String!
   $password: String!
+  $confirmPassword: String!
   $username: String!
   $firstName: String!
   $middleName: String!
@@ -19,6 +20,7 @@ mutation SignUp(
   createUser(
     email: $email
     password: $password
+    confirmPassword: $confirmPassword
     username: $username
     firstName: $firstName
     middleName: $middleName

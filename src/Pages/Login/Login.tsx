@@ -34,7 +34,7 @@ const Login: FC<LoginProps> = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || { pathname: "/administration"};
+  const from = location.state?.from || { pathname: "/dashboard"};
 
   const {
     register,

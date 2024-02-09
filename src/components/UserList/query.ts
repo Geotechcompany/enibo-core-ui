@@ -23,6 +23,7 @@ query ExampleQuery($userId: String!) {
       phoneNumber
       profile
       username
+      confirmPassword
     }
   }`
 ;
