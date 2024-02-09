@@ -62,7 +62,7 @@ const BranchDetailsPage = () => {
                   Branch Name
                 </dt>
                 <dd className="ml-2 text-base leading-none text-gray-900 dark:text-white">
-                  Nyeri county - Kenya
+                  Nairobi county - Kenya
                 </dd>
                 <dd className="mt-3 ml-8 leading-none text-blue-600 underline text-blue text-underline underline-offset-8 hover:text-blue-700 dark:hover:text-blue-500">
                   Edit Branch

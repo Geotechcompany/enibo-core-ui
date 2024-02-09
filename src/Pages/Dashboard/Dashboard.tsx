@@ -77,11 +77,11 @@ const Dashboard = () => {
           <div className="flex justify-between p-2">
             <dl className=" justify-start">
               <dt className="pb-1 text-4xl text-black  dark:text-gray-400">
-                Branch Name
+                 Nairobi Branch
               </dt>
-              <dd className="ml-2 text-lg leading-none text-blue-900 dark:text-white">
+              {/* <dd className="ml-2 text-lg leading-none text-blue-900 dark:text-white">
                 Nairobi Branch - Kenya
-              </dd>
+              </dd> */}
             </dl>
             <div className="flex items-center justify-end">
               <input
