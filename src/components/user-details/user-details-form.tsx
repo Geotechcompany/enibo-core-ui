@@ -54,6 +54,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+ 
 
   const {
     register,
