@@ -14,6 +14,8 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
+import CREATE_FEE_TYPE_MUTATION from '@/Pages/FeeTypes/FeeTypesMutation';
+import { useMutation } from '@apollo/client';
 
 const feeTypeSchema = z.object({
   feeCode: z
@@ -47,17 +49,44 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
     } = useForm<FeeTypeInput>({
       resolver: zodResolver(feeTypeSchema),
     });
+    const [createfeetypeMutation] = useMutation(CREATE_FEE_TYPE_MUTATION);
 
-    const onSubmit = (data: FeeTypeInput) => {
-      toast({
-        title: "Fee Type Created",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        )
+    const onSubmit = (async (data: FeeTypeInput) => {
+        try {
+          await createfeetypeMutation({
+            variables: {
+              feeName: data.feeName,
+              description: data.description,
+              transactionTypes: [data.transactionType],
+              paymentFrequency: data.paymentFrequency,
+              effectiveDate: data.effectiveDate,
+              fixedRate: data.fixedRate,
+              modifiedBy: "", // Replace with actual value
+              modifiedOn: new Date().toISOString(), // Replace with actual value
+            },
+          });
+          
+          toast({
+            title: "Fee Type Created",
+            description: (
+              <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                <code className="text-white">
+                  {/* Add description here if needed */}
+                </code>
+              </pre>
+            ),
+          });
+        } catch (error) {
+          console.error("Error creating fee type:", error);
+          toast({
+            title: "Error",
+            description: "Failed to create fee type. Please try again.",
+          });
+        }
       });
-    };
+      
+       
+        
   return <section>
     <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 gap-4 w-[30%]">
@@ -180,3 +209,6 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
 }
 
 export default NewFeeTypesForm
+
+
+
