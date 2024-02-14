@@ -1,29 +1,26 @@
 import { gql } from '@apollo/client';
 
-export const QUERY_USERS_LIST = gql`
-query ExampleQuery($userId: String!) {
-    users {
-        id
-      }
-      _service {
-        sdl
-      }
-    user(id: $userId) {
-      branch
-      documentAttachment
-      email
-      employeeNumber
-      firstName
-      id
-      lastName
-      middleName
-      modifiedBy
-      modifiedOn
-      password
-      phoneNumber
-      profile
-      username
-      confirmPassword
-    }
-  }`
+const QUERY_USERS_LIST = gql`
+query Branch($branchId: String!) {
+  branch(branchId: $branchId) {
+    branchId
+    branchName
+    description
+    branchCode
+    SWIFTCode
+    localBankCode
+    country
+    countrySubdivision
+    streetName
+    buildingNumber
+    buildingName
+    postalAddress
+    AllowedProductTypes
+    email
+    isHeadOfficeBranch
+    headOfficeBranch
+    createdAt
+  }
+}`
 ;
+export default QUERY_USERS_LIST;

@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +14,11 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
+
+import CREATE_BRANCH from "./branch-list/query";
+import { useMutation } from "@apollo/client";
+
+
 
 export const newBranchSchema = z.object({
   branchName: z.string().min(3, { message: "Branch name is required" }),
@@ -47,7 +52,9 @@ type newBranchInput = z.infer<typeof newBranchSchema>;
 interface NewBranchFormProps {}
 
 const NewBranchForm: FC<NewBranchFormProps> = () => {
-  const {toast} = useToast();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -59,18 +66,49 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
     resolver: zodResolver(newBranchSchema),
   });
 
+  const [createBranchMutation] = useMutation(CREATE_BRANCH);
+
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
 
-  const onSubmit = (data: newBranchInput) => {
-    console.log(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const onSubmit = async (data: newBranchInput) => {
+    setIsLoading(true);
+    try {
+      const { data: createdBranchData } = await createBranchMutation({
+        variables: {
+          branchName: data.branchName,
+          description: data.description,
+          branchCode: data.branchCode,
+          SWIFTCode: data.SWIFTCode,
+          localBankCode: data.localBankCode,
+          country: data.country,
+          countrySubdivision: data.countrySubdivision,
+          streetName: data.streetName,
+          buildingNumber: data.buildingNumber,
+          buildingName: data.buildingName,
+          postalAddress: data.postalAddress,
+          AllowedProductTypes: data.AllowedProductTypes.map(
+            (item) => item.value
+          ), 
+          email: data.email,
+          isHeadOfficeBranch: data.isHeadOfficeBranch === "yes",
+          headOfficeBranch: data.headOfficeBranch,
+          createdAt: new Date().toISOString(),
+        },
+      });
+
+      console.log("Created Branch Data:", createdBranchData);
+
+      toast({
+        title: "Branch Created",
+        description: "The branch has been successfully created.",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Error creating branch:", error);
+      setErrorMessage("Error creating branch. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -81,6 +119,22 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
     }
   }, [watchHeadOfficeCheck, unregister, register]);
 
+  const InputTemplateWrapper = ({ id }: {id: string}) => {
+    return (
+      <div>
+            <Label htmlFor="branchName">Branch Name</Label>
+            <Input
+              id={id}
+              type="text"
+              {...register("branchName", { required: true })}
+            />
+            {errors.branchName && (
+              <span className="text-red-500">{errors.branchName.message}</span>
+            )}
+          </div>
+    )
+  }
+
   return (
     <section className="">
       <form
@@ -89,6 +143,9 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         autoComplete="off"
       >
         <div className="grid grid-cols-3 gap-6">
+          <InputTemplateWrapper 
+            id="branchName"
+          />
           <div>
             <Label htmlFor="branchName">Branch Name</Label>
             <Input
@@ -323,13 +380,17 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
           </div>
           
         </div>
+        {errorMessage && (
+          <span className="text-red-500 text-center">{errorMessage}</span>
+        )}
         <div className="flex gap-2">
             <Button
               type="submit"
               size="lg"
               className="bg-[#36459C] hover:bg-[#253285]"
+              disabled={isLoading}
             >
-              Submit
+               {isLoading ? "Submitting..." : "Submit"}
             </Button>
             <Button  size="lg">
               Cancel
