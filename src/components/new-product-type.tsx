@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,7 +14,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
-
+import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
+import { useMutation } from "@apollo/client";
 
 const productTypeSchema = z.object({
   productTypeCode: z
@@ -26,10 +27,10 @@ const productTypeSchema = z.object({
   productTypeDescription: z
     .string()
     .min(3, { message: "Product Type Description is required" }),
-  activeFlag: z.boolean(),
+  active: z.boolean(),
   interestBearing: z.boolean(),
   fixedInterestRate: z
-    .number()
+    .string()
     .min(1, { message: "Fixed Interest Rate is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
   fees: z.boolean(),
@@ -39,9 +40,12 @@ const productTypeSchema = z.object({
   riskRating: z.string().min(3, { message: "Risk Rating is required" }),
   prefix: z.string().min(3, { message: "Prefix is required" }),
   numberSchema: z.string().min(3, { message: "Number Schema is required" }),
-  accountNumberStartingValue: z
-    .number()
+  startingValue: z
+    .string()
+
     .min(1, { message: "Account Number Starting Value is required" }),
+  modifiedBy: z.string().min(3, { message: "Modified By is required" }),
+  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type ProductTypeInput = z.infer<typeof productTypeSchema>;
@@ -61,18 +65,41 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     resolver: zodResolver(productTypeSchema),
   });
 
+  const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
+
   const watchInterestBearing = watch("interestBearing");
   const watchFees = watch("fees");
 
-  const onSubmit = handleSubmit((data) => {
-    toast({
-      title: "Product Type Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const onSubmit = handleSubmit((data: ProductTypeInput) => {
+    // Convert relevant form fields to numbers
+    const convertedData = {
+      ...data,
+      fixedInterestRate: Number(data.fixedInterestRate),
+      accountNumberStartingValue: Number(data.startingValue),
+    };
+
+    createProductTypeMutation({
+      variables: convertedData,
+    })
+      .then(() => {
+        toast({
+          title: "Product Type Created",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(convertedData, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+      })
+      .catch((error) => {
+        console.error("Error creating product type:", error);
+        toast({
+          title: "Error",
+          description: "Failed to create product type. Please try again.",
+        });
+      });
   });
 
   useEffect(() => {
@@ -87,7 +114,12 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       unregister("feeTypes");
     }
   }, [register, unregister, watchInterestBearing, watchFees]);
-
+  const [defaultModifiedOn, setDefaultModifiedOn] = useState(
+    new Date().toISOString()
+  );
+  useEffect(() => {
+    setDefaultModifiedOn(new Date().toISOString());
+  }, []);
   return (
     <section>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
@@ -123,14 +155,14 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <Input
                 type="checkbox"
                 placeholder="Active Flag"
-                {...register("activeFlag")}
+                {...register("active")}
                 className="flex w-4 h-4"
               />
               <Label>Active?</Label>
             </div>
-            {errors.activeFlag && (
+            {errors.active && (
               <span className="text-sm text-red-500">
-                {errors.activeFlag.message}
+                {errors.active.message}
               </span>
             )}
           </div>
@@ -274,14 +306,47 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           <div>
             <Label>Account Number Starting Value</Label>
             <Input
-              type="number"
+              type="text"
               placeholder="Account Number Starting Value"
-              {...register("accountNumberStartingValue")}
+              {...register("startingValue")}
             />
-            {errors.accountNumberStartingValue && (
+            {errors.startingValue && (
               <span className="text-sm text-red-500">
-                {errors.accountNumberStartingValue.message}
+                {errors.startingValue.message}
               </span>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+              Modified By
+            </Label>
+            <Input
+              {...register("modifiedBy")}
+              placeholder="Modified By"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={"User"}
+            />
+            {errors.modifiedBy && (
+              <span className="text-red-500">{errors.modifiedBy.message}</span>
+            )}
+          </div>
+
+          <div className="hidden">
+            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
+              Modified On
+            </Label>
+            <Input
+              {...register("modifiedOn")}
+              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={defaultModifiedOn} // Set the default value
+            />
+            {errors.modifiedOn && (
+              <span className="text-red-500">{errors.modifiedOn.message}</span>
             )}
           </div>
         </div>
@@ -289,9 +354,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           <Button type="submit" size="lg" className="">
             Submit
           </Button>
-          <Button  size="lg">
-            Cancel
-          </Button>
+          <Button size="lg">Cancel</Button>
         </div>
       </form>
     </section>

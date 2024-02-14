@@ -2,11 +2,12 @@ import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import branchList from "@/components/branch-list/branches.json";
 
 import { Branch } from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
+import branchList from "@/components/branch-list/branches.json";
+
 
 interface BranchesProps {}
 
@@ -60,7 +61,11 @@ const Branches: FC<BranchesProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{branches && <DataTable columns={columns} data={branches} />}</div>
+        <div>{branches && 
+        <DataTable
+         columns={columns}
+        data={branches} 
+        />}</div>
         <div className="flex items-center my-4">
           <div className="mr-2">
             <Button
