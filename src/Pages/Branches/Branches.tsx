@@ -1,18 +1,23 @@
 import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { Branch } from "@/components/branch-list/schema";
+// import { Branch } from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
-import branchList from "@/components/branch-list/branches.json";
+import queryBranchList from "@/components/branch-list/query";
+import { NewBranchSchemaType } from "@/components/branch-list/newBranchSchema";
+import { useQuery } from "@apollo/client";
 
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
-  const branches: Branch[] = branchList;
+  const [branches, setBranches] = useState<NewBranchSchemaType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
@@ -21,6 +26,16 @@ const Branches: FC<BranchesProps> = () => {
   const to = location.state?.to || {
     pathname: "/administration/branch-details",
   };
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryBranchList);
+
+  useEffect(() => {
+    if (data) {
+      setBranches(data.branches);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
 
   return (
     <div>
@@ -61,11 +76,19 @@ const Branches: FC<BranchesProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{branches && 
-        <DataTable
-         columns={columns}
-        data={branches} 
-        />}</div>
+        <div>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={branches} 
+              
+            />
+          )}
+        </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
             <Button

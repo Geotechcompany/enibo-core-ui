@@ -1,11 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { Branch } from "../branch-list/schema";
-
+import { NewBranchSchemaType } from "./newBranchSchema";
  
 
-export const columns: ColumnDef<Branch>[] = [
+export const columns: ColumnDef<NewBranchSchemaType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,11 +31,38 @@ export const columns: ColumnDef<Branch>[] = [
     enableHiding: true,
   },
   {
+    accessorKey: "branchId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Branch ID" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("branchId")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
     accessorKey: "branchName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Branch Name" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("branchName")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "branchType",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Branch Type" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("branchType")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "description",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
@@ -112,4 +138,49 @@ export const columns: ColumnDef<Branch>[] = [
         enableSorting: true,
         enableHiding: true,
     },
+    {
+      accessorKey: "postalAddress",
+      header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Postal Address" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("postalAddress")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
+  {
+    accessorKey: "AllowedProductTypes",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Allowed Product Types" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("AllowedProductTypes")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+},
+{
+  accessorKey: "email",
+  header: ({ column }) => (
+  <DataTableColumnHeader column={column} title="Email" />
+  ),
+  cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
+  enableSorting: true,
+  enableHiding: true,
+},
+{
+  accessorKey: "isHeadOfficeBranch",
+  header: ({ column }) => (
+  <DataTableColumnHeader column={column} title="isHeadOfficeBranch" />
+  ),
+  cell: ({ row }) => <div className="">{row.getValue("isHeadOfficeBranch")}</div>,
+  enableSorting: true,
+  enableHiding: true,
+},
+{
+  accessorKey: "headOfficeBranch",
+  header: ({ column }) => (
+  <DataTableColumnHeader column={column} title="iheadOfficeBranch" />
+  ),
+  cell: ({ row }) => <div className="">{row.getValue("headOfficeBranch")}</div>,
+  enableSorting: true,
+  enableHiding: true,
+},
 ];
