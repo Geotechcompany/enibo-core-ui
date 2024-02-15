@@ -14,8 +14,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
-import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
 import { useMutation } from "@apollo/client";
+import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
 
 const productTypeSchema = z.object({
   productTypeCode: z
@@ -42,7 +42,6 @@ const productTypeSchema = z.object({
   numberSchema: z.string().min(3, { message: "Number Schema is required" }),
   startingValue: z
     .string()
-
     .min(1, { message: "Account Number Starting Value is required" }),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
   modifiedOn: z.string().min(3, { message: "Modified On is required" }),
@@ -65,21 +64,29 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     resolver: zodResolver(productTypeSchema),
   });
 
-  const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
-
   const watchInterestBearing = watch("interestBearing");
   const watchFees = watch("fees");
+  const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
 
   const onSubmit = handleSubmit((data: ProductTypeInput) => {
-    // Convert relevant form fields to numbers
-    const convertedData = {
-      ...data,
-      fixedInterestRate: Number(data.fixedInterestRate),
-      accountNumberStartingValue: Number(data.startingValue),
-    };
-
+    // Assuming you have a mutation function called createProductTypeMutation
     createProductTypeMutation({
-      variables: convertedData,
+      variables: {
+        productTypeCode: data.productTypeCode,
+        productTypeName: data.productTypeName,
+        productTypeDescription: data.productTypeDescription,
+        activeFlag: data.active,
+        interestBearing: data.interestBearing,
+        fixedInterestRate: data.fixedInterestRate,
+        effectiveDate: data.effectiveDate,
+        fees: data.fees,
+        feeTypes: data.feeTypes,
+        riskRating: data.riskRating,
+        prefix: data.prefix,
+        numberSchema: data.numberSchema,
+        startingValue: data.startingValue,
+        // Add other fields according to your mutation if necessary
+      },
     })
       .then(() => {
         toast({
@@ -87,13 +94,14 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           description: (
             <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
               <code className="text-white">
-                {JSON.stringify(convertedData, null, 2)}
+                {JSON.stringify(data, null, 2)}
               </code>
             </pre>
           ),
         });
       })
       .catch((error) => {
+        // Handle error accordingly, set error message or perform other actions
         console.error("Error creating product type:", error);
         toast({
           title: "Error",
@@ -101,19 +109,20 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         });
       });
   });
-
   useEffect(() => {
     if (watchInterestBearing) {
       register("fixedInterestRate");
     } else {
       unregister("fixedInterestRate");
     }
+
     if (watchFees) {
       register("feeTypes");
     } else {
       unregister("feeTypes");
     }
   }, [register, unregister, watchInterestBearing, watchFees]);
+
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
   );
@@ -154,7 +163,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             <div className="flex items-center gap-2">
               <Input
                 type="checkbox"
-                placeholder="Active Flag"
+                placeholder="Active"
                 {...register("active")}
                 className="flex w-4 h-4"
               />
@@ -164,6 +173,38 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <span className="text-sm text-red-500">
                 {errors.active.message}
               </span>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+              Modified By
+            </Label>
+            <Input
+              {...register("modifiedBy")}
+              placeholder="Modified By"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={"User"}
+            />
+            {errors.modifiedBy && (
+              <span className="text-red-500">{errors.modifiedBy.message}</span>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
+              Modified On
+            </Label>
+            <Input
+              {...register("modifiedOn")}
+              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={defaultModifiedOn} // Set the default value
+            />
+            {errors.modifiedOn && (
+              <span className="text-red-500">{errors.modifiedOn.message}</span>
             )}
           </div>
           <div className="flex flex-col">
@@ -307,29 +348,13 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             <Label>Account Number Starting Value</Label>
             <Input
               type="text"
-              placeholder="Account Number Starting Value"
+              placeholder="starting Value"
               {...register("startingValue")}
             />
             {errors.startingValue && (
               <span className="text-sm text-red-500">
                 {errors.startingValue.message}
               </span>
-            )}
-          </div>
-          <div className="hidden">
-            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
-              Modified By
-            </Label>
-            <Input
-              {...register("modifiedBy")}
-              placeholder="Modified By"
-              type="text"
-              className="h-12 text-base bg-blue-50"
-              autoComplete="false"
-              defaultValue={"User"}
-            />
-            {errors.modifiedBy && (
-              <span className="text-red-500">{errors.modifiedBy.message}</span>
             )}
           </div>
 
