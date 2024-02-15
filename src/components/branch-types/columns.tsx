@@ -58,22 +58,5 @@ export const columns: ColumnDef<BranchTypes>[] = [
         enableSorting: true,
         enableHiding: true,
     },
-    {
-        accessorKey: "createdBy",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created By" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("createdBy")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "createdAt",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created At" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("createdAt")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
+    
 ];

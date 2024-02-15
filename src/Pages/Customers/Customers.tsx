@@ -1,22 +1,37 @@
 import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
-import { FC } from "react";
-import customerList from "@/components/customer-list/customers.json";
+import { FC, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Customer } from "@/types/global";
 import { Link } from "react-router-dom";
 import { columns } from "@/components/customer-list/columns";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryCustomersList from "@/components/customer-list/query";
 
 interface CustomersProps {}
 
 const Customers: FC<CustomersProps> = () => {
 
-    const customers: Customer[] =  customerList as Customer[] ;
-    const location = useLocation();
+  const [Customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from || { pathname: "/customers/new-customer" };
-  return (
+   
+    const { data, loading: queryLoading, error: queryError } = useQuery(queryCustomersList);
+
+    useEffect(() => {
+      if (data) {
+        setCustomers(data.Customers);
+      }
+      setLoading(queryLoading);
+      setError(queryError ? queryError.message : null);
+    }, [data, queryLoading, queryError]);
+  
+    return (
     <div>
       <div className="mx-4">
         <div className="pt-2">
@@ -55,9 +70,19 @@ const Customers: FC<CustomersProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{customers && <DataTable columns={columns} data={customers} />}</div>
-      </div>
-      <div className="flex items-center my-4">
+        <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={Customers} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
           <div className="mr-2">
             <Button
               size="sm"
@@ -78,6 +103,7 @@ const Customers: FC<CustomersProps> = () => {
               Copy
             </Button>
           </div>
+
           <div className="mr-2">
             <Button
               size="sm"
@@ -89,8 +115,8 @@ const Customers: FC<CustomersProps> = () => {
             </Button>
           </div>
         </div>
+      </div>
     </div>
   );
 };
-
 export default Customers;

@@ -1,18 +1,22 @@
-import { KYC } from "@/types/global";
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/datatable/data-table";
-import { columns } from "@/components/KYC-list/columns";
-import customerKYCList from "@/components/KYC-list/kyc.json";
 import { FaPlus } from "react-icons/fa";
 import { Dialog, Transition } from "@headlessui/react";
 import { IoCloseOutline } from "react-icons/io5";
+import queryKycTypesList from "@/components/kyc-type-list/query";
+import { useQuery } from "@apollo/client";
+import { columns } from "@/components/KYC-list/columns";
+import { KYCType } from "@/types/global";
+import { DataTable } from "@/components/datatable/data-table";
+
 
 interface CustomerKYCSProps {}
 
 const CustomerKYCS: FC<CustomerKYCSProps> = () => {
-  const customerKYCS: KYC[] = customerKYCList as KYC[];
+  const [kycsTypes, setKycsTypes] = useState<KYCType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,6 +37,18 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
       window.location.href = '/customers/kyc-types/individual-form';
     }
   };
+
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryKycTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setKycsTypes(data.kycTypes);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
+
   return (
     <>
     <div>
@@ -83,10 +99,58 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
           </div>
         </div>
         <div>
-          {customerKYCS && <DataTable columns={columns} data={customerKYCS} />}
+        <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={kycsTypes} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+ 
+        </div>
+        
+        </div>
+  
+ 
     
     <Transition appear show={isOpen} as={Fragment}>
     <Dialog as="div" className="relative z-10" onClose={() => {}}>
@@ -99,7 +163,7 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <div></div>
+   
       </Transition.Child>
 
       <div className="fixed inset-0 overflow-y-auto">
@@ -179,7 +243,9 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
       </div>
     </Dialog>
   </Transition>
+
   </>
+
   );
 };
 

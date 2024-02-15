@@ -1,23 +1,36 @@
 import { DataTable } from "@/components/datatable/data-table";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import feeList from "@/components/fee-type-list/fee.json";
 import { columns } from "@/components/fee-type-list/columns";
 import { FeeType } from "@/types/global";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryFeeTypesList from "@/components/fee-type-list/query";
 
 interface FeeProps {}
 
-const FeeTypes: FC<FeeProps> = () => {
-  const feeTypes: FeeType[] = feeList;
+const FeeType: FC<FeeProps> = () => {
+  const [ FeeTypeslist, setFeeTypesList] = useState<FeeType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   //administration/static-data/fee-types/new-fee-type
   const location = useLocation();
   const navigate = useNavigate();
   const from =
     location.state?.from ||
     "/administration/static-data/fee-types/new-fee-type";
-
+    const { data, loading: queryLoading, error: queryError } = useQuery(queryFeeTypesList);
+ 
+    useEffect(() => {
+      if (data) {
+        setFeeTypesList(data.FeeTypeslist);
+      }
+      setLoading(queryLoading);
+      setError(queryError ? queryError.message : null);
+    }, [data, queryLoading, queryError]);
+  
   return (
     <div>
       <div className="mx-4">
@@ -67,10 +80,54 @@ const FeeTypes: FC<FeeProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{feeTypes && <DataTable columns={columns} data={feeTypes} />}</div>
+        <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={FeeTypeslist} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default FeeTypes;
+export default FeeType;
