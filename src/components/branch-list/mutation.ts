@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const CREATE_BRANCH = gql`
+export const CREATE_BRANCH = gql`
   mutation CreateBranch(
     $branchName: String!
     $branchType: String!
@@ -52,4 +52,11 @@ const CREATE_BRANCH = gql`
   }
 `;
 
-export default CREATE_BRANCH;
+
+
+
+
+
+
+
+

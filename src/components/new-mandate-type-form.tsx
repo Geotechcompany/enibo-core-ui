@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
+import { CREATE_MANDATE_TYPE } from "@/types/mutations";
+import { useMutation } from "@apollo/client";
+
 
 const mandateTypeSchema = z.object({
   mandateTypeCode: z.string().min(3, { message: "MANDATE Type Code is required" }),
@@ -20,6 +23,7 @@ interface NewMandateTypeFormProps {}
 
 const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   const { toast } = useToast();
+  const [createMandateType] = useMutation(CREATE_MANDATE_TYPE);
   const {
     register,
     handleSubmit,
@@ -29,13 +33,20 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   });
 
   const onSubmit = (data: MandateTypeInput) => {
+    console.log(data);
+    const formInput = {
+      mandateTypeCode: data.mandateTypeCode,
+      mandateTypeName: data.mandateTypeName,
+      mandateTypeDescription: data.mandateTypeDescription,
+      modifiedBy: "e170f3b7-c9bc-421a-9c9f-a15fd17e6f3d",
+      modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
+        .toISOString()
+        .split(".")[0],
+    };
+    createMandateType({ variables: formInput });
     toast({
       title: "Mandate Type Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: "Mandate Type has been created successfully",
     });
   };
   return (

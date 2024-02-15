@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Link } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { CREATE_INDIVIDUAL_KYC } from "@/types/mutations";
 
 /**
  * 
@@ -36,7 +38,7 @@ import { Link } from "react-router-dom";
     signature: string;
  */
 const newKYCIndividualSchema = z.object({
-  designation: z.string().min(3, { message: "Designation is required" }),
+  designation: z.string().min(2, { message: "Designation is required" }),
   firstName: z.string().min(3, { message: "First Name is required" }),
   middleName: z.string().min(3, { message: "Middle Name is required" }),
   lastName: z.string().min(3, { message: "Last Name is required" }),
@@ -65,6 +67,7 @@ interface NewKYCIndividualFormProps {}
 
 const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
   const { toast } = useToast();
+  const [createIndividualKyc] = useMutation(CREATE_INDIVIDUAL_KYC);
   const {
     register,
     handleSubmit,
@@ -74,18 +77,42 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
     resolver: zodResolver(newKYCIndividualSchema),
   });
   const onSubmit = (data: NewKYCIndividualInput) => {
+    console.log(data);
+    const formInput = {
+      kycType: "98ae0ccf-65a7-484e-91bd-d30ff531c7ca",
+      designation: data.designation,
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName,
+      phoneNumber: data.phoneNumber,
+      emailAddress: data.emailAddress,
+      postalAddress: data.postalAddress,
+      physicalAddress: data.physicalAddress,
+      country: data.country,
+      taxNumber: data.taxNumber,
+      idType: data.idType,
+      idNumber: data.idNumber,
+      sex: data.sex,
+      nationality: data.nationality,
+      riskRating: data.riskRating,
+      attachDocumentsField: data.attachDocumentsField,
+      signature: data.signature,
+      modifiedBy: "e170f3b7-c9bc-421a-9c9f-a15fd17e6f3d", //TODO: get user id from context
+      modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
+        .toISOString()
+        .split(".")[0],
+    };
+
+    createIndividualKyc({ variables: formInput });
+
     toast({
       title: "New KYC Individual Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: "New KYC Individual has been created successfully",
     });
   };
   return (
     <section>
-       <div className="pt-2 ml-4">
+      <div className="pt-2 ml-4">
         <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
           <ol className="inline-flex p-0 m-0 list-none">
             <li className="flex items-center m-0">
@@ -106,10 +133,10 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
           </ol>
         </nav>
         <div className="flex items-center justify-between my-4">
-        <div className="">
-          <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
+          </div>
         </div>
-      </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
@@ -119,7 +146,9 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
             </div>
             <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
               <div>
-                <Label htmlFor="designation">Designation e.g. Mr, Mrs, Dr, Rev, etc</Label>
+                <Label htmlFor="designation">
+                  Designation e.g. Mr, Mrs, Dr, Rev, etc
+                </Label>
                 <Input
                   id="designation"
                   type="text"
@@ -134,15 +163,13 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
               </div>
               <div>
                 <Label htmlFor="firstName">First Name</Label>
-                <Input 
-                type="text"
-                {...register("firstName", { required: true })}
-                className="mt-1"
+                <Input
+                  type="text"
+                  {...register("firstName", { required: true })}
+                  className="mt-1"
                 />
                 {errors.firstName && (
-                  <div className="text-red-500">
-                    {errors.firstName.message}
-                  </div>
+                  <div className="text-red-500">{errors.firstName.message}</div>
                 )}
               </div>
               <div>
@@ -169,9 +196,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
                   className="mt-1"
                 />
                 {errors.lastName && (
-                  <div className="text-red-500">
-                    {errors.lastName.message}
-                  </div>
+                  <div className="text-red-500">{errors.lastName.message}</div>
                 )}
               </div>
               <div>
@@ -201,9 +226,8 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
                     {errors.phoneNumber.message}
                   </div>
                 )}
+              </div>
             </div>
-            </div>
-            
           </div>
           <div className="flex flex-col gap-4 border-l border-r">
             <div className="p-4">
@@ -260,24 +284,22 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
               <div>
                 <Label htmlFor="idType">ID Type</Label>
                 <Controller
-                    control={control}
-                    name="idType"
-                    render={({ field: { onChange, value } }) => (
-                      <Select>
-                        <SelectTrigger
-                          className="mt-1"
-                          value={value}
-                          onChange={onChange}
-                        >
-                          <SelectValue placeholder="Select Id Type"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="passport">Passport</SelectItem>
-                          <SelectItem value="national-id">National ID</SelectItem>
-                          <SelectItem value="drivers-license">Drivers License</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                  control={control}
+                  name="idType"
+                  render={({ field: { onChange, value } }) => (
+                    <Select value={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Id Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="passport">Passport</SelectItem>
+                        <SelectItem value="national-id">National ID</SelectItem>
+                        <SelectItem value="drivers-license">
+                          Drivers License
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
                 {errors.idType && (
                   <div className="text-red-500">{errors.idType.message}</div>
@@ -310,38 +332,36 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
               <div>
                 <Label htmlFor="sex">Sex</Label>
                 <Controller
-                    control={control}
-                    name="sex"
-                    render={({ field: { onChange, value } }) => (
-                      <Select>
-                        <SelectTrigger
-                          className="mt-1"
-                          value={value}
-                          onChange={onChange}
-                        >
-                          <SelectValue placeholder="Select Gender"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="male">Male</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                  control={control}
+                  name="sex"
+                  render={({ field: { onChange, value } }) => (
+                    <Select value={value} onValueChange={onChange}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="male">Male</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
                 {errors.sex && (
-                    <div className="text-red-500">{errors.sex.message}</div>    
+                  <div className="text-red-500">{errors.sex.message}</div>
                 )}
               </div>
               <div>
                 <Label htmlFor="nationality">Nationality</Label>
                 <Input
-                id="nationality"
-                type="text"
-                {...register("nationality", { required: true })}
-                className="mt-1" 
+                  id="nationality"
+                  type="text"
+                  {...register("nationality", { required: true })}
+                  className="mt-1"
                 />
                 {errors.nationality && (
-                    <div className="text-red-500">{errors.nationality.message}</div>
+                  <div className="text-red-500">
+                    {errors.nationality.message}
+                  </div>
                 )}
               </div>
               <div>
@@ -389,9 +409,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
                   className="mt-1"
                 />
                 {errors.signature && (
-                  <div className="text-red-500">
-                    {errors.signature.message}
-                  </div>
+                  <div className="text-red-500">{errors.signature.message}</div>
                 )}
               </div>
             </div>
@@ -399,9 +417,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
         </div>
         <div className="flex justify-end mt-4">
           <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+          <Button className="ml-2">Cancel</Button>
         </div>
       </form>
     </section>
