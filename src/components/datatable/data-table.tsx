@@ -29,15 +29,11 @@ import { DataTablePagination } from "./data-table-pagination";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  loading?: boolean;
-  error?: string | null;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  loading = false,
-  error = null,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -94,25 +90,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody className="text-gray-800">
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : error ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-red-500"
-                >
-                  Error: {error}
-                </TableCell>
-              </TableRow>
-            ) : data.length > 0 ? (
+          {table.getRowModel().rows?.length && columns && columns.length  ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

@@ -32,15 +32,6 @@ export const columns: ColumnDef<MandateType>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "mandateTypeCode",
-    header: ({ column }) => (
-    <DataTableColumnHeader column={column} title="Mandate Type Code" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("mandateTypeCode")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-},
-  {
     accessorKey: "mandateTypeName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KYC Type Name" />
@@ -49,7 +40,15 @@ export const columns: ColumnDef<MandateType>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-   
+  {
+    accessorKey: "mandateTypeCode",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Mandate Type Code" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("mandateTypeCode")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+},
     {
         accessorKey: "mandateTypeDescription",
         header: ({ column }) => (

@@ -48,10 +48,11 @@ export type Customer = {
 }
 
 export type ProductType = {
+    productTypeName: string;
     productTypeCode: string;
     productType: string;
     productTypeDescription: string;
-    activeFlag: boolean;
+    active: boolean;
     interestBearing: boolean;
     fixedInterestRate: number | null; // It can be a number or null if not applicable
     effectiveDate: string;
@@ -60,7 +61,9 @@ export type ProductType = {
     riskRating: string;
     prefix: string;
     numberSchema: string;
-    accountNumberStartingValue: number;
+    startingValue: number;
+    modifiedBy: string;
+    modifiedOn: string;
 };
 
 export type LedgerAccount = {
@@ -243,4 +246,25 @@ export type ApprovalRule = {
     labels: string[];
     values: number[];
   }
+
+  export interface UserDetailsType{
+    id: number;
+    username: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    phoneNumber: string;
+    employeeNumber: string;
+    branch: string;
+    profile: string;
+    documentAttachment: string;
+    modifiedOn: string;
+    modifiedBy: string;
+  }
+  
+
+
   

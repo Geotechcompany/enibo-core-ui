@@ -1,22 +1,34 @@
 import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import userDetailsList from "@/components//user-details/userdetails.json"
-import { UserDetails } from "@/components/user-details/schema";
 import { userColumns } from "@/components/user-details/columns";
+import { UserDetailsType } from "@/types/global";
+import { useQuery } from "@apollo/client";
+import queryUsersList from "@/components/user-details/query";
 
 interface UsersProps {}
 
 const Users: FC<UsersProps> = () => {
+  const [users, setUsers] = useState<UserDetailsType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const users: UserDetails[] =  userDetailsList;
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/user-details/user-details-form" };
-  
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryUsersList);
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data.users);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);  
   return (
     <div>
       <div className="mx-4">
@@ -53,12 +65,16 @@ const Users: FC<UsersProps> = () => {
           </Button></div>
         </div>
         <div>
-          {users && (
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
             <DataTable
               columns={userColumns}
-                data={users}
+              data={users} 
             />
-            )}
+          )}
         </div>
       </div>
     </div>
