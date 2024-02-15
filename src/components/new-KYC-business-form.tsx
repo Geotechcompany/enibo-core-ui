@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Link } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import {CREATE_BUSINESS_KYC} from "@/types/mutations"
 
 
 const newKYCBusinessSchema = z.object({
@@ -59,6 +61,7 @@ interface NewKYCBusinessFormProps {}
 
 const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
   const { toast } = useToast();
+  const [createBusinessKyc] = useMutation(CREATE_BUSINESS_KYC)
   const {
     register,
     handleSubmit,
@@ -68,13 +71,32 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
     resolver: zodResolver(newKYCBusinessSchema),
   });
   const onSubmit = (data: NewKYCBusinessInput) => {
+    console.log(data)
+    const input = {
+      kycType: "98ae0ccf-65a7-484e-91bd-d30ff531c7ca", //TODO: get kyc type id from context
+      legalEntityName: data.legalEntityName,
+      legalStatus: data.legalStatus,
+      dateOfIncorporation: data.dateOfIncorporation,
+      registrationNumber: data.registrationNumber,
+      natureOfBusiness: data.natureOfBusiness,
+      entityNationality: data.entityNationality,
+      entityPINNumber: data.entityPINNumber,
+      entityTaxNumber: data.entityTaxNumber,
+      telephoneNumber: data.telephoneNumber,
+      emailAddress: data.emailAddress,
+      postalAddress: data.postalAddress,
+      physicalAddress: data.physicalAddress,
+      riskRating: data.riskRating,
+      attachDocumentsField: data.attachDocumentsField,
+      modifiedBy: "e170f3b7-c9bc-421a-9c9f-a15fd17e6f3d", //TODO: get user id from context
+      modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
+        .toISOString()
+        .split(".")[0],
+    }
+    createBusinessKyc({variables: input})
     toast({
       title: "New KYC Business Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: "Successfully created new business KYC"
     });
   };
   return (

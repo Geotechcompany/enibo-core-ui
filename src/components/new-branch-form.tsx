@@ -17,7 +17,7 @@ import { useToast } from "./ui/use-toast";
 
 import { useMutation } from "@apollo/client";
 import { XIcon } from "lucide-react";
-import CREATE_BRANCH from "./branch-list/mutation";
+import {CREATE_BRANCH} from "./branch-list/mutation";
 
 
 
@@ -129,17 +129,17 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
     <><div>
       {Object.keys(errors).length > 0 && (
         <div className="mt-6 text-white bg-red-600 border-4 border-red-700 alert-start">
-          <div className="flex justify-between items-center bg-red-700 py-2 px-4">
+          <div className="flex items-center justify-between px-4 py-2 bg-red-700">
             <div>
               <p>The following errors have occurred:</p>
             </div>
 
             <div className="cursor-pointer">
-              <XIcon className="h-6 w-6 text-white alert-close" />
+              <XIcon className="w-6 h-6 text-white alert-close" />
             </div>
           </div>
 
-          <div className="py-2 px-4">
+          <div className="px-4 py-2">
             <div className="flex flex-col gap-2">
               {Object.entries(errors).map(([index, error]) => (
                 <div className="flex flex-col gap-y-6 sm:gap-x-8" key={index}>
@@ -377,7 +377,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
           </div>
           {errorMessage && (
-            <span className="text-red-500 text-center">{errorMessage}</span>
+            <span className="text-center text-red-500">{errorMessage}</span>
           )}
           <div className="flex gap-2">
             <Button
