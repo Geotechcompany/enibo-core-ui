@@ -39,8 +39,8 @@ export const userDetailsSchema = z.object({
   documentAttachment: z
     .string()
     .min(3, { message: "Document Attachment is required" }),
-  modifiedBy: z.string().min(3, { message: "Modified By is required" }),
-  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
+    modifiedBy: z.string().min(3, { message: "Modified By is required" }),
+    modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type UserDetailsInput = z.infer<typeof userDetailsSchema>;
@@ -124,7 +124,6 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
   );
 
   useEffect(() => {
-    // Update the defaultModifiedOn state with the current date and time
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
 
