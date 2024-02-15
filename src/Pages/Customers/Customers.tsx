@@ -57,6 +57,38 @@ const Customers: FC<CustomersProps> = () => {
         </div>
         <div>{customers && <DataTable columns={columns} data={customers} />}</div>
       </div>
+      <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
     </div>
   );
 };

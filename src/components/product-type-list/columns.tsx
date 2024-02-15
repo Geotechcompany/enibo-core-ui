@@ -33,11 +33,11 @@ export const columns: ColumnDef<ProductType>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "productTypeCode",
+    accessorKey: "productTypeName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Product Type Code" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("productTypeCode")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("productTypeName")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
@@ -60,8 +60,8 @@ export const columns: ColumnDef<ProductType>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "activeFlag",
-        accessorFn: (row) => row.activeFlag ? "Active" : "Inactive",
+        accessorKey: "active",
+        accessorFn: (row) => row.active ? "Active" : "Inactive",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Active" />
         ),
@@ -136,12 +136,30 @@ export const columns: ColumnDef<ProductType>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "accountNumberStartingValue",
+        accessorKey: "startingValue",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Account Number Starting Value" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("accountNumberStartingValue")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("startingValue")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
+    {
+      accessorKey: "modifiedBy",
+      header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Modified By" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
+  {
+    accessorKey: "modifiedOn",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Modified On" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+},
 ];

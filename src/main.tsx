@@ -7,10 +7,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'remixicon/fonts/remixicon.css'
 import { ApolloProvider } from "@apollo/client";
 import client from "./store/index.ts";
+import { UserProvider } from "./types/userContext.tsx";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+     <UserProvider>
     <BrowserRouter>
       <Routes>
         <Route
@@ -23,5 +25,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         />
       </Routes>
     </BrowserRouter>
+    </UserProvider>
   </React.StrictMode>
 );

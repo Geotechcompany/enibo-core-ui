@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../datatable/datatable-column-header";
-import { UserDetails } from "./schema";
 import { Checkbox } from "../ui/checkbox";
+import { UserDetailsType } from "@/types/global";
 
-export const userColumns: ColumnDef<UserDetails>[] = [
+export const userColumns: ColumnDef<UserDetailsType>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -26,6 +26,15 @@ export const userColumns: ColumnDef<UserDetails>[] = [
           />
         </div>
       ),
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "id",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="User Id" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
       enableSorting: true,
       enableHiding: true,
     },
@@ -102,11 +111,11 @@ export const userColumns: ColumnDef<UserDetails>[] = [
         enableHiding: true,
       },
       {
-        accessorKey: "userProfile",
+        accessorKey: "profile",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="User Profile" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("userProfile")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("profile")}</div>,
         enableSorting: true,
         enableHiding: true,
       },
