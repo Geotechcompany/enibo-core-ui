@@ -96,7 +96,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
         },
       });
       console.log("Sign up successful:", createUser);
-      navigate("/");
+      navigate("/administration/user-details");
     } catch (error) {
       console.error("Error signing up:", error);
       setErrorMessage("Error signing up. Please try again.");

@@ -1,11 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { KYC } from "@/types/global";
+import { KYCType } from "@/types/global";
 
  
 
-export const columns: ColumnDef<KYC>[] = [
+export const columns: ColumnDef<KYCType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,7 +32,7 @@ export const columns: ColumnDef<KYC>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "kycType",
+    accessorKey: "kycTypeId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KYC Type" />
     ),
@@ -41,127 +41,31 @@ export const columns: ColumnDef<KYC>[] = [
     enableHiding: true,
   },
     {
-        accessorKey: "customer",
-        accessorFn: (row) => row.business?.legalEntityName || `${row.individual?.firstName + " " + row.individual?.lastName}`,
+        accessorKey: "KycTypeName",
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="KycTypeName" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("customer")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("KycTypeName")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-        accessorKey: "riskRating",
-        accessorFn: (row) => row.business?.riskRating || row.individual?.riskRating,
+        accessorKey: "KycTypeDescription",
         header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Risk Rating" />
+        <DataTableColumnHeader column={column} title="Kyc Description" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("riskRating")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("KycTypeDescription")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-      accessorKey: "emailAddress",
-      accessorFn: (row) => row.business?.emailAddress || row.individual?.emailAddress,
+      accessorKey: "KycTypeCode",
       header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email Address" />
+      <DataTableColumnHeader column={column} title="KycTypeCode" />
       ),
-      cell: ({ row }) => <div className="">{row.getValue("emailAddress")}</div>,
+      cell: ({ row }) => <div className="">{row.getValue("KycTypeCode")}</div>,
       enableSorting: true,
       enableHiding: true,
   },
-  {
-    accessorKey: "phoneNumber",
-    accessorFn: (row) => row.business?.telephoneNumber || row.individual?.phoneNumber,
-    header: ({ column }) => (
-    <DataTableColumnHeader column={column} title="Phone Number" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("phoneNumber")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-},
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => (<div></div>),
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
+  
 ];

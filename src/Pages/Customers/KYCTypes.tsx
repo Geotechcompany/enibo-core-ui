@@ -1,21 +1,37 @@
 import { DataTable } from "@/components/datatable/data-table";
-import { columns } from "@/components/kyc-type-list/columns";
+
 import { Button } from "@/components/ui/button";
-import { KYCType } from "@/types/global";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import kycTypesList from "@/components/kyc-type-list/kyc-type.json";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryKycTypesList from "@/components/kyc-type-list/query";
+import { columns } from "@/components/kyc-type-list/columns";
+import { KYCType } from "@/types/global";
 
 interface KYCTypesProps {}
 
 const KYCTypes: FC<KYCTypesProps> = () => {
-  const kycTypes: KYCType[] = kycTypesList as KYCType[];
+  const [kycTypes, setKycTypes] = useState<KYCType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/customers/kyc-types/new-kyc-type",
   };
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryKycTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setKycTypes(data.kycTypes);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
+
   return (
     <div>
       <div className="mx-4">
@@ -45,19 +61,62 @@ const KYCTypes: FC<KYCTypesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">KYC Types</h1>
           </div>
           <div className="">
-          <Button
+            <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add new
+              <FaPlus className="mr-1 text-white" /> Add new
+            </Button>
+          </div>     
+        </div>
+        <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={kycTypes} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
             </Button>
           </div>
         </div>
-        <div>{kycTypes && <DataTable columns={columns} data={kycTypes} />}</div>
       </div>
     </div>
   );
 };
-
 export default KYCTypes;

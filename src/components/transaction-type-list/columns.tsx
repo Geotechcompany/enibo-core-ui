@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { TransactionType } from "@/types/global";
+import { TransactionTypeSchemaType } from "./schema";
 
-export const columns: ColumnDef<TransactionType>[] = [
+export const columns: ColumnDef<TransactionTypeSchemaType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,12 +52,12 @@ export const columns: ColumnDef<TransactionType>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "transactionTypeDescription",
+    accessorKey: "description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => (
-      <div className="">{row.getValue("transactionTypeDescription")}</div>
+      <div className="">{row.getValue("description")}</div>
     ),
     enableSorting: true,
     enableHiding: true,
@@ -68,34 +68,6 @@ export const columns: ColumnDef<TransactionType>[] = [
       <DataTableColumnHeader column={column} title="Currency" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("currency")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
     enableSorting: true,
     enableHiding: true,
   },

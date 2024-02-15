@@ -1,20 +1,35 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import productTypeList from "@/components/product-type-list/product-types.json";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/product-type-list/columns";
 import { FaPlus } from "react-icons/fa";
+import { ProductType } from "@/types/global";
+import queryProductList from "@/components/product-type-list/query";
+import { useQuery } from "@apollo/client";
 
 interface ProductTypesProps {}
 
 const ProductTypes: FC<ProductTypesProps> = () => {
-  const productTypes = productTypeList;
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/products/product-types/new-product-type",
   };
+
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryProductList);
+
+  useEffect(() => {
+    if (data) {
+      setProducts(data.products);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
   return (
     <div>
       <div className="mx-4">
@@ -64,7 +79,17 @@ const ProductTypes: FC<ProductTypesProps> = () => {
           </div>
         </div>
         <div>
-          {productTypes && <DataTable columns={columns} data={productTypes} />}
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={products} 
+              
+            />
+          )}
         </div>
       </div>
     </div>
