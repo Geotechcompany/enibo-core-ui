@@ -14,8 +14,8 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
-import CREATE_FEE_TYPE_MUTATION from '@/Pages/FeeTypes/FeeTypesMutation';
 import { useMutation } from '@apollo/client';
+import CREATE_FEE_TYPE_MUTATION from '@/Pages/FeeTypes/FeeTypesMutation';
 
 const feeTypeSchema = z.object({
   feeCode: z
@@ -30,7 +30,8 @@ const feeTypeSchema = z.object({
     .string()
     .min(3, { message: "Payment Frequency is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
-  fixedRate: z.number().min(3, { message: "Fixed Rate is required" }),
+  // fixedRate: z.string().min(3, { message: "Fixed Rate is required" }),
+  fixedRate: z.string().min(3, { message: "Fixed Rate is required"}),
 });
 
 type FeeTypeInput = z.infer<typeof feeTypeSchema>;
@@ -191,7 +192,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
                 <Label htmlFor="fixedRate">Fixed Rate (%)</Label>
                 <Input
                     id="fixedRate"
-                    type="number"
+                    type="text"
                     placeholder="Fixed Rate"
                     {...register("fixedRate")}
                 />
@@ -209,6 +210,3 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
 }
 
 export default NewFeeTypesForm
-
-
-

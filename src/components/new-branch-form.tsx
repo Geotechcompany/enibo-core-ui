@@ -180,8 +180,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                       <SelectValue placeholder="Select ..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem key={1} value="62ae49bd-b2f5-4daf-b7e2-6b8f16785edc">Full Service</SelectItem>
-                      <SelectItem key={2} value="62ae49bd-b2f5-4daf-b7e2-6b8f16785edc">Limited Service</SelectItem>
+                      <SelectItem key={1} value="dce8ab09-8319-4bb1-b767-2931a70c59d0">Full Service</SelectItem>
+                      <SelectItem key={2} value="dce8ab09-8319-4bb1-b767-2931a70c59d0">Limited Service</SelectItem>
                     </SelectContent>
                   </Select>
                 )} />
