@@ -2,20 +2,33 @@ import { columns } from "@/components/branch-types/columns";
 import { BranchTypes } from "@/components/branch-types/schema";
 import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import brancheTypesList from "@/components/branch-types/branchtypes.json";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryBranchTypesList from "@/components/branch-types/query";
 
 interface BranchesProps {}
 
-const Branches: FC<BranchesProps> = () => {
-  const branches: BranchTypes[] = brancheTypesList;
+const BranchType: FC<BranchesProps> = () => {
+  const [BranchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/branches/new-branch-type",
   };
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryBranchTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setBranchTypes(data.branchTypes);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
 
   return (
     <div>
@@ -43,7 +56,7 @@ const Branches: FC<BranchesProps> = () => {
         </div>
         <div className="flex items-center justify-between my-4">
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">Branche Types</h1>
+            <h1 className="text-4xl text-[#36459C]">Branch Types</h1>
           </div>
           <div className="">
           <Button
@@ -55,10 +68,54 @@ const Branches: FC<BranchesProps> = () => {
             </Button>
           </div>
         </div>
-        <div>{branches && <DataTable columns={columns} data={branches} />}</div>
+        <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={BranchTypes} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Branches;
+export default BranchType;

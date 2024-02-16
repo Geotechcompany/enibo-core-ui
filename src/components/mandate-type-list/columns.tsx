@@ -41,23 +41,23 @@ export const columns: ColumnDef<MandateType>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "mandateTypeCode",
+    accessorKey: "mandateTypeDescription",
     header: ({ column }) => (
-    <DataTableColumnHeader column={column} title="Mandate Type Code" />
+    <DataTableColumnHeader column={column} title="Description" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("mandateTypeCode")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("mandateTypeDescription")}</div>,
     enableSorting: true,
     enableHiding: true,
 },
     {
-        accessorKey: "mandateTypeDescription",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Description" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("mandateTypeDescription")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
+      accessorKey: "mandateTypeCode",
+      header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Mandate Type Code" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("mandateTypeCode")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
     {
         accessorKey: "modifiedBy",
         header: ({ column }) => (

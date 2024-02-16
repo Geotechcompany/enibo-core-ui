@@ -42,20 +42,11 @@ export const columns: ColumnDef<ProductType>[] = [
     enableHiding: true,
   },
     {
-        accessorKey: "productType",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Product Type" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("productType")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "productTypeDescription",
+        accessorKey: "description",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Product Type Description" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("productTypeDescription")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
         enableSorting: true,
         enableHiding: true,
     },

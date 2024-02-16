@@ -21,7 +21,7 @@ const feeTypeSchema = z.object({
   feeCode: z
     .string()
     .min(3, { message: "Fee Code is required" }),
-  feeName: z
+  feeTypeName: z
     .string()
     .min(3, { message: "Fee Name is required" }),
   description: z.string().min(3, { message: "Description is required" }),
@@ -31,7 +31,7 @@ const feeTypeSchema = z.object({
     .min(3, { message: "Payment Frequency is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
   // fixedRate: z.string().min(3, { message: "Fixed Rate is required" }),
-  fixedRate: z.string().min(3, { message: "Fixed Rate is required"}),
+  fixedRate: z.string().min(1, { message: "Fixed Rate is required"}),
 });
 
 type FeeTypeInput = z.infer<typeof feeTypeSchema>;
@@ -56,13 +56,13 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         try {
           await createfeetypeMutation({
             variables: {
-              feeName: data.feeName,
+              feeTypeName: data.feeTypeName,
               description: data.description,
               transactionTypes: [data.transactionType],
               paymentFrequency: data.paymentFrequency,
               effectiveDate: data.effectiveDate,
-              fixedRate: data.fixedRate,
-              modifiedBy: "", // Replace with actual value
+              fixedRate: parseFloat(data.fixedRate),
+              modifiedBy: "tester", // Replace with actual value
               modifiedOn: new Date().toISOString(), // Replace with actual value
             },
           });
@@ -104,15 +104,15 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
                 )}
             </div>
             <div>
-                <Label htmlFor="feeName">Fee Name</Label>
+                <Label htmlFor="feeTypeName">Fee Name</Label>
                 <Input
-                    id="feeName"
+                    id="feeTypeName"
                     type="text"
                     placeholder="Fee Name"
-                    {...register("feeName")}
+                    {...register("feeTypeName")}
                 />
-                {errors.feeName && (
-                    <span className="text-red-500">{errors.feeName.message}</span>
+                {errors.feeTypeName && (
+                    <span className="text-red-500">{errors.feeTypeName.message}</span>
                 )}
             </div>
             <div>
@@ -192,7 +192,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
                 <Label htmlFor="fixedRate">Fixed Rate (%)</Label>
                 <Input
                     id="fixedRate"
-                    type="text"
+                    type="number"
                     placeholder="Fixed Rate"
                     {...register("fixedRate")}
                 />

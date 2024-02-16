@@ -18,13 +18,10 @@ import { useMutation } from "@apollo/client";
 import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
 
 const productTypeSchema = z.object({
-  productTypeCode: z
-    .string()
-    .min(3, { message: "Product Type Code is required" }),
   productTypeName: z
     .string()
     .min(3, { message: "Product Type Name is required" }),
-  productTypeDescription: z
+    description: z
     .string()
     .min(3, { message: "Product Type Description is required" }),
   active: z.boolean(),
@@ -55,8 +52,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const { toast } = useToast();
   const {
     register,
-    unregister,
-    watch,
     handleSubmit,
     control,
     formState: { errors },
@@ -64,28 +59,24 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     resolver: zodResolver(productTypeSchema),
   });
 
-  const watchInterestBearing = watch("interestBearing");
-  const watchFees = watch("fees");
   const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
 
   const onSubmit = handleSubmit((data: ProductTypeInput) => {
-    // Assuming you have a mutation function called createProductTypeMutation
+    console.log(data)
     createProductTypeMutation({
       variables: {
-        productTypeCode: data.productTypeCode,
         productTypeName: data.productTypeName,
-        productTypeDescription: data.productTypeDescription,
-        activeFlag: data.active,
+        description: data.description,
+        active: data.active,
         interestBearing: data.interestBearing,
-        fixedInterestRate: data.fixedInterestRate,
-        effectiveDate: data.effectiveDate,
+        fixedInterestRate: parseFloat(data.fixedInterestRate),
+        effectiveDate: new Date(data.effectiveDate).toISOString(),
         fees: data.fees,
         feeTypes: data.feeTypes,
         riskRating: data.riskRating,
         prefix: data.prefix,
         numberSchema: data.numberSchema,
         startingValue: data.startingValue,
-        // Add other fields according to your mutation if necessary
       },
     })
       .then(() => {
@@ -101,7 +92,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         });
       })
       .catch((error) => {
-        // Handle error accordingly, set error message or perform other actions
         console.error("Error creating product type:", error);
         toast({
           title: "Error",
@@ -109,19 +99,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         });
       });
   });
-  useEffect(() => {
-    if (watchInterestBearing) {
-      register("fixedInterestRate");
-    } else {
-      unregister("fixedInterestRate");
-    }
-
-    if (watchFees) {
-      register("feeTypes");
-    } else {
-      unregister("feeTypes");
-    }
-  }, [register, unregister, watchInterestBearing, watchFees]);
 
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
@@ -151,11 +128,11 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             <Input
               type="text"
               placeholder="Product Type Description"
-              {...register("productTypeDescription")}
+              {...register("description")}
             />
-            {errors.productTypeDescription && (
+            {errors.description && (
               <span className="text-sm text-red-500">
-                {errors.productTypeDescription.message}
+                {errors.description.message}
               </span>
             )}
           </div>
@@ -163,11 +140,11 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             <div className="flex items-center gap-2">
               <Input
                 type="checkbox"
-                placeholder="Active"
-                {...register("active")}
+                placeholder="interestBearing"
+                {...register("interestBearing")}
                 className="flex w-4 h-4"
               />
-              <Label>Active?</Label>
+              <Label>interestBearing?</Label>
             </div>
             {errors.active && (
               <span className="text-sm text-red-500">
@@ -175,6 +152,50 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               </span>
             )}
           </div>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <Input
+                type="checkbox"
+                placeholder="active"
+                {...register("active")}
+                className="flex w-4 h-4"
+              />
+              <Label>Active</Label>
+            </div>
+            {errors.active && (
+              <span className="text-sm text-red-500">
+                {errors.active.message}
+              </span>
+            )}
+          </div>
+          <div className="flex w-full gap-2">
+              <div className="w-full">
+                <Label>Fixed Interest Rate</Label>
+                <Input
+                  type="number"
+                  placeholder="Fixed Interest Rate"
+                  {...register("fixedInterestRate")}
+                />
+                {errors.fixedInterestRate && (
+                  <span className="text-sm text-red-500">
+                    {errors.fixedInterestRate.message}
+                  </span>
+                )}
+              </div>
+              <div className="w-full">
+                <Label>Effective Date</Label>
+                <Input
+                  type="date"
+                  placeholder="Effective Date"
+                  {...register("effectiveDate")}
+                />
+                {errors.effectiveDate && (
+                  <span className="text-sm text-red-500">
+                    {errors.effectiveDate.message}
+                  </span>
+                )}
+              </div>
+            </div>
           <div className="hidden">
             <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
               Modified By
@@ -207,70 +228,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <span className="text-red-500">{errors.modifiedOn.message}</span>
             )}
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <Input
-                type="checkbox"
-                placeholder="Interest Bearing"
-                {...register("interestBearing")}
-                className="flex w-4 h-4"
-              />
-              <Label>Is Interest Bearing?</Label>
-            </div>
-            {errors.interestBearing && (
-              <span className="text-sm text-red-500">
-                {errors.interestBearing.message}
-              </span>
-            )}
-          </div>
-          {watchInterestBearing && (
-            <div className="flex w-full gap-2">
-              <div className="w-full">
-                <Label>Fixed Interest Rate</Label>
-                <Input
-                  type="number"
-                  placeholder="Fixed Interest Rate"
-                  {...register("fixedInterestRate")}
-                />
-                {errors.fixedInterestRate && (
-                  <span className="text-sm text-red-500">
-                    {errors.fixedInterestRate.message}
-                  </span>
-                )}
-              </div>
-              <div className="w-full">
-                <Label>Effective Date</Label>
-                <Input
-                  type="date"
-                  placeholder="Effective Date"
-                  {...register("effectiveDate")}
-                />
-                {errors.effectiveDate && (
-                  <span className="text-sm text-red-500">
-                    {errors.effectiveDate.message}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <Input
-                type="checkbox"
-                placeholder="Fees"
-                {...register("fees")}
-                className="flex w-4 h-4"
-              />
-              <Label>Has Fees?</Label>
-            </div>
-            {errors.fees && (
-              <span className="text-sm text-red-500">
-                {errors.fees.message}
-              </span>
-            )}
-          </div>
-          {watchFees && (
             <div>
               <Label>Fee Types</Label>
               <Controller
@@ -296,7 +253,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
                 </span>
               )}
             </div>
-          )}
 
           <div>
             <Label>Risk Rating</Label>

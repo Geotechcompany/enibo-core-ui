@@ -1,34 +1,33 @@
+import { TransactionType } from "@/types/global";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { columns } from "@/components/transaction-type-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FaPlus } from "react-icons/fa";
 import { useQuery } from "@apollo/client";
-import { TransactionTypeSchemaType } from "@/components/transaction-type-list/schema";
-import queryTransactionList from "@/components/transaction-type-list/query";
-import { columns } from "@/components/transaction-type-list/columns";
+import queryTransactionTypesList from "@/components/transaction-list/query";
 
 interface TransactionTypesProps {}
 
-const TransactionTypes: FC<TransactionTypesProps> = () => {
-  const [transactions, setTransactions] = useState<TransactionTypeSchemaType[]>([]);
+const TransactionTypesList: FC<TransactionTypesProps> = () => {
+  const [TransactionTypesList, setTransactionTypesList] = useState<TransactionType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const location = useLocation();
+ const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
- 
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryTransactionList);
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryTransactionTypesList);
+
   useEffect(() => {
     if (data) {
-      setTransactions(data.transactions);
+      setTransactionTypesList(data.transactionTypes);
     }
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
 
-
+ 
   return (
     <div>
       <div className="mx-4">
@@ -79,18 +78,17 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
           </div>
         </div>
         <div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p>Error: {error}</p>
-          ) : (
-            <DataTable
-              columns={columns}
-              data={transactions} 
-              
-            />
-          )}
-               </div>
+        {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={TransactionTypesList} 
+              />
+            )}
+              </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
             <Button
@@ -128,4 +126,6 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
     </div>
   );
 };
-export default TransactionTypes;
+
+
+export default TransactionTypesList;

@@ -1,8 +1,10 @@
-import { gql } from "@apollo/client";
 
-export const CREATE_BRANCH = gql`
+
+  import { gql } from "@apollo/client";
+
+export const CREATE_FEE_TYPE_LIST = gql`
   mutation CreateFeeType(
-    $feeName: String!
+    $feeTypeName: String!
     $description: String!
     $transactionTypes: [String]!
     $paymentFrequency: String!
@@ -12,7 +14,7 @@ export const CREATE_BRANCH = gql`
     $modifiedOn: String!
   ) {
     createFeeType(
-      feeName: $feeName
+      feeTypeName: $feeTypeName
       description: $description
       transactionTypes: $transactionTypes
       paymentFrequency: $paymentFrequency
@@ -21,7 +23,7 @@ export const CREATE_BRANCH = gql`
       modifiedBy: $modifiedBy
       modifiedOn: $modifiedOn
     ) {
-      feeName
+      feeTypeName
       description
       transactionTypes
       paymentFrequency

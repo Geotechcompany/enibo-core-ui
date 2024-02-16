@@ -71,17 +71,21 @@ const Customers: FC<CustomersProps> = () => {
           </div>
         </div>
         <div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error: {error}</p>
-            ) : (
-              <DataTable
-                columns={columns}
-                data={Customers} 
-              />
-            )}
-              </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          data && data.length ? (
+            <DataTable
+              columns={columns}
+              data={Customers} 
+            />
+          ) : (
+            <p>No data available</p>
+          )
+        )}
+          </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
             <Button

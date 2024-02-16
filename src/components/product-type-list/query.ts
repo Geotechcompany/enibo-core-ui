@@ -5,7 +5,7 @@ query ProductTypes {
     productTypes {
       productTypeName
       productType
-      productTypeDescription
+      description
       active
       interestBearing
       fixedInterestRate

@@ -5,7 +5,7 @@ const CREATE_PRODUCT_TYPE_MUTATION = gql`
   mutation CreateProductType(
     $productTypeName: String!
     $productType: String!
-    $productTypeDescription: String!
+    $description: String!
     $active: Boolean!
     $interestBearing: Boolean!
     $fixedInterestRate: Float!
@@ -22,7 +22,7 @@ const CREATE_PRODUCT_TYPE_MUTATION = gql`
     createProductType(
       productTypeName: $productTypeName
       productType: $productType
-      productTypeDescription: $productTypeDescription
+      description: $description
       active: $active
       interestBearing: $interestBearing
       fixedInterestRate: $fixedInterestRate
@@ -38,7 +38,7 @@ const CREATE_PRODUCT_TYPE_MUTATION = gql`
     ) {
       productTypeName
       productType
-      productTypeDescription
+      description
       active
       interestBearing
       fixedInterestRate

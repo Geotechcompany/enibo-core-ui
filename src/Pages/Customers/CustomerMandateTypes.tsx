@@ -1,21 +1,36 @@
 import { DataTable } from "@/components/datatable/data-table";
-import { columns } from "@/components/mandate-type-list/columns";
 import { Button } from "@/components/ui/button";
 import { MandateType } from "@/types/global";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import mandateTypesList from "@/components/mandate-type-list/mandate-types.json";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryMandateList from "@/components/mandate-type-list/query";
+import { columns } from "@/components/mandate-type-list/columns";
 
 interface CustomerMandateTypesProps {}
 
 const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
-  const mandateTypes: MandateType[] = mandateTypesList as MandateType[];
+  const [MandateTypes, setMandateTypes] = useState<MandateType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/customers/account-mandate-types/new-mandate-type",
   };
+  
+
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryMandateList);
+
+  useEffect(() => {
+    if (data) {
+      setMandateTypes(data.MandateTypes);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
   return (
     <div>
       <div className="mx-4">
@@ -56,8 +71,21 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
           </div>
         </div>
         <div>
-          {mandateTypes && <DataTable columns={columns} data={mandateTypes} />}
-        </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          data && data.length ? (
+            <DataTable
+              columns={columns}
+              data={MandateTypes} 
+            />
+          ) : (
+            <p>No data available</p>
+          )
+        )}
+          </div>
       </div>
     </div>
   );

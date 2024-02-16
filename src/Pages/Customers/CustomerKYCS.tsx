@@ -18,6 +18,7 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+
   const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -47,7 +48,6 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
-
 
   return (
     <>
@@ -99,7 +99,6 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
           </div>
         </div>
         <div>
-        <div>
             {loading ? (
               <p>Loading...</p>
             ) : error ? (
@@ -111,46 +110,8 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
               />
             )}
               </div>
-        <div className="flex items-center my-4">
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Edit
-            </Button>
-          </div>
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Copy
-            </Button>
-          </div>
-
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
       </div>
- 
-        </div>
-        
-        </div>
-  
- 
+    </div>
     
     <Transition appear show={isOpen} as={Fragment}>
     <Dialog as="div" className="relative z-10" onClose={() => {}}>
@@ -163,7 +124,7 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-   
+        <div></div>
       </Transition.Child>
 
       <div className="fixed inset-0 overflow-y-auto">
@@ -243,9 +204,7 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
       </div>
     </Dialog>
   </Transition>
-
   </>
-
   );
 };
 

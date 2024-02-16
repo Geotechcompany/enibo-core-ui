@@ -1,9 +1,12 @@
+
+  
+
 import { gql } from "@apollo/client";
 
 const queryFeeTypesList = gql`
 query FeeTypes {
     feeTypes {
-      feeName
+      feeTypeName
       description
       transactionTypes
       paymentFrequency

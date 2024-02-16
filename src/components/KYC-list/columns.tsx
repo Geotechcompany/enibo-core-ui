@@ -36,7 +36,7 @@ export const columns: ColumnDef<KYCType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KYC Type" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("kycType")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("kycTypeId")}</div>,
     enableSorting: true,
     enableHiding: true,
   },

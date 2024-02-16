@@ -49,15 +49,14 @@ export type Customer = {
 
 export type ProductType = {
     productTypeName: string;
-    productTypeCode: string;
     productType: string;
-    productTypeDescription: string;
+    description: string;
     active: boolean;
     interestBearing: boolean;
-    fixedInterestRate: number | null; // It can be a number or null if not applicable
+    fixedInterestRate: number;
     effectiveDate: string;
     fees: boolean;
-    feeTypes: string[]; // Assuming it's an array of strings, modify as needed
+    feeTypes: string[]; 
     riskRating: string;
     prefix: string;
     numberSchema: string;
@@ -150,9 +149,9 @@ export type KYCType = {
     modifiedOn: string;
 };
 export type MandateType = {
-    mandateTypeCode: string;
     mandateTypeName: string;
     mandateTypeDescription: string;
+    mandateTypeCode: string;
     modifiedBy: string;
     modifiedOn: string;
 };
@@ -264,7 +263,7 @@ export type ApprovalRule = {
     modifiedOn: string;
     modifiedBy: string;
   }
-  
+
 
 
   

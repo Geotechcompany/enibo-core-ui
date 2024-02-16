@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 // Define the mutation
 const CREATE_FEE_TYPE_MUTATION = gql`
   mutation CreateFeeType(
-    $feeName: String!
+    $feeTypeName: String!
     $description: String!
     $transactionTypes: [String]!
     $paymentFrequency: String!
@@ -13,7 +13,7 @@ const CREATE_FEE_TYPE_MUTATION = gql`
     $modifiedOn: String!
   ) {
     createFeeType(
-      feeName: $feeName
+      feeTypeName: $feeTypeName
       description: $description
       transactionTypes: $transactionTypes
       paymentFrequency: $paymentFrequency
@@ -22,7 +22,7 @@ const CREATE_FEE_TYPE_MUTATION = gql`
       modifiedBy: $modifiedBy
       modifiedOn: $modifiedOn
     ) {
-      feeName
+      feeTypeName
       description
       transactionTypes
       paymentFrequency
