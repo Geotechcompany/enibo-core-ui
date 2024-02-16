@@ -1,19 +1,33 @@
 import { TransactionType } from "@/types/global";
-import { FC } from "react";
-import transactionTypeList from "@/components/transaction-type-list/transaction-types.json";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { columns } from "@/components/transaction-type-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FaPlus } from "react-icons/fa";
+import { useQuery } from "@apollo/client";
+import queryTransactionTypesList from "@/components/transaction-list/query";
 
 interface TransactionTypesProps {}
 
-const TransactionTypes: FC<TransactionTypesProps> = () => {
-  const transactionTypes: TransactionType[] = transactionTypeList;
-  const location = useLocation();
+const TransactionTypesList: FC<TransactionTypesProps> = () => {
+  const [TransactionTypesList, setTransactionTypesList] = useState<TransactionType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+ const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryTransactionTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setTransactionTypesList(data.transactionTypes);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+
+ 
   return (
     <div>
       <div className="mx-4">
@@ -64,13 +78,54 @@ const TransactionTypes: FC<TransactionTypesProps> = () => {
           </div>
         </div>
         <div>
-          {transactionTypes && (
-            <DataTable columns={columns} data={transactionTypes} />
-          )}
+        {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={TransactionTypesList} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default TransactionTypes;
+
+export default TransactionTypesList;

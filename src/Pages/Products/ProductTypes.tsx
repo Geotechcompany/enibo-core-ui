@@ -5,26 +5,26 @@ import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/product-type-list/columns";
 import { FaPlus } from "react-icons/fa";
 import { ProductType } from "@/types/global";
-import queryProductList from "@/components/product-type-list/query";
 import { useQuery } from "@apollo/client";
+import queryProductTypesList from "@/components/product-type-list/query";
 
 interface ProductTypesProps {}
 
 const ProductTypes: FC<ProductTypesProps> = () => {
-  const [products, setProducts] = useState<ProductType[]>([]);
+  const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/products/product-types/new-product-type",
   };
-
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryProductList);
+  const { data, loading: queryLoading, error: queryError } = useQuery(queryProductTypesList);
 
   useEffect(() => {
     if (data) {
-      setProducts(data.products);
+      setProductTypes(data.productTypes);
     }
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
@@ -79,21 +79,54 @@ const ProductTypes: FC<ProductTypesProps> = () => {
           </div>
         </div>
         <div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p>Error: {error}</p>
-          ) : (
-            <DataTable
-              columns={columns}
-              data={products} 
-              
-            />
-          )}
+        {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={ProductTypes} 
+              />
+            )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default ProductTypes;

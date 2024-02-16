@@ -1,7 +1,8 @@
-import { gql } from "@apollo/client";
 
-// Define the mutation
-const CREATE_FEE_TYPE_MUTATION = gql`
+
+  import { gql } from "@apollo/client";
+
+export const CREATE_FEE_TYPE_LIST = gql`
   mutation CreateFeeType(
     $feeTypeName: String!
     $description: String!
@@ -34,4 +35,11 @@ const CREATE_FEE_TYPE_MUTATION = gql`
   }
 `;
 
-export default CREATE_FEE_TYPE_MUTATION;
+
+
+
+
+
+
+
+

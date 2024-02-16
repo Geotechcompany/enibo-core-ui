@@ -46,6 +46,7 @@ import AppSettingsDetails from "./Pages/AppSettings/AppSettingsDetails";
 import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
+import BranchType from "./Pages/Branches/BranchTypesPage";
 
 function App() {
   return (
@@ -97,7 +98,7 @@ function App() {
           path="/administration/branches/branch-types"
           element={
             <MainLayout>
-              <Branches />
+              <BranchType />
             </MainLayout>
           }
         />
