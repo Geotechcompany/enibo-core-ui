@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 
 const queryProductList = gql`
-query ProductTypes {
+  query ProductTypes {
     productTypes {
       productTypeName
-      productType
       description
       active
       interestBearing
@@ -19,6 +18,7 @@ query ProductTypes {
       modifiedBy
       modifiedOn
     }
-  }`
+  }
+`;
 
-  export default queryProductList;
+export default queryProductList;
