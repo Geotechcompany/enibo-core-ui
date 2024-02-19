@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, concat } from "@apollo/client";
 
-const httpLink = new HttpLink({ uri: '/api/* http://172.105.92.130:4000/graphql:splat 200!' });
+const httpLink = new HttpLink({ uri: 'http://172.105.92.130:4000/graphql' });
 
 
 const authMiddleware = new ApolloLink((operation, forward) => {
