@@ -1,17 +1,18 @@
-import { columns } from "@/components/branch-types/columns";
-import { BranchTypes } from "@/components/branch-types/schema";
-import { DataTable } from "@/components/datatable/data-table";
-import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import { useQuery } from "@apollo/client";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/datatable/data-table";
+import { columns } from "@/components/branch-types/columns";
+import { DELETE_BRANCH_TYPE, UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
+import { BranchTypes } from "@/components/branch-types/schema";
 import queryBranchTypesList from "@/components/branch-types/query";
 
 interface BranchesProps {}
 
 const BranchType: FC<BranchesProps> = () => {
-  const [BranchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
+  const [branchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +21,11 @@ const BranchType: FC<BranchesProps> = () => {
   const from = location.state?.from || {
     pathname: "/administration/branches/new-branch-type",
   };
+
   const { data, loading: queryLoading, error: queryError } = useQuery(queryBranchTypesList);
+  const [deleteBranchType] = useMutation(DELETE_BRANCH_TYPE);
+  const [updateBranchType] = useMutation(UPDATE_BRANCH_TYPE);
+  const [selectedBranchType, setSelectedBranchType] = useState<BranchTypes | null>(null); // Track selected branch type
 
   useEffect(() => {
     if (data) {
@@ -30,6 +35,32 @@ const BranchType: FC<BranchesProps> = () => {
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
 
+  const handleDelete = async (branchTypeName: string) => {
+    try {
+      await deleteBranchType({ variables: { branchTypeName } });
+      setBranchTypes(branchTypes.filter((branchType) => branchType.branchTypeName !== branchTypeName));
+    } catch (error) {
+      console.error("Error deleting branch type:", error);
+    }
+  };
+
+    if (!branchTypes) return; // Do nothing if branchType is null
+    const handleEdit = async (branchType: BranchTypes | null) => {
+      if (!branchType) return; // Do nothing if branchType is null
+    
+      const { branchTypeName, description } = branchType;
+      try {
+        // Perform mutation to update branch type
+        await updateBranchType({
+          variables: { branchTypeName, description },
+        });
+        setSelectedBranchType(branchType); // Set selected branch type for editing
+        // Handle success, e.g., update local state or refetch data
+      } catch (error) {
+        console.error("Error updating branch type:", error);
+      }
+    };
+    
   return (
     <div>
       <div className="mx-4">
@@ -59,37 +90,40 @@ const BranchType: FC<BranchesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Branch Types</h1>
           </div>
           <div className="">
-          <Button
+            <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
           </div>
         </div>
         <div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error: {error}</p>
-            ) : (
-              <DataTable
-                columns={columns}
-                data={BranchTypes} 
-              />
-            )}
-              </div>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <DataTable
+            columns={columns}
+            data={branchTypes}
+            onRowEdit={setSelectedBranchType} // Set selected branch type for editing
+            onRowDelete={handleDelete}
+            />
+          )}
+        </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Edit
-            </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-[#36459C]"
+            onClick={() => handleEdit(selectedBranchType)}
+            // Disable if no branch type selected
+          >
+            Edit
+          </Button>
           </div>
           <div className="mr-2">
             <Button
@@ -101,16 +135,17 @@ const BranchType: FC<BranchesProps> = () => {
               Copy
             </Button>
           </div>
-
           <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Delete
-            </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-[#36459C]"
+            onClick={() => handleDelete(selectedBranchType?.branchTypeName || '')} // Delete selected branch type
+          // Disable if no branch type selected
+          >
+            Delete
+          </Button>
+
           </div>
         </div>
       </div>
