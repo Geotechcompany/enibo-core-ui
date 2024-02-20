@@ -30,53 +30,36 @@ export const columns: ColumnDef<LedgerCategory>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "ledgerCategory",
+    accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ledger Category" />
+      <DataTableColumnHeader column={column} title="id" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("ledgerCategory")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
   {
-    accessorKey: "ledgerCategoryDescription",
+    accessorKey: "ledgerCategory",
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Ledger Category Description"
+        title="Ledger Category"
       />
     ),
     cell: ({ row }) => (
-      <div className="">{row.getValue("ledgerCategoryDescription")}</div>
+      <div className="">{row.getValue("ledgerCategory")}</div>
     ),
     enableSorting: true,
     enableHiding: true,
   },
   {
-    accessorKey: "categoryNumber",
+    accessorKey: "description",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category Number" />
+      <DataTableColumnHeader column={column} title="Description" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("categoryNumber")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    accessorKey: "modifiedBy",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Modified By" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "modifiedOn",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Modified On" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
+
 ];

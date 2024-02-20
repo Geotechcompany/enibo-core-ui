@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,10 +15,11 @@ import {
 } from "./ui/select";
 import { MultiSelect } from "./multi-select";
 import { X } from "lucide-react";
+import { gql, useQuery } from "@apollo/client";
+import { KYCType, ProductType } from "@/types/global";
 
 const customerRetailSchema = z.object({
-  jointKYC: z
-    .array(z.object({ value: z.string(), label: z.string() })),
+  jointKYC: z.array(z.object({ value: z.string(), label: z.string() })),
   individualKYC: z.string(),
   kycType: z.string().refine((value) => value === 'personal' || value === 'joint', {
     message: 'Invalid KYC Type',
@@ -62,9 +63,29 @@ type CustomerRetailInput = z.infer<typeof customerRetailSchema>;
 
 interface NewCustomerRetailFormProps {}
 
+const GET_PRODUCT_TYPES = gql`
+query ProductTypes {
+  productTypes {
+    productTypeId
+    productTypeName
+  }
+}
+`;
+const GET_KYC_TYPES = gql`
+query kycType {
+  kycTypes {
+    kycTypeId
+    kycTypeName
+  }
+}
+`;
+
+
 const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
   const [kycType, setKycType] = useState(''); 
-
+  
+  const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
+  const [KYCType, setKycTypes] = useState<KYCType[]>([]);
   const handleKycTypeChange = (value: string) => {
     setKycType(value);
   };
@@ -86,13 +107,25 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
   }]);
   const { toast } = useToast();
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<CustomerRetailInput>({
     resolver: zodResolver(customerRetailSchema),
   });
+ 
+    const { data: kycData } = useQuery(GET_KYC_TYPES); // Execute the query
+    useEffect(() => {
+      if (data && data.kycTypes) {
+        setKycTypes(data.kycTypes);
+      }
+    }, [kycData]);
+  const {data } = useQuery(GET_PRODUCT_TYPES);
+useEffect(() => {
+  if (data && data.productTypes) {
+    setProductTypes(data.productTypes);
+  }
+}, [data]);
   const onSubmit = (data: CustomerRetailInput) => {
     toast({
       title: "Customer Retail Created",
@@ -103,6 +136,8 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
       ),
     });
   };
+
+
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -113,8 +148,8 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
             </div>
             <div className="grid grid-cols-1 gap-4">
               <div>
-              <Label htmlFor="kycType">KYC Type</Label>
-              <Controller
+                <Label htmlFor="kycType">KYC Type</Label>
+                <Controller
                   control={control}
                   name="kycType"
                   render={({ field: { onChange, value } }) => (
@@ -140,45 +175,46 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       name="individualKYC"
                       render={({ field: { onChange, value } }) => (
                         <Select onValueChange={onChange} value={value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Individual KYC" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="John">John Doe - A12345</SelectItem>
-                            <SelectItem value="Jane">Jane Smith - B67890</SelectItem>
-                            <SelectItem value="Robert">Robert Johnson - C13579</SelectItem>
-                            <SelectItem value="Emily">Emily Davis - D24680</SelectItem>
-                            <SelectItem value="Michael">Michael Wilson - E97531</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Product Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over productTypes state to render select options */}
+                          {KYCType.map((type) => (
+                            <SelectItem key={type.kycTypeId} value={type.kycTypeId}>
+                              {type.kycTypeName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  </>
+                )}
+                { kycType === 'joint' && (
+                  <>
+                    <Label htmlFor="jointKYC">Joint Individual KYC</Label>
+                    <Controller
+                      control={control}
+                      name="jointKYC"
+                      render={({ field: { onChange, value } }) => (
+                        <MultiSelect
+                          onChange={onChange}
+                          selected={value}
+                          placeholder="Select Individuals KYC"
+                          className="w-full"
+                          options={[
+                            { value: "A12345", label: "John Doe - A12345" },
+                            { value: "B67890", label: "Jane Smith - B67890" },
+                            { value: "C13579", label: "Robert Johnson - C13579" },
+                            { value: "D24680", label: "Emily Davis - D24680" },
+                            { value: "E97531", label: "Michael Wilson - E97531" },
+                          ]}
+                        />
                       )}
                     />
                   </>
                 )}
-               { kycType === 'joint' && (
-                 <>
-                 <Label htmlFor="jointKYC">Joint Individual KYC</Label>
-                 <Controller
-                   control={control}
-                   name="jointKYC"
-                   render={({ field: { onChange, value } }) => (
-                     <MultiSelect
-                       onChange={onChange}
-                       selected={value}
-                       placeholder="Select Individuals KYC"
-                       className="w-full"
-                       options={[
-                         { value: "A12345", label: "John Doe - A12345" },
-                         { value: "B67890", label: "Jane Smith - B67890" },
-                         { value: "C13579", label: "Robert Johnson - C13579" },
-                         { value: "D24680", label: "Emily Davis - D24680" },
-                         { value: "E97531", label: "Michael Wilson - E97531" },
-                       ]}
-                     />
-                   )}
-                 />
-               </>
-               )}
                 {errors.individualKYC && (
                   <div className="text-red-500">
                     {errors.individualKYC.message}
@@ -200,72 +236,21 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                   render={({ field: { onChange, value } }) => (
                     <Select onValueChange={onChange} value={value}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Product Types" />
+                        <SelectValue placeholder="Select Product Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Savings">Savings Account</SelectItem>
-                        <SelectItem value="Checking">Checking Account</SelectItem>
-                        <SelectItem value="Fixed">Fixed Deposit</SelectItem>
-                        <SelectItem value="MortgageAccount">Home Mortgage</SelectItem>
-                        <SelectItem value="LoanAccount">Personal Loan</SelectItem>
+                        {/* Map over productTypes state to render select options */}
+                        {ProductTypes.map((type) => (
+                          <SelectItem key={type.productTypeId} value={type.productTypeId}>
+                            {type.productTypeName}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )}
                 />
                 {errors.productTypes && (
-                  <div className="text-red-500">
-                    {errors.productTypes.message}
-                  </div>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="accountCurrency">Account Currency</Label>
-                <Controller
-                  control={control}
-                  name="accountCurrency"
-                  render={({ field: { onChange, value } }) => (
-                    <Select onValueChange={onChange} value={value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Account Currency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
-                        <SelectItem value="GBP">GBP</SelectItem>
-                        <SelectItem value="CAD">CAD</SelectItem>
-                        <SelectItem value="AUD">AUD</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.accountCurrency && (
-                  <div className="text-red-500">
-                    {errors.accountCurrency.message}
-                  </div>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="riskRating">Risk Rating</Label>
-                <Controller
-                  control={control}
-                  name="riskRating"
-                  render={({ field: { onChange, value } }) => (
-                    <Select onValueChange={onChange} value={value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select rating" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Low">Low</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="High">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.riskRating && (
-                  <div className="text-red-500">
-                    {errors.riskRating.message}
-                  </div>
+                  <div className="text-red-500">{errors.productTypes.message}</div>
                 )}
               </div>
             </div>
@@ -296,23 +281,23 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                     Signatory KYC
                   </Label>
                   <Controller
-                      control={control}
-                      name={`mandates.${index}.signatory`}
-                      render={({ field: { onChange, value } }) => (
-                        <Select onValueChange={onChange} value={value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Individual KYC" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="John">John Doe - A12345</SelectItem>
-                            <SelectItem value="Jane">Jane Smith - B67890</SelectItem>
-                            <SelectItem value="Robert">Robert Johnson - C13579</SelectItem>
-                            <SelectItem value="Emily">Emily Davis - D24680</SelectItem>
-                            <SelectItem value="Michael">Michael Wilson - E97531</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    /> 
+                    control={control}
+                    name={`mandates.${index}.signatory`}
+                    render={({ field: { onChange, value } }) => (
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Individual KYC" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="John">John Doe - A12345</SelectItem>
+                          <SelectItem value="Jane">Jane Smith - B67890</SelectItem>
+                          <SelectItem value="Robert">Robert Johnson - C13579</SelectItem>
+                          <SelectItem value="Emily">Emily Davis - D24680</SelectItem>
+                          <SelectItem value="Michael">Michael Wilson - E97531</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  /> 
                   {errors.mandates?.[index]?.signatory && (
                     <div className="text-red-500">
                       {errors.mandates?.[index]?.signatory?.message}
@@ -410,21 +395,28 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                 onClick={() =>
                   setMandateDetails((prev) => [
                     ...prev,
-                    { signingMandateType: [],
+                    {
+                      signingMandateType: [],
                       signingRule: "",
                       minimumPaymentAmount: 0,
                       maximumPaymentAmount: 0,
-                      maximumDailyLimit: 0, },
+                      maximumDailyLimit: 0,
+                    },
                   ])
                 }
               >
-                Add Signing
+                Add Mandate Detail
               </Button>
             </div>
             {mandateDetails.map((_mandate, index) => (
-              <div className="flex gap-4">
+              <div className="flex w-full gap-4">
                 <div className="w-[50%]">
-                  <Label htmlFor="signingMandateType">Mandate Type</Label>
+                  <Label
+                    htmlFor="signingMandateType"
+                    className={index > 0 ? "sr-only" : ""}
+                  >
+                    Signing Mandate Type
+                  </Label>
                   <Controller
                     control={control}
                     name={`signingRules.${index}.signingMandateType`}
@@ -432,7 +424,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       <MultiSelect
                         onChange={onChange}
                         selected={value}
-                        placeholder="Select Mandate Type"
+                        placeholder="Select Signing Mandate Type"
                         className="w-full"
                         options={[
                           { value: "A12345", label: "Full Access" },
@@ -444,78 +436,121 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       />
                     )}
                   />
-                  {errors?.signingRules?.[index]?.signingMandateType && (
+                  {errors.signingRules?.[index]?.signingMandateType && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.signingMandateType?.message}
+                      {errors.signingRules?.[index]?.signingMandateType?.message}
                     </div>
                   )}
                 </div>
                 <div className="w-[50%]">
-                  <Label htmlFor="signingRule">Signing Rule</Label>
-                  <Input
-                    type="text"
-                    id="signingRule"
-                    {...register(`signingRules.${index}.signingRule`)}
-                  />
-                  {errors?.signingRules?.[index]?.signingRule && (
-                    <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.signingRule?.message}
-                    </div>
-                  )}
-                </div>
-                <div className="w-[50%]">
-                  <Label htmlFor="minimumPaymentAmount">
-                  Minimum Transaction Amount
+                  <Label
+                    htmlFor="signingRule"
+                    className={index > 0 ? "sr-only" : ""}
+                  >
+                    Signing Rule
                   </Label>
-                  <Input
-                    type="number"
-                    id="minimumPaymentAmount"
-                    {...register(`signingRules.${index}.minimumPaymentAmount`)}
+                  <Controller
+                    control={control}
+                    name={`signingRules.${index}.signingRule`}
+                    render={({ field: { onChange, value } }) => (
+                      <Input
+                        onChange={onChange}
+                        value={value}
+                        placeholder="Enter Signing Rule"
+                      />
+                    )}
                   />
-                  {errors?.signingRules?.[index]?.minimumPaymentAmount && (
+                  {errors.signingRules?.[index]?.signingRule && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.minimumPaymentAmount?.message}
+                      {errors.signingRules?.[index]?.signingRule?.message}
                     </div>
                   )}
                 </div>
                 <div className="w-[50%]">
-                  <Label htmlFor="maximumPaymentAmount">
-                    Maximum Transaction Amount
+                  <Label
+                    htmlFor="minimumPaymentAmount"
+                    className={index > 0 ? "sr-only" : ""}
+                  >
+                    Minimum Payment Amount
                   </Label>
-                  <Input
-                    type="number"
-                    id="maximumPaymentAmount"
-                    {...register(`signingRules.${index}.maximumPaymentAmount`)}
+                  <Controller
+                    control={control}
+                    name={`signingRules.${index}.minimumPaymentAmount`}
+                    render={({ field: { onChange, value } }) => (
+                      <Input
+                        onChange={onChange}
+                        value={value}
+                        type="number"
+                        placeholder="Enter Minimum Payment Amount"
+                      />
+                    )}
                   />
-                  {errors?.signingRules?.[index]?.maximumPaymentAmount && (
+                  {errors.signingRules?.[index]?.minimumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.maximumPaymentAmount?.message}
+                      {errors.signingRules?.[index]?.minimumPaymentAmount?.message}
                     </div>
                   )}
                 </div>
                 <div className="w-[50%]">
-                  <Label htmlFor="maximumDailyLimit">Maximum Daily Limit</Label>
-                  <Input
-                    type="number"
-                    id="maximumDailyLimit"
-                    {...register(`signingRules.${index}.maximumDailyLimit`)}
+                  <Label
+                    htmlFor="maximumPaymentAmount"
+                    className={index > 0 ? "sr-only" : ""}
+                  >
+                    Maximum Payment Amount
+                  </Label>
+                  <Controller
+                    control={control}
+                    name={`signingRules.${index}.maximumPaymentAmount`}
+                    render={({ field: { onChange, value } }) => (
+                      <Input
+                        onChange={onChange}
+                        value={value}
+                        type="number"
+                        placeholder="Enter Maximum Payment Amount"
+                      />
+                    )}
                   />
-                  {errors?.signingRules?.[index]?.maximumDailyLimit && (
+                  {errors.signingRules?.[index]?.maximumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.maximumDailyLimit?.message}
+                      {errors.signingRules?.[index]?.maximumPaymentAmount?.message}
                     </div>
                   )}
                 </div>
-                <div className="w-[5%] flex items-end">
+                <div className="w-[50%]">
+                  <Label
+                    htmlFor="maximumDailyLimit"
+                    className={index > 0 ? "sr-only" : ""}
+                  >
+                    Maximum Daily Limit
+                  </Label>
+                  <Controller
+                    control={control}
+                    name={`signingRules.${index}.maximumDailyLimit`}
+                    render={({ field: { onChange, value } }) => (
+                      <Input
+                        onChange={onChange}
+                        value={value}
+                        type="number"
+                        placeholder="Enter Maximum Daily Limit"
+                      />
+                    )}
+                  />
+                  {errors.signingRules?.[index]?.maximumDailyLimit && (
+                    <div className="text-red-500">
+                      {errors.signingRules?.[index]?.maximumDailyLimit?.message}
+                    </div>
+                  )}
+                </div>
+                <div className="w-[5%] relative justify-end">
                   <Button
                     variant="outline"
                     size="icon"
-                    className="mb-1"
+                    className="mt-4"
                     onClick={() => {
                       setMandateDetails((prev) => {
-                        const newMandateRules = [...prev];
-                        newMandateRules.splice(index, 1);
-                        return newMandateRules;
+                        const newMandates = [...prev];
+                        newMandates.splice(index, 1);
+                        return newMandates;
                       });
                     }}
                   >
@@ -526,11 +561,15 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
             ))}
           </div>
         </div>
-        <div className="mt-4 ">
-          <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
+        <div className="flex justify-end mt-6 space-x-4">
+          <Button
+            type="button"
+            onClick={() => window.history.back()}
+            variant="outline"
+          >
             Cancel
           </Button>
+          <Button type="submit">Create Customer Retail</Button>
         </div>
       </form>
     </section>

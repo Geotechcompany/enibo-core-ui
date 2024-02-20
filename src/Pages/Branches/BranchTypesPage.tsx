@@ -108,8 +108,6 @@ const BranchType: FC<BranchesProps> = () => {
             <DataTable
             columns={columns}
             data={branchTypes}
-            onRowEdit={setSelectedBranchType} // Set selected branch type for editing
-            onRowDelete={handleDelete}
             />
           )}
         </div>

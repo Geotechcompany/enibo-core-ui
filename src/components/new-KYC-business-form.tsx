@@ -1,5 +1,6 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -14,11 +15,13 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/client";
-import {CREATE_BUSINESS_KYC} from "@/types/mutations"
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_BUSINESS_KYC } from "@/types/mutations";
 
+import queryKycTypesList from "./kyc-type-list/query";
 
 const newKYCBusinessSchema = z.object({
+  kycType: z.string().min(3, { message: "KYC Type is required" }),
   legalEntityName: z
     .string()
     .min(3, { message: "Legal Entity Name is required" }),
@@ -61,7 +64,8 @@ interface NewKYCBusinessFormProps {}
 
 const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
   const { toast } = useToast();
-  const [createBusinessKyc] = useMutation(CREATE_BUSINESS_KYC)
+  const [createBusinessKyc] = useMutation(CREATE_BUSINESS_KYC);
+  const [KYCTypes, setKycsTypes] = useState<any[]>([]); // State to track the selected KYC type
   const {
     register,
     handleSubmit,
@@ -71,9 +75,9 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
     resolver: zodResolver(newKYCBusinessSchema),
   });
   const onSubmit = (data: NewKYCBusinessInput) => {
-    console.log(data)
+    console.log(data);
     const input = {
-      kycType: "98ae0ccf-65a7-484e-91bd-d30ff531c7ca", //TODO: get kyc type id from context
+      kycType: data.kycType, //TODO: get kyc type id from context
       legalEntityName: data.legalEntityName,
       legalStatus: data.legalStatus,
       dateOfIncorporation: data.dateOfIncorporation,
@@ -92,16 +96,28 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
       modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
         .toISOString()
         .split(".")[0],
-    }
-    createBusinessKyc({variables: input})
+    };
+    createBusinessKyc({ variables: input });
     toast({
       title: "New KYC Business Created",
-      description: "Successfully created new business KYC"
+      description: "Successfully created new business KYC",
     });
   };
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryKycTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setKycsTypes(data.kycTypes);
+    }
+  }, [data, queryLoading, queryError]);
+
   return (
     <section>
-       <div className="pt-2 ml-4">
+      <div className="pt-2 ml-4">
         <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
           <ol className="inline-flex p-0 m-0 list-none">
             <li className="flex items-center m-0">
@@ -122,18 +138,42 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
           </ol>
         </nav>
         <div className="flex items-center justify-between my-4">
-        <div className="">
-          <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">Customer KYC Details</h1>
+          </div>
         </div>
-      </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 border border-b-0">
-           <div className="p-4">
+            <div className="p-4">
               <h3>BUSINESS DETAILS</h3>
             </div>
             <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
+              <div>
+                <Label htmlFor="kycType">KYC Type</Label>
+                <Controller
+                  control={control}
+                  name="kycType"
+                  render={({ field: { onChange, value } }) => (
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select KYC Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {KYCTypes.map((type) => (
+                          <SelectItem
+                            key={type.kycTypeId}
+                            value={type.kycTypeId}
+                          >
+                            {type.kycTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
               <div>
                 <Label htmlFor="legalEntityName">Legal Entity Name</Label>
                 <Input
@@ -236,7 +276,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 border border-b-0 ">
-          <div className="p-4">
+            <div className="p-4">
               <h3>LOCATION DETAILS</h3>
             </div>
             <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
@@ -285,7 +325,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 border border-b-red-50">
-          <div className="p-4">
+            <div className="p-4">
               <h3>IDENTIFICATION DETAILS</h3>
             </div>
             <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
@@ -386,9 +426,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
         </div>
         <div className="flex justify-end mt-4">
           <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+          <Button className="ml-2">Cancel</Button>
         </div>
       </form>
     </section>

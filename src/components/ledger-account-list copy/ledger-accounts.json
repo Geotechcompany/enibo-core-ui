@@ -1,0 +1,102 @@
+[
+    {
+        "ledgerAccountNumber": "123456789",
+        "exportLedgerAccountNumber": "987654321",
+        "description": "Example Ledger Account",
+        "ledgerAccountType": "Customer",
+        "customerAccountNumber": "CUST123",
+        "branchCode": "BR001",
+        "ledgerAccountCategory": "CategoryA",
+        "chartString": "ABC-123-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "74393473874y3",
+        "exportLedgerAccountNumber": "98439847938",
+        "description": "Another Ledger Account",
+        "ledgerAccountType": "Customer",
+        "customerAccountNumber": "CUST46363",
+        "branchCode": "BR04646",
+        "ledgerAccountCategory": "CategoryC",
+        "chartString": "ABC-123-646"
+    },
+    {
+        "ledgerAccountNumber": "3847293847",
+        "exportLedgerAccountNumber": "8748293477",
+        "description": "Third Ledger Account",
+        "ledgerAccountType": "Internal",
+        "customerAccountNumber": "INT456",
+        "branchCode": "BR032",
+        "ledgerAccountCategory": "CategoryB",
+        "chartString": "DEF-456-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "983749837",
+        "exportLedgerAccountNumber": "563829384",
+        "description": "Special Ledger Account",
+        "ledgerAccountType": "Internal",
+        "customerAccountNumber": "INT789",
+        "branchCode": "BR015",
+        "ledgerAccountCategory": "CategoryA",
+        "chartString": "XYZ-789-ABC"
+    },
+    {
+        "ledgerAccountNumber": "849203847",
+        "exportLedgerAccountNumber": "273648293",
+        "description": "New Ledger Entry",
+        "ledgerAccountType": "Customer",
+        "customerAccountNumber": "CUST567",
+        "branchCode": "BR023",
+        "ledgerAccountCategory": "CategoryB",
+        "chartString": "PQR-567-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "123498765",
+        "exportLedgerAccountNumber": "876543210",
+        "description": "Latest Ledger Entry",
+        "ledgerAccountType": "Internal",
+        "customerAccountNumber": "INT987",
+        "branchCode": "BR009",
+        "ledgerAccountCategory": "CategoryC",
+        "chartString": "MNO-987-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "564738291",
+        "exportLedgerAccountNumber": "192837465",
+        "description": "Example Ledger 7",
+        "ledgerAccountType": "Customer",
+        "customerAccountNumber": "CUST777",
+        "branchCode": "BR077",
+        "ledgerAccountCategory": "CategoryA",
+        "chartString": "LMN-777-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "111223344",
+        "exportLedgerAccountNumber": "998877665",
+        "description": "Dummy Ledger 8",
+        "ledgerAccountType": "Internal",
+        "customerAccountNumber": "INT888",
+        "branchCode": "BR008",
+        "ledgerAccountCategory": "CategoryB",
+        "chartString": "JKL-888-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "987654321",
+        "exportLedgerAccountNumber": "123456789",
+        "description": "Test Ledger 9",
+        "ledgerAccountType": "Customer",
+        "customerAccountNumber": "CUST999",
+        "branchCode": "BR099",
+        "ledgerAccountCategory": "CategoryC",
+        "chartString": "GHI-999-XYZ"
+    },
+    {
+        "ledgerAccountNumber": "999888777",
+        "exportLedgerAccountNumber": "777888999",
+        "description": "Dummy Ledger 10",
+        "ledgerAccountType": "Internal",
+        "customerAccountNumber": "INT666",
+        "branchCode": "BR066",
+        "ledgerAccountCategory": "CategoryA",
+        "chartString": "XYZ-666-ABC"
+    }
+]

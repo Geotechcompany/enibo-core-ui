@@ -25,11 +25,12 @@ const Customers: FC<CustomersProps> = () => {
 
     useEffect(() => {
       if (data) {
-        setCustomers(data.Customers);
+        setCustomers(data.customers);
       }
       setLoading(queryLoading);
       setError(queryError ? queryError.message : null);
     }, [data, queryLoading, queryError]);
+    console.log(data)
   
     return (
     <div>
@@ -71,21 +72,17 @@ const Customers: FC<CustomersProps> = () => {
           </div>
         </div>
         <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
-          data && data.length ? (
-            <DataTable
-              columns={columns}
-              data={Customers} 
-            />
-          ) : (
-            <p>No data available</p>
-          )
-        )}
-          </div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={Customers} 
+              />
+            )}
+              </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
             <Button
@@ -97,6 +94,7 @@ const Customers: FC<CustomersProps> = () => {
               Edit
             </Button>
           </div>
+          
           <div className="mr-2">
             <Button
               size="sm"
@@ -123,4 +121,5 @@ const Customers: FC<CustomersProps> = () => {
     </div>
   );
 };
+      
 export default Customers;
