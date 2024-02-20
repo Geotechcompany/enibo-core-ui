@@ -75,7 +75,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
     resolver: zodResolver(newKYCBusinessSchema),
   });
   const onSubmit = (data: NewKYCBusinessInput) => {
-    console.log(data);
+   
     const input = {
       kycType: data.kycType, //TODO: get kyc type id from context
       legalEntityName: data.legalEntityName,

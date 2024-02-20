@@ -32,9 +32,18 @@ export const columns: ColumnDef<MandateType>[] = [
     enableHiding: true,
   },
   {
+    accessorKey: "mandateTypeId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Mandate Type Id" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("mandateTypeId")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
     accessorKey: "mandateTypeName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="KYC Type Name" />
+      <DataTableColumnHeader column={column} title="Mandate Type Name" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("mandateTypeName")}</div>,
     enableSorting: true,
@@ -58,22 +67,5 @@ export const columns: ColumnDef<MandateType>[] = [
       enableSorting: true,
       enableHiding: true,
   },
-    {
-        accessorKey: "modifiedBy",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Modified By" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "modifiedOn",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Modified On" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    }
+  
 ];

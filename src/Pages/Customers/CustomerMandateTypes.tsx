@@ -19,13 +19,16 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
   const from = location.state?.from || {
     pathname: "/customers/account-mandate-types/new-mandate-type",
   };
-  
 
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryMandateList);
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryMandateList);
 
   useEffect(() => {
     if (data) {
-      setMandateTypes(data.MandateTypes);
+      setMandateTypes(data.mandateTypes);
     }
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
@@ -60,32 +63,57 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Mandate Types</h1>
           </div>
           <div className="">
-          <Button
+            <Button
               size="sm"
-              
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
           </div>
         </div>
         <div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
-          data && data.length ? (
-            <DataTable
-              columns={columns}
-              data={MandateTypes} 
-            />
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
           ) : (
-            <p>No data available</p>
-          )
-        )}
+            <DataTable columns={columns} data={MandateTypes} />
+          )}
+        </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
           </div>
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
