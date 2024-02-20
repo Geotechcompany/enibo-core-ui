@@ -1,3 +1,5 @@
+import { Key, ReactNode } from "react";
+
 export type CustomerType = "Retail" | "Business"
 
 enum RetailType {
@@ -48,6 +50,9 @@ export type Customer = {
 }
 
 export type ProductType = {
+    label: ReactNode;
+    value: Key | null | undefined;
+    productTypeId: string;
     productTypeName: string;
     productType: string;
     description: string;
@@ -134,7 +139,7 @@ export type LedgerRule = {
 
 export type LedgerCategory = {
     ledgerCategory: string;
-    ledgerCategoryDescription: string;
+    description: string;
     categoryNumber: string;
     modifiedBy: string;
     modifiedOn: string;
@@ -143,6 +148,7 @@ export type LedgerCategory = {
 export type KYCType = {
     kycType: "Individual" | "Business";
     kycTypeName: string;
+    kycTypeId: string;
     kycTypeDescription: string;
     kycTypeCode: string;
     modifiedBy: string;
@@ -158,6 +164,7 @@ export type MandateType = {
 
 type KYCIndividual = {
     kycType: "Individual";
+    kycTypeId: string;
     designation: string;
     firstName: string;
     middleName: string;

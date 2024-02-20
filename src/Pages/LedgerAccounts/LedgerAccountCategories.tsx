@@ -2,20 +2,36 @@ import { DataTable } from '@/components/datatable/data-table';
 import { columns } from '@/components/ledger-categories-list/columns';
 import { Button } from '@/components/ui/button';
 import { LedgerCategory } from '@/types/global';
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ledgerAccountCategoryList from '@/components/ledger-categories-list/ledger-categories.json';
+
 import { FaPlus } from 'react-icons/fa';
+import queryaccountcategoriesList from '@/components/ledger-categories-list/query';
+import { useQuery } from '@apollo/client';
 
 interface LedgerAccountCategoriesProps {
   
 }
 
 const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
-    const ledgerAccountCategories: LedgerCategory[] = ledgerAccountCategoryList as LedgerCategory[];
-    const location = useLocation();
+  const [ledgerAccountCategory, setledgerAccountCategories] = useState<LedgerCategory[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+ const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from || { pathname: "/administration/ledger-management/ledger-account-categories/new-ledger-account-category" };
+    const { data, loading: queryLoading, error: queryError } = useQuery(queryaccountcategoriesList);
+    console.log(data)
+
+    useEffect(() => {
+      if (data) {
+        setledgerAccountCategories(data.accountCategories);
+      }
+      setLoading(queryLoading);
+      setError(queryError ? queryError.message : null);
+    }, [data, queryLoading, queryError]);
+  
+     
     return (
       <div>
         <div className="mx-4">
@@ -64,14 +80,57 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
             </Button>
             </div>
           </div>
+       
           <div>
-            {ledgerAccountCategories && (
-              <DataTable columns={columns} data={ledgerAccountCategories} />
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={ledgerAccountCategory} 
+              />
             )}
+              </div>
+        <div className="flex items-center my-4">
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Edit
+            </Button>
+          </div>
+          
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Copy
+            </Button>
+          </div>
+
+          <div className="mr-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={() => {}}
+            >
+              Delete
+            </Button>
           </div>
         </div>
       </div>
-    );
-}
+    </div>
+  );
+};
+      
 
 export default LedgerAccountCategories

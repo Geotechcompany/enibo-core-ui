@@ -150,20 +150,7 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
                   <IoCloseOutline onClick={closeModal} />
                 </div>
                 <div>
-                <div>
-            <label htmlFor="kycType" className="block text-sm font-medium text-gray-700">
-              Select KYC Type Name:
-            </label>
-            <select
-              id="kycTypeName"
-              name="kycTypeName"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#36459C]"
-            >
-              <option value="">Select</option>
-              <option value="">Non-Profit Orginization</option>
-              <option value="">Government</option>
-            </select>
-          </div>
+          
                 <div>
             <label htmlFor="kycType" className="block text-sm font-medium text-gray-700">
               KYC Type:
