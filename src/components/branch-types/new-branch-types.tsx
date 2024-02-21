@@ -68,7 +68,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         <RiCheckboxCircleLine className="mr-2 inset-y-3" />
         <div className="text-lg">
           New Branch Type {" "}
-          <Link to={`/administration/branch-details`} className="underline text-blue-500">
+          <Link to={`/administration/branches/branch-types`} className="underline text-blue-500">
             {data.branchName}
           </Link>
            , has been successfully created
@@ -76,7 +76,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
       </div>,
       });
       reset();
-      navigate("/administration/branch-details"); 
+      navigate("/administration/branches/branch-types"); 
 
     } catch (error) {
       console.error("Error creating branch type:", error);
