@@ -1,10 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { NewBranchSchemaType } from "./newBranchSchema";
+import { BranchForm } from "@/types/global";
  
 
-export const columns: ColumnDef<NewBranchSchemaType>[] = [
+export const columns: ColumnDef<BranchForm>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -63,6 +63,24 @@ export const columns: ColumnDef<NewBranchSchemaType>[] = [
       <DataTableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("description")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "phoneNumber",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="Phone" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("phoneNumber")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "branchCode",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Branch Code" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("branchCode")}</div>,
     enableSorting: true,
     enableHiding: true,
   },

@@ -5,6 +5,7 @@ export const CREATE_BRANCH = gql`
     $branchName: String!
     $branchType: String!
     $description: String!
+    $phoneNumber: String!
     $branchCode: String!
     $localBankCode: String!
     $country: String!
@@ -21,6 +22,7 @@ export const CREATE_BRANCH = gql`
       branchName: $branchName
       branchType: $branchType
       description: $description
+      phoneNumber: $phoneNumber
       branchCode: $branchCode
       localBankCode: $localBankCode
       country: $country
@@ -37,26 +39,19 @@ export const CREATE_BRANCH = gql`
       branchType
       description
       branchCode
+      phoneNumber
+      SWIFTCode
       localBankCode
-      branchId
-      buildingName
-      buildingNumber
       country
       countrySubdivision
-      email
-      headOfficeBranch
-      isHeadOfficeBranch
-      postalAddress
       streetName
+      buildingNumber
+      buildingName
+      postalAddress
+      AllowedProductTypes
+      email
+      isHeadOfficeBranch
+      headOfficeBranch
     }
   }
 `;
-
-
-
-
-
-
-
-
-

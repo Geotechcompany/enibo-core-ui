@@ -7,6 +7,7 @@ query Branches {
     branchName
     branchType
     description
+    phoneNumber
     branchCode
     SWIFTCode
     localBankCode
