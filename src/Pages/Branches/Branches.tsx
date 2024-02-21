@@ -26,15 +26,16 @@ const Branches: FC<BranchesProps> = () => {
   const to = location.state?.to || {
     pathname: "/administration/branch-details",
   };
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryBranchList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryBranchList);
 
   useEffect(() => {
     if (data) {
       setBranches(data.branches);
     }
     setLoading(queryLoading);
+    refetch();
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [data, queryLoading, queryError, refetch]);
 
 
   return (

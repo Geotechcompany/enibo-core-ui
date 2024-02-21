@@ -22,15 +22,16 @@ const FeeTypes: FC<FeeProps> = () => {
   const from =
     location.state?.from ||
     "/administration/static-data/fee-types/new-fee-type";
-    const { data, loading: queryLoading, error: queryError } = useQuery(queryFeeTypesList);
-
+    const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryFeeTypesList);
+    
     useEffect(() => {
       if (data) {
         setFeeTypes(data.feeTypes);
       }
       setLoading(queryLoading);
+      refetch();
       setError(queryError ? queryError.message : null);
-    }, [data, queryLoading, queryError]);
+    }, [data, queryLoading, queryError, refetch]);
   
   return (
     <div>

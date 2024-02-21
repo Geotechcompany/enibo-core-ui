@@ -71,32 +71,4 @@ export const columns: ColumnDef<TransactionType>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "accountNumber",
-    header: () => <div></div>,
-    cell: () => <div className=""></div>,
-    enableSorting: true,
-    enableHiding: true,
-  },
 ];
