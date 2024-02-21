@@ -16,24 +16,29 @@ const BranchType: FC<BranchesProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/branches/new-branch-type",
   };
 
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryBranchTypesList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryBranchTypesList);
   const [deleteBranchType] = useMutation(DELETE_BRANCH_TYPE);
   const [updateBranchType] = useMutation(UPDATE_BRANCH_TYPE);
-  const [selectedBranchType, setSelectedBranchType] = useState<BranchTypes | null>(null); // Track selected branch type
+  const [selectedBranchType, setSelectedBranchType] = useState<BranchTypes | null>(null); 
+
 
   useEffect(() => {
     if (data) {
       setBranchTypes(data.branchTypes);
     }
     setLoading(queryLoading);
+    refetch();
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+    
+  }, [data, queryLoading, queryError, refetch]);
 
   const handleDelete = async (branchTypeName: string) => {
     try {
@@ -44,23 +49,21 @@ const BranchType: FC<BranchesProps> = () => {
     }
   };
 
-    if (!branchTypes) return; // Do nothing if branchType is null
+    if (!branchTypes) return; 
     const handleEdit = async (branchType: BranchTypes | null) => {
-      if (!branchType) return; // Do nothing if branchType is null
+      if (!branchType) return; 
     
       const { branchTypeName, description } = branchType;
       try {
-        // Perform mutation to update branch type
         await updateBranchType({
           variables: { branchTypeName, description },
         });
-        setSelectedBranchType(branchType); // Set selected branch type for editing
-        // Handle success, e.g., update local state or refetch data
+        setSelectedBranchType(branchType); 
       } catch (error) {
         console.error("Error updating branch type:", error);
       }
     };
-    
+
   return (
     <div>
       <div className="mx-4">
@@ -108,6 +111,7 @@ const BranchType: FC<BranchesProps> = () => {
             <DataTable
             columns={columns}
             data={branchTypes}
+            sorting={sorting}
             />
           )}
         </div>
@@ -117,9 +121,7 @@ const BranchType: FC<BranchesProps> = () => {
             size="sm"
             variant="outline"
             className="border-[#36459C]"
-            onClick={() => handleEdit(selectedBranchType)}
-            // Disable if no branch type selected
-          >
+            onClick={() => handleEdit(selectedBranchType)}          >
             Edit
           </Button>
           </div>
@@ -138,8 +140,7 @@ const BranchType: FC<BranchesProps> = () => {
             size="sm"
             variant="outline"
             className="border-[#36459C]"
-            onClick={() => handleDelete(selectedBranchType?.branchTypeName || '')} // Delete selected branch type
-          // Disable if no branch type selected
+            onClick={() => handleDelete(selectedBranchType?.branchTypeName || '')}
           >
             Delete
           </Button>

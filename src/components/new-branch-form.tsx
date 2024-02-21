@@ -16,8 +16,8 @@ import {
 import { useToast } from "./ui/use-toast";
 
 import { useMutation } from "@apollo/client";
-import { XIcon } from "lucide-react";
 import {CREATE_BRANCH} from "./branch-list/mutation";
+import { Link } from "react-router-dom";
 
 
 
@@ -54,13 +54,13 @@ interface NewBranchFormProps {}
 
 const NewBranchForm: FC<NewBranchFormProps> = () => {
   const { toast } = useToast();
-  // const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     watch,
     unregister,
+    reset,
     control,
     formState: { errors },
   } = useForm<newBranchInput>({
@@ -72,13 +72,9 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
 
   const onSubmit = async (data: newBranchInput) => {
-    // setIsLoading(true);
     try {
       console.log(data, 
         "Checking")
-        // const newProductType =  data.AllowedProductTypes!.map(
-        //   (item) => item.value
-        // ) 
         const input = {
           branchName: data.branchName,
           branchType: data.branchType,
@@ -103,12 +99,20 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
 
       console.log("Created Branch Data:", response);
-
+    
       toast({
-        title: "Branch Created",
-        description: "The branch has been successfully created.",
-        duration: 5000,
+        title: "Success",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New Branch{" "}
+          <Link to={`/administration/branches`} className="underline text-blue-500">
+            {data.branchName}
+          </Link>
+          , has been successfully created
+        </div>
+      </div>,
       });
+      reset();
     } catch (error) {
       console.error("Error creating branch:", error);
       setErrorMessage("Error creating branch. Please try again later.");
@@ -127,31 +131,6 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
   return (
     <><div>
-      {Object.keys(errors).length > 0 && (
-        <div className="mt-6 text-white bg-red-600 border-4 border-red-700 alert-start">
-          <div className="flex items-center justify-between px-4 py-2 bg-red-700">
-            <div>
-              <p>The following errors have occurred:</p>
-            </div>
-
-            <div className="cursor-pointer">
-              <XIcon className="w-6 h-6 text-white alert-close" />
-            </div>
-          </div>
-
-          <div className="px-4 py-2">
-            <div className="flex flex-col gap-2">
-              {Object.entries(errors).map(([index, error]) => (
-                <div className="flex flex-col gap-y-6 sm:gap-x-8" key={index}>
-                  <p>&bull; {error.message}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-      
-  
     </div><section className="">
         <form
           className="flex flex-col gap-8"

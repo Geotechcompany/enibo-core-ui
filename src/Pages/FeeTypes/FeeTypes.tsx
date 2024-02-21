@@ -14,7 +14,9 @@ const FeeTypes: FC<FeeProps> = () => {
   const [FeeTypes, setFeeTypes] = useState<FeeType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-//administration/static-data/fee-types/new-fee-type
+  const [sorting] = useState([{ id: "effectiveDate", desc: true }])
+
+
   const location = useLocation();
   const navigate = useNavigate();
   const from =
@@ -87,7 +89,8 @@ const FeeTypes: FC<FeeProps> = () => {
             ) : (
               <DataTable
                 columns={columns}
-                data={FeeTypes} 
+                data={FeeTypes}
+                sorting={sorting} 
               />
             )}
               </div>
