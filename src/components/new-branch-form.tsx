@@ -108,7 +108,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
       console.log("Created Branch Data:", response);
       reset();
-      navigate("/administration/branches/branch-types"); 
+      navigate("/administration/branches"); 
     
       toast({
         title: "Branch Created",
