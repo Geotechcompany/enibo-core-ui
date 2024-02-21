@@ -9,10 +9,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "../ui/use-toast";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_TRANSACTION_TYPE_MUTATION from "@/Pages/Branches/BranchTypeMutation";
+import { RiCheckboxCircleLine } from "react-icons/ri";
+import { useLocation, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+
 
 export const newBranchTypeSchema = z.object({
   branchName: z.string().min(3, { message: "Branch name is required" }),
-  description: z.string().max(100, { message: "Description is required" }),
+  description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
 
   modifiedOn: z.string().min(3, { message: "Modified On is required" }),
@@ -24,9 +28,16 @@ interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   const { toast } = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || {
+    pathname: "/administration/branches/branch-types",
+  };
+  
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<newBranchInput>({
     resolver: zodResolver(newBranchTypeSchema),
@@ -39,26 +50,34 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
     CREATE_NEW_TRANSACTION_TYPE_MUTATION
   );
 
+
   const onSubmit = async (data: newBranchInput) => {
     try {
       const { branchName, description, modifiedBy, modifiedOn } = data;
       await createBranchTypeMutation({
         variables: {
           branchTypeName: branchName,
-          description,
+          description: description || "N/A"  ,
           modifiedBy,
           modifiedOn,
         },
       });
-
       toast({
         title: "Branch Type Created",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
+        description: <div className="text-black">
+        <RiCheckboxCircleLine className="mr-2 inset-y-3" />
+        <div className="text-lg">
+          New Branch Type {" "}
+          <Link to={`/administration/branch-details`} className="underline text-blue-500">
+            {data.branchName}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
       });
+      reset();
+      navigate("/administration/branches/branch-types"); 
+
     } catch (error) {
       console.error("Error creating branch type:", error);
       toast({
@@ -125,7 +144,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
             type="text"
             className="h-12 text-base bg-blue-50"
             autoComplete="false"
-            defaultValue={defaultModifiedOn} // Set the default value
+            defaultValue={defaultModifiedOn}
           />
           {errors.modifiedOn && (
             <span className="text-red-500">{errors.modifiedOn.message}</span>
@@ -139,7 +158,9 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           >
             Submit
           </Button>
-          <Button size="lg">Cancel</Button>
+          <Button size="lg"
+           onClick={() => navigate(from, { replace: true })}
+          >Cancel</Button>
         </div>
       </form>
     </section>
