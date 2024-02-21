@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -15,19 +16,21 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {CREATE_BRANCH} from "./branch-list/mutation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import queryBranchTypesList from "@/components/branch-types/query";
+
 
 
 
 export const newBranchSchema = z.object({
   branchName: z.string().min(3, { message: "Branch name is required" }),
   branchType: z.string().min(3, { message: "Branch type is required" }),
-  description: z.string().max(10, { message: "Description is required" }),
-  branchCode: z.string().min(3, { message: "Branch code is required" }),
+  description: z.string(),
+  branchCode: z.string(),
   SWIFTCode: z.string().min(3, { message: "SWIFT code is required" }).optional(),
-  localBankCode: z.string().min(3, { message: "Local bank code is required" }),
+  localBankCode: z.string(),
   country: z.string().min(3, { message: "Country is required" }),
   countrySubdivision: z
     .string()
@@ -40,6 +43,7 @@ export const newBranchSchema = z.object({
   //   .array(z.object({ value: z.string(), label: z.string() }))
   //   .min(1, { message: "At least one product type is required" }).optional(),
   email: z.string().email({ message: "Email is required" }),
+  phoneNumber: z.string().min(3, { message: "Phone Number is required" }),
   isHeadOfficeBranch: z.enum(["yes", "no"], {
     required_error: "You need to select a branch type.",
   }),
@@ -54,6 +58,7 @@ interface NewBranchFormProps {}
 
 const NewBranchForm: FC<NewBranchFormProps> = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
@@ -70,6 +75,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
   const [createBranchMutation] = useMutation(CREATE_BRANCH);
 
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
+  const [branchTypes, setBranchTypes] = useState<any[]>([]); 
+
 
   const onSubmit = async (data: newBranchInput) => {
     try {
@@ -78,7 +85,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         const input = {
           branchName: data.branchName,
           branchType: data.branchType,
-          description: data.description,
+          description: data.description || "N/A",
+          phoneNumber: data.phoneNumber,
           branchCode: data.branchCode,
           SWIFTCode: data.SWIFTCode,
           localBankCode: data.localBankCode,
@@ -99,9 +107,11 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
 
       console.log("Created Branch Data:", response);
+      reset();
+      navigate("/administration/branches/branch-types"); 
     
       toast({
-        title: "Success",
+        title: "Branch Created",
         description: <div className="text-black">
         <div className="text-lg">
           New Branch{" "}
@@ -112,7 +122,6 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         </div>
       </div>,
       });
-      reset();
     } catch (error) {
       console.error("Error creating branch:", error);
       setErrorMessage("Error creating branch. Please try again later.");
@@ -128,6 +137,19 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       register("headOfficeBranch");
     }
   }, [watchHeadOfficeCheck, unregister, register]);
+
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryBranchTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setBranchTypes(data.branchTypes);
+    }
+  }, [data, queryLoading, queryError]);
+
 
   return (
     <><div>
@@ -151,19 +173,26 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
             <div>
               <Label htmlFor="branchTypes">Branch Types</Label>
               <Controller
-                control={control}
-                name="branchType"
-                render={({ field: { onChange, value } }) => (
-                  <Select onValueChange={onChange} value={value}>
-                    <SelectTrigger className="">
-                      <SelectValue placeholder="Select ..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem key={1} value="dce8ab09-8319-4bb1-b767-2931a70c59d0">Full Service</SelectItem>
-                      <SelectItem key={2} value="dce8ab09-8319-4bb1-b767-2931a70c59d0">Limited Service</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )} />
+                  control={control}
+                  name="branchType"
+                  render={({ field: { onChange, value } }) => (
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Branch Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {branchTypes.map((type) => (
+                          <SelectItem
+                            key={type.branchTypeId}
+                            value={type.branchTypeId}
+                          >
+                            {type.branchTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               {errors.branchType && (
                 <span className="text-red-500">
                   {errors.branchType.message}
@@ -184,7 +213,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               <Label htmlFor="branchCode">Branch Code</Label>
               <Input
                 id="branchCode"
-                type="text"
+                type="number"
                 {...register("branchCode", { required: true })} />
               {errors.branchCode && (
                 <span className="text-red-500">{errors.branchCode.message}</span>
@@ -204,7 +233,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               <Label htmlFor="localBankCode">Local Bank Code</Label>
               <Input
                 id="localBankCode"
-                type="text"
+                type="number"
                 {...register("localBankCode", { required: true })} />
               {errors.localBankCode && (
                 <span className="text-red-500">
@@ -313,6 +342,17 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                 {...register("email", { required: true })} />
               {errors.email && (
                 <span className="text-red-500">{errors.email.message}</span>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input
+                id="phoneNumber"
+                type="text"
+                placeholder="+254722XXXXXX"
+                {...register("phoneNumber", { required: true })} />
+              {errors.phoneNumber && (
+                <span className="text-red-500">{errors.phoneNumber.message}</span>
               )}
             </div>
             <div>

@@ -7,14 +7,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import queryBranchList from "@/components/branch-list/query";
-import { NewBranchSchemaType } from "@/components/branch-list/newBranchSchema";
 import { useQuery } from "@apollo/client";
+import { BranchForm } from "@/types/global";
 
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
-  const [branches, setBranches] = useState<NewBranchSchemaType[]>([]);
+  const [branches, setBranches] = useState<BranchForm[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
