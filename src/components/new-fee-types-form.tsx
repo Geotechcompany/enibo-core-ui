@@ -16,6 +16,7 @@ import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
 import { useMutation } from '@apollo/client';
 import CREATE_FEE_TYPE_MUTATION from '@/Pages/FeeTypes/FeeTypesMutation';
+import { Link, useNavigate } from 'react-router-dom';
 
 const feeTypeSchema = z.object({
   feeCode: z
@@ -42,9 +43,11 @@ interface NewFeeTypesFormProps {
 
 const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
     const { toast } = useToast();
+    const navigate  = useNavigate();
     const {
       register,
       handleSubmit,
+      reset,
       control,
       formState: { errors },
     } = useForm<FeeTypeInput>({
@@ -66,17 +69,20 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
               modifiedOn: new Date().toISOString(), // Replace with actual value
             },
           });
-          
           toast({
             title: "Fee Type Created",
-            description: (
-              <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                <code className="text-white">
-                  {/* Add description here if needed */}
-                </code>
-              </pre>
-            ),
+            description: <div className="text-black">
+            <div className="text-lg">
+              New Fee Type {" "}
+              <Link to={`/administration/static-data/fee-types`} className="underline text-blue-500">
+                {data.feeTypeName}
+              </Link>
+               , has been successfully created
+            </div>
+          </div>,
           });
+          reset();
+          navigate("/administration/static-data/fee-types"); 
         } catch (error) {
           console.error("Error creating fee type:", error);
           toast({
