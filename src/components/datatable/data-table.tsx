@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -26,14 +25,21 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 // import { DataTableToolbar } from "../components/data-table-toolbar"
 
-interface DataTableProps<TData, TValue> {
+export interface SortingState {
+  id: string;
+  desc: boolean;
+}
+
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  sorting?: SortingState[]; // Sorting configuration
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  sorting,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -41,7 +47,8 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+
 
   const table = useReactTable({
     data,
@@ -54,7 +61,6 @@ export function DataTable<TData, TValue>({
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),

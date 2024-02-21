@@ -177,7 +177,7 @@ export const columns: ColumnDef<NewBranchSchemaType>[] = [
 {
   accessorKey: "headOfficeBranch",
   header: ({ column }) => (
-  <DataTableColumnHeader column={column} title="iheadOfficeBranch" />
+  <DataTableColumnHeader column={column} title="headOfficeBranch" />
   ),
   cell: ({ row }) => <div className="">{row.getValue("headOfficeBranch")}</div>,
   enableSorting: true,
