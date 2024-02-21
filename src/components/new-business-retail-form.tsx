@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,29 +15,23 @@ import {
 } from "./ui/select";
 import { MultiSelect } from "./multi-select";
 import { X } from "lucide-react";
+import { gql, useQuery } from "@apollo/client";
+import { MandateType, ProductType } from "@/types/global";
 
 const businessRetailSchema = z.object({
-  businessKYC: z
-    .array(z.object({ value: z.string(), label: z.string() }))
-    .min(3, { message: "Individual KYC is required" }),
+  businessKYC: z.string().min(3, { message: "Business KYC is required" }),
   directorKYC: z
     .array(z.object({ value: z.string(), label: z.string() }))
-    .min(3, { message: "Individual KYC is required" }),
-  productTypes: z
-    .array(z.object({ value: z.string(), label: z.string() }))
-    .min(3, { message: "Product Types is required" }),
+    .min(3, { message: "Director KYC is required" }),
+  productTypes: z.string().min(3, { message: "Product Types is required" }),
   accountCurrency: z
     .string()
     .min(3, { message: "Account Currency is required" }),
   riskRating: z.string().min(3, { message: "Risk Rating is required" }),
   mandates: z.array(
     z.object({
-      signatory: z
-        .array(z.object({ value: z.string(), label: z.string() }))
-        .min(3, { message: "Signatory is required" }),
-      mandateType: z
-        .array(z.object({ value: z.string(), label: z.string() }))
-        .min(3, { message: "Mandate Type is required" }),
+      signatory: z.string().min(3, { message: "Signatory is required" }),
+      mandateType: z.string().min(3, { message: "Mandate Type is required" }),
       category: z.string().min(3, { message: "Category is required" }),
     })
   ),
@@ -64,7 +58,40 @@ type BusinessRetailInput = z.infer<typeof businessRetailSchema>;
 
 interface NewBusinessRetailFormProps {}
 
+const GET_PRODUCT_TYPES = gql`
+  query ProductTypes {
+    productTypes {
+      productTypeId
+      productTypeName
+    }
+  }
+`;
+const GET_MANDATE_TYPES = gql`
+  query MandateTypes {
+    mandateTypes {
+      mandateTypeId
+      mandateTypeName
+    }
+  }
+`;
+const GET_BUSINESS_KYCS = gql`
+  query BusinessKYCs {
+    businessKYCs {
+      businessKYCId
+      kycType
+      legalEntityName
+      legalStatus
+      dateOfIncorporation
+      registrationNumber
+      natureOfBusiness
+    }
+  }
+`;
+
 const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
+  const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
+  const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
+  const [businessKYCs, setbusinessKYCs] = useState<any[]>([]);
   const [accountMandates, setAccountMandates] = useState([
     {
       signatory: [],
@@ -72,14 +99,16 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
       category: "",
     },
   ]);
-  
-  const [mandateDetails, setMandateDetails] = useState([{
-    signingMandateType: [],
-    signingRule: "",
-    minimumPaymentAmount: 0,
-    maximumPaymentAmount: 0,
-    maximumDailyLimit: 0,
-  }]);
+
+  const [mandateDetails, setMandateDetails] = useState([
+    {
+      signingMandateType: [],
+      signingRule: "",
+      minimumPaymentAmount: 0,
+      maximumPaymentAmount: 0,
+      maximumDailyLimit: 0,
+    },
+  ]);
   const { toast } = useToast();
   const {
     register,
@@ -99,6 +128,26 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
       ),
     });
   };
+  const { data } = useQuery(GET_PRODUCT_TYPES);
+  useEffect(() => {
+    if (data && data.productTypes) {
+      setProductTypes(data.productTypes);
+    }
+  }, [data]);
+  const { data: mandateData } = useQuery(GET_MANDATE_TYPES);
+  useEffect(() => {
+    if (mandateData && mandateData.mandateTypes) {
+      setMandateTypes(mandateData.mandateTypes);
+    }
+  }, [mandateData]);
+
+  const { data: businessKycData } = useQuery(GET_BUSINESS_KYCS);
+  useEffect(() => {
+    if (businessKycData && businessKycData.ibusinessKYCs) {
+      setbusinessKYCs(businessKycData.businessKYCs);
+    }
+  }, [businessKycData]);
+
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -114,19 +163,22 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   control={control}
                   name="businessKYC"
                   render={({ field: { onChange, value } }) => (
-                    <MultiSelect
-                      onChange={onChange}
-                      selected={value}
-                      placeholder="Select Business KYC"
-                      className="w-full"
-                      options={[
-                        { value: "A12345", label: "John Doe - A12345" },
-                        { value: "B67890", label: "Jane Smith - B67890" },
-                        { value: "C13579", label: "Robert Johnson - C13579" },
-                        { value: "D24680", label: "Emily Davis - D24680" },
-                        { value: "E97531", label: "Michael Wilson - E97531" },
-                      ]}
-                    />
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select business KYC Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {/* Map over KYCType state to render select options */}
+                        {businessKYCs.map((type) => (
+                          <SelectItem
+                            key={type.businessKYCId}
+                            value={type.businessKYCId}
+                          >
+                            {type.kycTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
                 />
                 {errors.businessKYC && (
@@ -175,19 +227,22 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   control={control}
                   name="productTypes"
                   render={({ field: { onChange, value } }) => (
-                    <MultiSelect
-                      onChange={onChange}
-                      selected={value}
-                      placeholder="Select Product Types"
-                      className="w-full"
-                      options={[
-                        { value: "A12345", label: "Savings Account" },
-                        { value: "B67890", label: "Checking Account" },
-                        { value: "C13579", label: "Fixed Deposit" },
-                        { value: "D24680", label: "Personal Loan" },
-                        { value: "E97531", label: "Home Mortgage" },
-                      ]}
-                    />
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Product Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {/* Map over productTypes state to render select options */}
+                        {ProductTypes.map((type) => (
+                          <SelectItem
+                            key={type.productTypeId}
+                            value={type.productTypeId}
+                          >
+                            {type.productTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
                 />
                 {errors.productTypes && (
@@ -276,21 +331,25 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     control={control}
                     name={`mandates.${index}.signatory`}
                     render={({ field: { onChange, value } }) => (
-                      <MultiSelect
-                        onChange={onChange}
-                        selected={value}
-                        placeholder="Select Signatory"
-                        className="w-full"
-                        options={[
-                          { value: "A12345", label: "John Doe - A12345" },
-                          { value: "B67890", label: "Jane Smith - B67890" },
-                          { value: "C13579", label: "Robert Johnson - C13579" },
-                          { value: "D24680", label: "Emily Davis - D24680" },
-                          { value: "E97531", label: "Michael Wilson - E97531" },
-                        ]}
-                      />
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Business KYC" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over individualKYCs state to render select options */}
+                          {businessKYCs.map((indKyc) => (
+                            <SelectItem
+                              key={indKyc.kycType}
+                              value={indKyc.kycType}
+                            >
+                              {`${indKyc.firstName} ${indKyc.lastName} `}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
+
                   {errors.mandates?.[index]?.signatory && (
                     <div className="text-red-500">
                       {errors.mandates?.[index]?.signatory?.message}
@@ -308,19 +367,22 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     control={control}
                     name={`mandates.${index}.mandateType`}
                     render={({ field: { onChange, value } }) => (
-                      <MultiSelect
-                        onChange={onChange}
-                        selected={value}
-                        placeholder="Select Mandate Type"
-                        className="w-full"
-                        options={[
-                          { value: "A12345", label: "Full Access" },
-                          { value: "B67890", label: "Transactional Access" },
-                          { value: "C13579", label: "View Only" },
-                          { value: "D24680", label: "Limited Access" },
-                          { value: "E97531", label: "Payment Authorization" },
-                        ]}
-                      />
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Mandate Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over mandateTypes state to render select options */}
+                          {mandateTypes.map((type) => (
+                            <SelectItem
+                              key={type.mandateTypeId}
+                              value={type.mandateTypeId}
+                            >
+                              {type.mandateTypeName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors.mandates?.[index]?.mandateType && (
@@ -362,7 +424,6 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                 </div>
                 <div className="w-[5%] flex items-end">
                   <Button
-                    
                     size="icon"
                     className="mb-6"
                     onClick={() => {
@@ -389,26 +450,32 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   <Label htmlFor="signingMandateType">Mandate Type</Label>
                   <Controller
                     control={control}
-                    name={`signingRules.${index}.signingMandateType`}
+                    name={`mandates.${index}.mandateType`}
                     render={({ field: { onChange, value } }) => (
-                      <MultiSelect
-                        onChange={onChange}
-                        selected={value}
-                        placeholder="Select Mandate Type"
-                        className="w-full"
-                        options={[
-                          { value: "A12345", label: "Full Access" },
-                          { value: "B67890", label: "Transactional Access" },
-                          { value: "C13579", label: "View Only" },
-                          { value: "D24680", label: "Limited Access" },
-                          { value: "E97531", label: "Payment Authorization" },
-                        ]}
-                      />
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Mandate Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over mandateTypes state to render select options */}
+                          {mandateTypes.map((type) => (
+                            <SelectItem
+                              key={type.mandateTypeId}
+                              value={type.mandateTypeId}
+                            >
+                              {type.mandateTypeName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors?.signingRules?.[index]?.signingMandateType && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.signingMandateType?.message}
+                      {
+                        errors?.signingRules?.[index]?.signingMandateType
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
@@ -436,7 +503,10 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   />
                   {errors?.signingRules?.[index]?.minimumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.minimumPaymentAmount?.message}
+                      {
+                        errors?.signingRules?.[index]?.minimumPaymentAmount
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
@@ -451,7 +521,10 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   />
                   {errors?.signingRules?.[index]?.maximumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.maximumPaymentAmount?.message}
+                      {
+                        errors?.signingRules?.[index]?.maximumPaymentAmount
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
@@ -464,13 +537,15 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   />
                   {errors?.signingRules?.[index]?.maximumDailyLimit && (
                     <div className="text-red-500">
-                      {errors?.signingRules?.[index]?.maximumDailyLimit?.message}
+                      {
+                        errors?.signingRules?.[index]?.maximumDailyLimit
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
                 <div className="w-[5%] flex items-end">
                   <Button
-                    
                     size="icon"
                     className="mb-6"
                     onClick={() => {
@@ -490,9 +565,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+          <Button className="ml-2">Cancel</Button>
         </div>
       </form>
     </section>
