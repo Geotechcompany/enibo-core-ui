@@ -220,7 +220,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       render={({ field: { onChange, value } }) => (
                         <Select onValueChange={onChange} value={value}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select KYC Type" />
+                            <SelectValue placeholder="Select IndividualKYC Type" />
                           </SelectTrigger>
                           <SelectContent>
                             {/* Map over KYCType state to render select options */}

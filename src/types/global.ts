@@ -154,6 +154,7 @@ export type KYCType = {
   modifiedOn: string;
 };
 export type MandateType = {
+  mandateTypeId: string;
   mandateTypeName: string;
   mandateTypeDescription: string;
   mandateTypeCode: string;
