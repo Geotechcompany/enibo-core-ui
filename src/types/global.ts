@@ -83,7 +83,7 @@ export type LedgerAccount = {
 export type TransactionType = {
   transactionTypeName: string;
   transactionTypeCode: string;
-  transactionTypeDescription: string;
+  description: string;
   currency: string;
 };
 

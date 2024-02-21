@@ -17,15 +17,16 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
  const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryTransactionTypesList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryTransactionTypesList);
 
   useEffect(() => {
     if (data) {
       setTransactionTypesList(data.transactionTypes);
     }
     setLoading(queryLoading);
+    refetch();
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [data, queryLoading, queryError, refetch]);
 
  
   return (

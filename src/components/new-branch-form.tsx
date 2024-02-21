@@ -20,7 +20,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import {CREATE_BRANCH} from "./branch-list/mutation";
 import { Link, useNavigate } from "react-router-dom";
 import queryBranchTypesList from "@/components/branch-types/query";
-
+// import queryBranchList from "@/components/branch-list/query";
 
 
 
@@ -29,14 +29,14 @@ export const newBranchSchema = z.object({
   branchType: z.string().min(3, { message: "Branch type is required" }),
   description: z.string(),
   branchCode: z.string(),
-  SWIFTCode: z.string().min(3, { message: "SWIFT code is required" }).optional(),
+  SWIFTCode: z.string().optional(),
   localBankCode: z.string(),
   country: z.string().min(3, { message: "Country is required" }),
   countrySubdivision: z
     .string()
     .min(3, { message: "Country subdivision is required" }),
   streetName: z.string().min(3, { message: "Street name is required" }),
-  buildingNumber: z.string().min(3, { message: "Building number is required" }),
+  buildingNumber: z.string(),
   buildingName: z.string().min(3, { message: "Building name is required" }),
   postalAddress: z.string().min(3, { message: "Postal address is required" }),
   // AllowedProductTypes: z
@@ -75,7 +75,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
   const [createBranchMutation] = useMutation(CREATE_BRANCH);
 
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
-  const [branchTypes, setBranchTypes] = useState<any[]>([]); 
+  const [branchTypes, setBranchTypes] = useState<any[]>([]);
+  // const [branches, setBranches] = useState<any[]>([]);  
 
 
   const onSubmit = async (data: newBranchInput) => {
@@ -144,9 +145,11 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
     error: queryError,
   } = useQuery(queryBranchTypesList);
 
+
   useEffect(() => {
     if (data) {
       setBranchTypes(data.branchTypes);
+      // setBranches(data.branches);
     }
   }, [data, queryLoading, queryError]);
 
@@ -370,7 +373,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                       <SelectItem value="no">No</SelectItem>
                     </SelectContent>
                   </Select>
-                )} />
+                )} /> 
               {errors.isHeadOfficeBranch && (
                 <span className="text-red-500">
                   {errors.isHeadOfficeBranch.message}
@@ -385,6 +388,27 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                     id="headOfficeBranch"
                     type="text"
                     {...register("headOfficeBranch", { required: true })} />
+                  {/* <Controller
+                  control={control}
+                  name="headOfficeBranch"
+                  render={({ field: { onChange, value } }) => (
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Branch" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {branches.map((type) => (
+                          <SelectItem
+                            key={type.branchId}
+                            value={type.branchId}
+                          >
+                            {type.branchName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                /> */}
                   {errors.headOfficeBranch && (
                     <span className="text-red-500">
                       {errors.headOfficeBranch.message}
