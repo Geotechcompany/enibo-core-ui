@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,8 +14,9 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_INDIVIDUAL_KYC } from "@/types/mutations";
+import queryKycTypesList from "./kyc-type-list/query";
 
 /**
  * 
@@ -38,6 +39,7 @@ import { CREATE_INDIVIDUAL_KYC } from "@/types/mutations";
     signature: string;
  */
 const newKYCIndividualSchema = z.object({
+  kycType: z.string().min(3, { message: "KYC Type is required" }),
   designation: z.string().min(2, { message: "Designation is required" }),
   firstName: z.string().min(3, { message: "First Name is required" }),
   middleName: z.string().min(3, { message: "Middle Name is required" }),
@@ -68,6 +70,7 @@ interface NewKYCIndividualFormProps {}
 const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
   const { toast } = useToast();
   const [createIndividualKyc] = useMutation(CREATE_INDIVIDUAL_KYC);
+  const [KYCTypes, setKycsTypes] = useState<any[]>([]); // State to track the selected KYC type
   const {
     register,
     handleSubmit,
@@ -79,7 +82,7 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
   const onSubmit = (data: NewKYCIndividualInput) => {
     console.log(data);
     const formInput = {
-      kycType: "98ae0ccf-65a7-484e-91bd-d30ff531c7ca",
+      kycType: data.kycType, //TODO: get kyc type id from context
       designation: data.designation,
       firstName: data.firstName,
       middleName: data.middleName,
@@ -110,6 +113,18 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
       description: "New KYC Individual has been created successfully",
     });
   };
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryKycTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setKycsTypes(data.kycTypes);
+    }
+  }, [data, queryLoading, queryError]);
+
   return (
     <section>
       <div className="pt-2 ml-4">
@@ -142,10 +157,42 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 border">
             <div className="p-4">
+             
+              </div>
+              <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
+                <div>
+                <Label htmlFor="kycType">KYC TYPE</Label>
+                <Controller
+                  control={control}
+                  name="kycType"
+                  render={({ field: { onChange, value } }) => (
+                    <Select onValueChange={onChange} value={value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select KYC Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {KYCTypes.map((type) => (
+                          <SelectItem
+                            key={type.kycTypeId}
+                            value={type.kycTypeId}
+                          >
+                            {type.kycTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 border-l border-r">
+            <div className="p-4">
               <h3>PERSONAL DETAILS</h3>
             </div>
             <div className="grid grid-cols-3 gap-4 mx-4 mb-8 -mt-4 ">
               <div>
+                
                 <Label htmlFor="designation">
                   Designation e.g. Mr, Mrs, Dr, Rev, etc
                 </Label>
