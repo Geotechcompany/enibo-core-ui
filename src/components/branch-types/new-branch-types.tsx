@@ -76,7 +76,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
       </div>,
       });
       reset();
-      navigate("/administration/branches/branch-types"); 
+      navigate("/administration/branch-details"); 
 
     } catch (error) {
       console.error("Error creating branch type:", error);
