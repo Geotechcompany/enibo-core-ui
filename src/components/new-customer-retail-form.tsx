@@ -13,30 +13,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { MultiSelect } from "./multi-select";
+
 import { X } from "lucide-react";
 import { gql, useQuery } from "@apollo/client";
-import { KYCType, ProductType } from "@/types/global";
+import { KYCType, MandateType, ProductType } from "@/types/global";
 
 const customerRetailSchema = z.object({
   jointKYC: z.array(z.object({ value: z.string(), label: z.string() })),
   individualKYC: z.string(),
-  kycType: z.string().refine((value) => value === 'personal' || value === 'joint', {
-    message: 'Invalid KYC Type',
-  }),
-  productTypes: z.string()
-    .min(3, { message: "Product Types is required" }),
+  kycType: z
+    .string()
+    .refine((value) => value === "personal" || value === "joint", {
+      message: "Invalid KYC Type",
+    }),
+  productTypes: z.string().min(3, { message: "Product Types is required" }),
   accountCurrency: z
     .string()
     .min(3, { message: "Account Currency is required" }),
   riskRating: z.string().min(3, { message: "Risk Rating is required" }),
   mandates: z.array(
     z.object({
-      signatory:  z.string()
-        .min(3, { message: "Signatory is required" }),
-      mandateType: z
-        .array(z.object({ value: z.string(), label: z.string() }))
-        .min(3, { message: "Mandate Type is required" }),
+      signatory: z.string().min(3, { message: "Signatory is required" }),
+      mandateType: z.string().min(3, { message: "Mandate Type is required" }),
       category: z.string().min(3, { message: "Category is required" }),
     })
   ),
@@ -44,7 +42,7 @@ const customerRetailSchema = z.object({
     z.object({
       signingRule: z.string().min(3, { message: "Signing Rule is required" }),
       signingMandateType: z
-        .array(z.object({ value: z.string(), label: z.string() }))
+        .array(z.object({ value: z.number(), label: z.number() }))
         .min(3, { message: "Signing Mandate Type is required" }),
       minimumPaymentAmount: z
         .number()
@@ -64,28 +62,49 @@ type CustomerRetailInput = z.infer<typeof customerRetailSchema>;
 interface NewCustomerRetailFormProps {}
 
 const GET_PRODUCT_TYPES = gql`
-query ProductTypes {
-  productTypes {
-    productTypeId
-    productTypeName
+  query ProductTypes {
+    productTypes {
+      productTypeId
+      productTypeName
+    }
   }
-}
 `;
 const GET_KYC_TYPES = gql`
-query kycType {
-  kycTypes {
-    kycTypeId
-    kycTypeName
+  query kycType {
+    kycTypes {
+      kycTypeId
+      kycTypeName
+    }
   }
-}
+`;
+const GET_MANDATE_TYPES = gql`
+  query MandateTypes {
+    mandateTypes {
+      mandateTypeId
+      mandateTypeName
+    }
+  }
+`;
+const GET_INDIVIDUAL_KYCS = gql`
+  query IndividualKYCs {
+    individualKYCs {
+      individualKYCId
+      kycType
+      designation
+      firstName
+      middleName
+      lastName
+    }
+  }
 `;
 
-
 const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
-  const [kycType, setKycType] = useState(''); 
-  
+  const [kycType, setKycType] = useState("");
+  const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
+  const [individualKYCs, setIndividualKYCs] = useState<any[]>([]);
   const [KYCType, setKycTypes] = useState<KYCType[]>([]);
+
   const handleKycTypeChange = (value: string) => {
     setKycType(value);
   };
@@ -97,14 +116,16 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
       category: "",
     },
   ]);
-  
-  const [mandateDetails, setMandateDetails] = useState([{
-    signingMandateType: [],
-    signingRule: "",
-    minimumPaymentAmount: 0,
-    maximumPaymentAmount: 0,
-    maximumDailyLimit: 0,
-  }]);
+
+  const [mandateDetails, setMandateDetails] = useState([
+    {
+      signingMandateType: [],
+      signingRule: "",
+      minimumPaymentAmount: 0,
+      maximumPaymentAmount: 0,
+      maximumDailyLimit: 0,
+    },
+  ]);
   const { toast } = useToast();
   const {
     control,
@@ -113,19 +134,35 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
   } = useForm<CustomerRetailInput>({
     resolver: zodResolver(customerRetailSchema),
   });
- 
-    const { data: kycData } = useQuery(GET_KYC_TYPES); // Execute the query
-    useEffect(() => {
-      if (data && data.kycTypes) {
-        setKycTypes(data.kycTypes);
-      }
-    }, [kycData]);
-  const {data } = useQuery(GET_PRODUCT_TYPES);
-useEffect(() => {
-  if (data && data.productTypes) {
-    setProductTypes(data.productTypes);
-  }
-}, [data]);
+  const { data: mandateData } = useQuery(GET_MANDATE_TYPES);
+
+  useEffect(() => {
+    if (mandateData && mandateData.mandateTypes) {
+      setMandateTypes(mandateData.mandateTypes);
+    }
+  }, [mandateData]);
+
+  const { data: kycData } = useQuery(GET_KYC_TYPES); // Execute the query
+  useEffect(() => {
+    if (kycData && kycData.kycTypes) {
+      setKycTypes(kycData.kycTypes);
+    }
+  }, [kycData]);
+
+  const { data } = useQuery(GET_PRODUCT_TYPES);
+  useEffect(() => {
+    if (data && data.productTypes) {
+      setProductTypes(data.productTypes);
+    }
+  }, [data]);
+
+  const { data: individualKycData } = useQuery(GET_INDIVIDUAL_KYCS);
+  useEffect(() => {
+    if (individualKycData && individualKycData.individualKYCs) {
+      setIndividualKYCs(individualKycData.individualKYCs);
+    }
+  }, [individualKycData]);
+
   const onSubmit = (data: CustomerRetailInput) => {
     toast({
       title: "Customer Retail Created",
@@ -136,7 +173,6 @@ useEffect(() => {
       ),
     });
   };
-
 
   return (
     <section>
@@ -153,7 +189,13 @@ useEffect(() => {
                   control={control}
                   name="kycType"
                   render={({ field: { onChange, value } }) => (
-                    <Select onValueChange={(val) => { handleKycTypeChange(val); onChange(val); }} value={value}>
+                    <Select
+                      onValueChange={(val) => {
+                        handleKycTypeChange(val);
+                        onChange(val);
+                      }}
+                      value={value}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select KYC Type" />
                       </SelectTrigger>
@@ -164,10 +206,12 @@ useEffect(() => {
                     </Select>
                   )}
                 />
-                {errors.kycType && <div className="text-red-500">{errors.kycType.message}</div>}
+                {errors.kycType && (
+                  <div className="text-red-500">{errors.kycType.message}</div>
+                )}
               </div>
               <div>
-                {kycType === 'personal' && (
+                {kycType === "personal" && (
                   <>
                     <Label htmlFor="individualKYC">Individual KYC</Label>
                     <Controller
@@ -175,42 +219,48 @@ useEffect(() => {
                       name="individualKYC"
                       render={({ field: { onChange, value } }) => (
                         <Select onValueChange={onChange} value={value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Product Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {/* Map over productTypes state to render select options */}
-                          {KYCType.map((type) => (
-                            <SelectItem key={type.kycTypeId} value={type.kycTypeId}>
-                              {type.kycTypeName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select KYC Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {/* Map over KYCType state to render select options */}
+                            {KYCType.map((type) => (
+                              <SelectItem
+                                key={type.kycTypeId}
+                                value={type.kycTypeId}
+                              >
+                                {type.kycTypeName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
                   </>
                 )}
-                { kycType === 'joint' && (
+                {kycType === "joint" && (
                   <>
-                    <Label htmlFor="jointKYC">Joint Individual KYC</Label>
+                    <Label htmlFor="individualKYC">Individual KYC</Label>
                     <Controller
                       control={control}
-                      name="jointKYC"
+                      name="individualKYC"
                       render={({ field: { onChange, value } }) => (
-                        <MultiSelect
-                          onChange={onChange}
-                          selected={value}
-                          placeholder="Select Individuals KYC"
-                          className="w-full"
-                          options={[
-                            { value: "A12345", label: "John Doe - A12345" },
-                            { value: "B67890", label: "Jane Smith - B67890" },
-                            { value: "C13579", label: "Robert Johnson - C13579" },
-                            { value: "D24680", label: "Emily Davis - D24680" },
-                            { value: "E97531", label: "Michael Wilson - E97531" },
-                          ]}
-                        />
+                        <Select onValueChange={onChange} value={value}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select KYC Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {/* Map over KYCType state to render select options */}
+                            {KYCType.map((type) => (
+                              <SelectItem
+                                key={type.kycTypeId}
+                                value={type.kycTypeId}
+                              >
+                                {type.kycTypeName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                   </>
@@ -241,7 +291,10 @@ useEffect(() => {
                       <SelectContent>
                         {/* Map over productTypes state to render select options */}
                         {ProductTypes.map((type) => (
-                          <SelectItem key={type.productTypeId} value={type.productTypeId}>
+                          <SelectItem
+                            key={type.productTypeId}
+                            value={type.productTypeId}
+                          >
                             {type.productTypeName}
                           </SelectItem>
                         ))}
@@ -250,7 +303,9 @@ useEffect(() => {
                   )}
                 />
                 {errors.productTypes && (
-                  <div className="text-red-500">{errors.productTypes.message}</div>
+                  <div className="text-red-500">
+                    {errors.productTypes.message}
+                  </div>
                 )}
               </div>
             </div>
@@ -280,7 +335,7 @@ useEffect(() => {
                   >
                     Signatory KYC
                   </Label>
-                  <Controller
+                 <Controller
                     control={control}
                     name={`mandates.${index}.signatory`}
                     render={({ field: { onChange, value } }) => (
@@ -289,15 +344,20 @@ useEffect(() => {
                           <SelectValue placeholder="Select Individual KYC" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="John">John Doe - A12345</SelectItem>
-                          <SelectItem value="Jane">Jane Smith - B67890</SelectItem>
-                          <SelectItem value="Robert">Robert Johnson - C13579</SelectItem>
-                          <SelectItem value="Emily">Emily Davis - D24680</SelectItem>
-                          <SelectItem value="Michael">Michael Wilson - E97531</SelectItem>
+                          {/* Map over individualKYCs state to render select options */}
+                          {individualKYCs.map((indKyc) => (
+                            <SelectItem
+                              key={indKyc.kycType}
+                              value={indKyc.kycType}
+                            >
+                              {`${indKyc.firstName} ${indKyc.lastName} `}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     )}
-                  /> 
+                  />
+
                   {errors.mandates?.[index]?.signatory && (
                     <div className="text-red-500">
                       {errors.mandates?.[index]?.signatory?.message}
@@ -315,21 +375,25 @@ useEffect(() => {
                     control={control}
                     name={`mandates.${index}.mandateType`}
                     render={({ field: { onChange, value } }) => (
-                      <MultiSelect
-                        onChange={onChange}
-                        selected={value}
-                        placeholder="Select Mandate Type"
-                        className="w-full"
-                        options={[
-                          { value: "A12345", label: "Full Access" },
-                          { value: "B67890", label: "Transactional Access" },
-                          { value: "C13579", label: "View Only" },
-                          { value: "D24680", label: "Limited Access" },
-                          { value: "E97531", label: "Payment Authorization" },
-                        ]}
-                      />
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Mandate Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over mandateTypes state to render select options */}
+                          {mandateTypes.map((type) => (
+                            <SelectItem
+                              key={type.mandateTypeId}
+                              value={type.mandateTypeId}
+                            >
+                              {type.mandateTypeName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
+
                   {errors.mandates?.[index]?.mandateType && (
                     <div className="text-red-500">
                       {errors.mandates?.[index]?.mandateType?.message}
@@ -419,26 +483,33 @@ useEffect(() => {
                   </Label>
                   <Controller
                     control={control}
-                    name={`signingRules.${index}.signingMandateType`}
+                    name={`mandates.${index}.mandateType`}
                     render={({ field: { onChange, value } }) => (
-                      <MultiSelect
-                        onChange={onChange}
-                        selected={value}
-                        placeholder="Select Signing Mandate Type"
-                        className="w-full"
-                        options={[
-                          { value: "A12345", label: "Full Access" },
-                          { value: "B67890", label: "Transactional Access" },
-                          { value: "C13579", label: "View Only" },
-                          { value: "D24680", label: "Limited Access" },
-                          { value: "E97531", label: "Payment Authorization" },
-                        ]}
-                      />
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Mandate Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* Map over mandateTypes state to render select options */}
+                          {mandateTypes.map((type) => (
+                            <SelectItem
+                              key={type.mandateTypeId}
+                              value={type.mandateTypeId}
+                            >
+                              {type.mandateTypeName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
+
                   {errors.signingRules?.[index]?.signingMandateType && (
                     <div className="text-red-500">
-                      {errors.signingRules?.[index]?.signingMandateType?.message}
+                      {
+                        errors.signingRules?.[index]?.signingMandateType
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
@@ -487,7 +558,10 @@ useEffect(() => {
                   />
                   {errors.signingRules?.[index]?.minimumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors.signingRules?.[index]?.minimumPaymentAmount?.message}
+                      {
+                        errors.signingRules?.[index]?.minimumPaymentAmount
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
@@ -512,7 +586,10 @@ useEffect(() => {
                   />
                   {errors.signingRules?.[index]?.maximumPaymentAmount && (
                     <div className="text-red-500">
-                      {errors.signingRules?.[index]?.maximumPaymentAmount?.message}
+                      {
+                        errors.signingRules?.[index]?.maximumPaymentAmount
+                          ?.message
+                      }
                     </div>
                   )}
                 </div>
