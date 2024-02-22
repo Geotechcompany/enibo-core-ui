@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,11 +15,17 @@ import {
 } from "./ui/select";
 import { MultiSelect } from "./multi-select";
 import { X } from "lucide-react";
-import { gql, useQuery } from "@apollo/client";
-import { MandateType, ProductType } from "@/types/global";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { KYCType, MandateType, ProductType } from "@/types/global";
+import { CREATE_BUSINESS } from "./customer-list/mutation";
 
 const businessRetailSchema = z.object({
   businessKYC: z.string().min(3, { message: "Business KYC is required" }),
+  kycType: z
+    .string()
+    .refine((value) => value === "personal" || value === "joint", {
+      message: "Invalid KYC Type",
+    }),
   directorKYC: z
     .array(z.object({ value: z.string(), label: z.string() }))
     .min(3, { message: "Director KYC is required" }),
@@ -39,16 +45,16 @@ const businessRetailSchema = z.object({
     z.object({
       signingRule: z.string().min(3, { message: "Signing Rule is required" }),
       signingMandateType: z
-        .array(z.object({ value: z.string(), label: z.string() }))
+        .string()
         .min(3, { message: "Signing Mandate Type is required" }),
       minimumPaymentAmount: z
-        .number()
+        .string()
         .min(3, { message: "Minimum Payment Amount is required" }),
       maximumPaymentAmount: z
-        .number()
+        .string()
         .min(3, { message: "Maximum Payment Amount is required" }),
       maximumDailyLimit: z
-        .number()
+        .string()
         .min(3, { message: "Maximum Daily Limit is required" }),
     })
   ),
@@ -66,11 +72,20 @@ const GET_PRODUCT_TYPES = gql`
     }
   }
 `;
+const GET_KYC_TYPES = gql`
+  query kycType {
+    kycTypes {
+      kycTypeId
+      kycTypeName
+    }
+  }
+`;
 const GET_MANDATE_TYPES = gql`
   query MandateTypes {
     mandateTypes {
       mandateTypeId
       mandateTypeName
+      mandateTypeCode
     }
   }
 `;
@@ -92,7 +107,9 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
   const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
   const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [businessKYCs, setbusinessKYCs] = useState<any[]>([]);
+  const [KYCType, setKycTypes] = useState<KYCType[]>([]);
   const [accountMandates, setAccountMandates] = useState([
+    
     {
       signatory: [],
       mandateType: [],
@@ -118,16 +135,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
   } = useForm<BusinessRetailInput>({
     resolver: zodResolver(businessRetailSchema),
   });
-  const onSubmit = (data: BusinessRetailInput) => {
-    toast({
-      title: "Customer Retail Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  };
+ 
   const { data } = useQuery(GET_PRODUCT_TYPES);
   useEffect(() => {
     if (data && data.productTypes) {
@@ -143,11 +151,63 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
 
   const { data: businessKycData } = useQuery(GET_BUSINESS_KYCS);
   useEffect(() => {
-    if (businessKycData && businessKycData.ibusinessKYCs) {
+    if (businessKycData && businessKycData.businessKYCs) {
       setbusinessKYCs(businessKycData.businessKYCs);
     }
   }, [businessKycData]);
 
+  const { data: kycData } = useQuery(GET_KYC_TYPES); // Execute the query
+  useEffect(() => {
+    if (kycData && kycData.kycTypes) {
+      setKycTypes(kycData.kycTypes);
+    }
+  }, [kycData]);
+  const getDesignation = (kycType: string, individualKYCs: any[], selectedIndividualKYC: string) => {
+    if (kycType === "personal") {
+      const selectedKYC = individualKYCs.find(kyc => kyc.kycType === selectedIndividualKYC);
+      return selectedKYC ? selectedKYC.designation : "";
+    } else {
+      return "";
+    }
+  };
+ // Refs for firstName, middleName, and lastName input fields
+ const firstNameRef = useRef<HTMLInputElement>(null);
+ const middleNameRef = useRef<HTMLInputElement>(null);
+ const lastNameRef = useRef<HTMLInputElement>(null);
+ const [createRetail] = useMutation(CREATE_BUSINESS);
+ const onSubmit = async (data: BusinessRetailInput) => {
+  try {
+    const variables = {
+      retailType: data.kycType === "personal" ? "Personal" : "Joint",
+      designation: getDesignation(data.kycType, businessKYCs, data.businessKYC),
+      firstName: firstNameRef.current?.value || "", // Extract firstName from ref
+      middleName: middleNameRef.current?.value || "", // Extract middleName from ref
+      lastName: lastNameRef.current?.value || "", // Extract lastName from ref
+      individualKyc: data.businessKYC,
+      productTypes: data.productTypes,
+      accountCurrency: data.accountCurrency,
+      riskRating: data.riskRating,
+      accountMandates: JSON.stringify(data.mandates), // Convert to JSON string
+    };
+
+    // Execute mutation
+    const { data: responseData } = await createRetail({ variables });
+
+    // Handle success
+    toast({
+      title: "Customer Retail Created",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(responseData, null, 2)}</code>
+        </pre>
+      ),
+    });
+
+  } catch (err) {
+    // Handle error
+    console.error("Error creating customer retail:", err);
+  }
+};
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,10 +229,10 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {/* Map over KYCType state to render select options */}
-                        {businessKYCs.map((type) => (
+                        {KYCType.map((type) => (
                           <SelectItem
-                            key={type.businessKYCId}
-                            value={type.businessKYCId}
+                            key={type.kycTypeId}
+                            value={type.kycTypeId}
                           >
                             {type.kycTypeName}
                           </SelectItem>
@@ -339,10 +399,10 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                           {/* Map over individualKYCs state to render select options */}
                           {businessKYCs.map((indKyc) => (
                             <SelectItem
-                              key={indKyc.kycType}
-                              value={indKyc.kycType}
+                              key={indKyc.businessKYCId}
+                              value={indKyc.businessKYCId}
                             >
-                              {`${indKyc.firstName} ${indKyc.lastName} `}
+                              {`${indKyc.legalEntityName} - ${indKyc.registrationNumber} `}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -450,7 +510,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                   <Label htmlFor="signingMandateType">Mandate Type</Label>
                   <Controller
                     control={control}
-                    name={`mandates.${index}.mandateType`}
+                    name={`signingRules.${index}.signingMandateType`}
                     render={({ field: { onChange, value } }) => (
                       <Select onValueChange={onChange} value={value}>
                         <SelectTrigger>
@@ -497,7 +557,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     Minimum Payment Amount
                   </Label>
                   <Input
-                    type="number"
+                    type="text"
                     id="minimumPaymentAmount"
                     {...register(`signingRules.${index}.minimumPaymentAmount`)}
                   />
@@ -515,7 +575,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                     Maximum Payment Amount
                   </Label>
                   <Input
-                    type="number"
+                    type="text"
                     id="maximumPaymentAmount"
                     {...register(`signingRules.${index}.maximumPaymentAmount`)}
                   />
@@ -531,7 +591,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
                 <div className="w-[50%]">
                   <Label htmlFor="maximumDailyLimit">Maximum Daily Limit</Label>
                   <Input
-                    type="number"
+                    type="text"
                     id="maximumDailyLimit"
                     {...register(`signingRules.${index}.maximumDailyLimit`)}
                   />
