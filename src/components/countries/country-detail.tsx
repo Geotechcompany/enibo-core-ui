@@ -9,6 +9,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { countrySchema } from "./schema";
 import { useToast } from "../ui/use-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 
 interface CountryOption {
@@ -34,9 +35,11 @@ interface NewCountryProps {}
 
 const NewCountry: FC<NewCountryProps> = () => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     setValue,
   } = useForm<NewCountryInput>({
@@ -70,14 +73,28 @@ const NewCountry: FC<NewCountryProps> = () => {
 
   const onSubmit = (data: NewCountryInput) => {
     console.log(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try{
+      toast({
+        title: "Country Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New Country Created {" "}
+          <Link to={`/administration/countries-list`} className="underline text-blue-500">
+            {data.name}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/countries-list"); 
+    } catch (error) {
+      console.error("Error creating country:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create country. Please try again.",
+      });
+    }
   };
 
   return (

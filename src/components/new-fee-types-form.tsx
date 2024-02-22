@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,6 +33,8 @@ const feeTypeSchema = z.object({
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
   // fixedRate: z.string().min(3, { message: "Fixed Rate is required" }),
   fixedRate: z.string().min(1, { message: "Fixed Rate is required"}),
+  modifiedBy: z.string().min(3, { message: "Modified By is required" }),
+  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type FeeTypeInput = z.infer<typeof feeTypeSchema>;
@@ -65,8 +67,8 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
               paymentFrequency: data.paymentFrequency,
               effectiveDate: data.effectiveDate,
               fixedRate: parseFloat(data.fixedRate),
-              modifiedBy: "tester", // Replace with actual value
-              modifiedOn: new Date().toISOString(), // Replace with actual value
+              modifiedBy: "tester", 
+              modifiedOn: data.modifiedOn,
             },
           });
           toast({
@@ -91,6 +93,14 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
           });
         }
       });
+
+
+      const [defaultModifiedOn, setDefaultModifiedOn] = useState(
+        new Date().toISOString()
+      );
+      useEffect(() => {
+        setDefaultModifiedOn(new Date().toISOString());
+      }, []);
       
        
         
@@ -206,6 +216,38 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
                     <span className="text-red-500">{errors.fixedRate.message}</span>
                 )}
             </div>
+            <div className="hidden">
+            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+              Modified By
+            </Label>
+            <Input
+              {...register("modifiedBy")}
+              placeholder="Modified By"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={"User"}
+            />
+            {errors.modifiedBy && (
+              <span className="text-red-500">{errors.modifiedBy.message}</span>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
+              Modified On
+            </Label>
+            <Input
+              {...register("modifiedOn")}
+              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={defaultModifiedOn}
+            />
+            {errors.modifiedOn && (
+              <span className="text-red-500">{errors.modifiedOn.message}</span>
+            )}
+          </div>
         </div>
         <div className="flex gap-2 mt-4">
             <Button type="submit">Submit</Button>

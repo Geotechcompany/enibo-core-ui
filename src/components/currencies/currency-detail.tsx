@@ -6,13 +6,14 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export const newCurrencySchema = z.object({
     currencyCode: z.string().min(3, { message: "Currency Code is required" }),
     currencyDescription: z.string().max(100, { message: "Description is required" }),
     currencySymbol: z.string().max(100, { message: "Symbol is required" }),
-    country: z.string().min(3, { message: "Country is required" }),
+    currency: z.string().min(3, { message: "Currency is required" }),
   });
 
 
@@ -22,9 +23,11 @@ export const newCurrencySchema = z.object({
   
   const NewCurrency: FC<NewCurrencyProps> = () => {
     const { toast } = useToast();
+    const navigate  = useNavigate();
     const {
       register,
       handleSubmit,
+      reset,
       formState: { errors },
     } = useForm<NewCurrencyInput>({
       resolver: zodResolver(newCurrencySchema),
@@ -32,14 +35,28 @@ export const newCurrencySchema = z.object({
   
     const onSubmit = (data: NewCurrencyInput) => {
       console.log(data);
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-      });
+      try{
+        toast({
+          title: "Currency Created",
+          description: <div className="text-black">
+          <div className="text-lg">
+            New Currency Created {" "}
+            <Link to={`/administration/currencies-list`} className="underline text-blue-500">
+              {data.currency}
+            </Link>
+             , has been successfully created
+          </div>
+        </div>,
+        });
+        reset();
+        navigate("/administration/currencies-list"); 
+      } catch (error) {
+        console.error("Error creating currency:", error);
+        toast({
+          title: "Error",
+          description: "Failed to create currency. Please try again.",
+        });
+      }
     };
   
     return (
@@ -77,15 +94,15 @@ export const newCurrencySchema = z.object({
             </div>
   
             <div className="flex flex-col">
-              <Label htmlFor="country">Country</Label>
+              <Label htmlFor="currency">Currency</Label>
               <Input
-                id="country"
+                id="currency"
                 type="text"
-                {...register("country", { required: true })}
+                {...register("currency", { required: true })}
                 className="mt-1"
               />
-              {errors.country && (
-                <span className="text-red-500 mt-1">{errors.country.message}</span>
+              {errors.currency && (
+                <span className="text-red-500 mt-1">{errors.currency.message}</span>
               )}
             </div>
           </div>

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export const newCalendarSchema = z.object({
@@ -23,9 +24,11 @@ export const newCalendarSchema = z.object({
   
   const NewCalendar: FC<NewCalendarProps> = () => {
     const { toast } = useToast();
+    const navigate  = useNavigate();
     const {
       register,
       handleSubmit,
+      reset,
       formState: { errors },
     } = useForm<NewCalendarInput>({
       resolver: zodResolver(newCalendarSchema),
@@ -33,14 +36,28 @@ export const newCalendarSchema = z.object({
   
     const onSubmit = (data: NewCalendarInput) => {
       console.log(data);
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-      });
+      try{
+        toast({
+          title: "App Settings Created",
+          description: <div className="text-black">
+          <div className="text-lg">
+            New Calendar Detail {" "}
+            <Link to={`/administration/countries-list`} className="underline text-blue-500">
+              {data.businessCalendarName}
+            </Link>
+             , has been successfully created
+          </div>
+        </div>,
+        });
+        reset();
+        navigate("/administration/countries-list"); 
+      } catch (error) {
+        console.error("Error creating calendar detail:", error);
+        toast({
+          title: "Error",
+          description: "Failed to create calendar detail. Please try again.",
+        });
+      }
     };
   
     return (

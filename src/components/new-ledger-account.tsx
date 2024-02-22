@@ -15,6 +15,7 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
+import { Link, useNavigate } from "react-router-dom";
 
 const ledgerAccountSchema = z.object({
   ledgerAccountNumber: z
@@ -41,9 +42,11 @@ interface NewLedgerAccountFormProps {}
 
 const NewLedgerAccountForm: FC<NewLedgerAccountFormProps> = () => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { errors },
   } = useForm<LedgerAccount>({
@@ -51,14 +54,28 @@ const NewLedgerAccountForm: FC<NewLedgerAccountFormProps> = () => {
   });
 
   const onSubmit = (data: LedgerAccount) => {
+    try{
     toast({
       title: "Ledger Account Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: <div className="text-black">
+      <div className="text-lg">
+        New Ledger Account Created {" "}
+        <Link to={`/administration/ledger-management/ledger-accounts`} className="underline text-blue-500">
+          {data.ledgerAccountNumber}
+        </Link>
+         , has been successfully created
+      </div>
+    </div>,
     });
+    reset();
+    navigate("/administration/ledger-management/ledger-accounts"); 
+  } catch (error) {
+    console.error("Error creating ledger account ", error);
+    toast({
+      title: "Error",
+      description: "Failed to create ledger account. Please try again.",
+    });
+  }
   };
   return (
     <section>
