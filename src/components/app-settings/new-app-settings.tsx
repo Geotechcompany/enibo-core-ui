@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const appSettingsSchema = z.object({
@@ -22,23 +23,39 @@ interface NewAppSettingsFormProps {}
 
 const NewAppSettingsForm: FC<NewAppSettingsFormProps> = () => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<appSettingsType>({
     resolver: zodResolver(appSettingsSchema),
   });
 
   const onSubmit = (data: appSettingsType) => {
+    try{
     toast({
-      title: "New App Settings Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "App Settings Created",
+      description: <div className="text-black">
+      <div className="text-lg">
+        New App Settings {" "}
+        <Link to={`/administration/app-settings`} className="underline text-blue-500">
+          {data.appsettingID}
+        </Link>
+         , has been successfully created
+      </div>
+    </div>,
     });
+    reset();
+    navigate("/administration/app-settings"); 
+  } catch (error) {
+    console.error("Error creating app setting:", error);
+    toast({
+      title: "Error",
+      description: "Failed to create app setting. Please try again.",
+    });
+  }
   };
 
   return (

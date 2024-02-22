@@ -9,26 +9,43 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/button';
 import { v4 as uuid } from 'uuid';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function ManageInput() {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
   } = useForm<manageUserInput>({
     resolver: zodResolver(manageUserSchema),
   });
 
   const onSubmit = handleSubmit((data) => {
-    toast({
-      title: 'Product Type Created',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try{
+      toast({
+        title: "Permission Type Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New Permission Type {" "}
+          <Link to={`/administration/user-management/profile-list`} className="underline text-blue-500">
+            {data.moduleName}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/user-management/profile-list"); 
+    } catch (error) {
+      console.error("Error creating permission type:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create permission type. Please try again.",
+      });
+    }
   });
 
   const columns = React.useMemo<ColumnDef<manageUserInput>[]>(

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { userProfileSchema } from "./schema";
+import { Link, useNavigate } from "react-router-dom";
 
 
 type UserProfileInput = z.infer<typeof userProfileSchema>;
@@ -17,9 +18,11 @@ interface UserProfileFormProps {
 
 const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<UserProfileInput>({
     resolver: zodResolver(userProfileSchema),
@@ -28,14 +31,28 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
 
   const onSubmit = (data: UserProfileInput) => {
     console.log(data);
-    toast({
-      title: "You submitted the following user details:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try{
+      toast({
+        title: "Profile Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New User Profile {" "}
+          <Link to={`/administration/user-management/profile-list`} className="underline text-blue-500">
+            {data.profileName}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/user-management/profile-list"); 
+    } catch (error) {
+      console.error("Error creating user profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create user profile. Please try again.",
+      });
+    }
   };
 
   return (

@@ -81,10 +81,13 @@ export type LedgerAccount = {
 };
 
 export type TransactionType = {
+  transactionTypeId: string;
   transactionTypeName: string;
   transactionTypeCode: string;
   description: string;
   currency: string;
+  modifiedBy: string;
+  modifiedOn:  string;
 };
 
 export type Transaction = {
@@ -112,13 +115,15 @@ export type Entry = {
 };
 
 export type FeeType = {
-  feeCode: string;
-  feeName: string;
+  feeTypeId: string;
+  feeTypeName: string;
   description: string;
-  transactionType: string;
+  transactionTypes: string;
   paymentFrequency: string;
   effectiveDate: string;
   fixedRate: number;
+  modifiedBy: string;
+  modifiedOn: string;
 };
 
 export type LedgerRule = {

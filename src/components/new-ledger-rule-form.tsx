@@ -15,6 +15,7 @@ import {
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
 import { MultiSelect } from "./multi-select";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const NewLedgerRuleFormSchema = z.object({
@@ -52,9 +53,11 @@ interface NewLedgerRuleFormProps {}
 
 const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { errors },
   } = useForm<NewLedgerRuleFormInput>({
@@ -62,14 +65,28 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
   });
 
   const onSubmit = (data: NewLedgerRuleFormInput) => {
-    toast({
-      title: "Ledger Rule Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try{
+      toast({
+        title: "Ledger Rule Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New Ledger Rule Created {" "}
+          <Link to={`/administration/ledger-management/ledger-rules`} className="underline text-blue-500">
+            {data.ruleName}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/ledger-management/ledger-rules"); 
+    } catch (error) {
+      console.error("Error creating ledger rule ", error);
+      toast({
+        title: "Error",
+        description: "Failed to create ledger rule. Please try again.",
+      });
+    }
   };
   return (
     <section>

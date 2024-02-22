@@ -29,16 +29,16 @@ export const columns: ColumnDef<FeeType>[] = [
     enableHiding: true,
   },
     {
-        accessorKey: "feeCode",
+        accessorKey: "feeTypeId",
         header: "Fee Code",
-        cell: ({ row }) => <div className="">{row.getValue("feeCode")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("feeTypeId")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-        accessorKey: "feeName",
+        accessorKey: "feeTypeName",
         header: "Fee Name",
-        cell: ({ row }) => <div className="">{row.getValue("feeName")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("feeTypeName")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
@@ -50,9 +50,9 @@ export const columns: ColumnDef<FeeType>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "transactionType",
+        accessorKey: "transactionTypes",
         header: "Corresponding Transaction Type",
-        cell: ({ row }) => <div className="">{row.getValue("transactionType")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("transactionTypes")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
@@ -77,5 +77,12 @@ export const columns: ColumnDef<FeeType>[] = [
         enableSorting: true,
         enableHiding: true,
     },
+    {
+      accessorKey: "modifiedOn",
+      header: "Modified On",
+      cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
 
 ];
