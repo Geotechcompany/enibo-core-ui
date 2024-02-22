@@ -61,5 +61,15 @@ export const columns: ColumnDef<LedgerCategory>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+  {
+    accessorKey: "categoryNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="CategoryNumber" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("categoryNumber")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  
+  },
 
 ];
