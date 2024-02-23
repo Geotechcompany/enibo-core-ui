@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Route, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/branch-types/columns";
-import { DELETE_BRANCH_TYPE, UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
-import { BranchTypes } from "@/components/branch-types/schema";
+import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
+import { BranchTypes } from "@/types/global";
+import EditBranchTypes from "./EditBranch";
 
 interface BranchesProps {}
 
@@ -15,54 +16,78 @@ const BranchType: FC<BranchesProps> = () => {
   const [branchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
-
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/branches/new-branch-type",
   };
 
-  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryBranchTypesList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(
+    queryBranchTypesList
+  );
   const [deleteBranchType] = useMutation(DELETE_BRANCH_TYPE);
-  const [updateBranchType] = useMutation(UPDATE_BRANCH_TYPE);
-  const [selectedBranchType, setSelectedBranchType] = useState<BranchTypes | null>(null); 
+  const [selected, setSelected] = useState<number[]>([]);
 
-
+  
   useEffect(() => {
     if (data) {
       setBranchTypes(data.branchTypes);
     }
-    setLoading(queryLoading);
     refetch();
+    setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-    
   }, [data, queryLoading, queryError, refetch]);
 
-  const handleDelete = async (branchTypeName: string) => {
-    try {
-      await deleteBranchType({ variables: { branchTypeName } });
-      setBranchTypes(branchTypes.filter((branchType) => branchType.branchTypeName !== branchTypeName));
-    } catch (error) {
-      console.error("Error deleting branch type:", error);
+  const handleDelete = async () => {
+    if (selected.length) {
+      // Show confirmation dialog
+      if (window.confirm(`Confirm deletion of selected record/s`)) {
+        try {
+          // Extracting branch type IDs from selected array
+          const selectedBranchTypeIds = selected.map(branchTypeIndex => branchTypes[branchTypeIndex].branchTypeId);
+  
+          // Deleting selected branch types
+          await Promise.all(
+            selectedBranchTypeIds.map(async (branchTypeId) => {
+              await deleteBranchType({ variables: { branchTypeId } });
+            })
+          );
+  
+          // Filter out deleted items from UI
+          const updatedBranchTypes = branchTypes.filter(
+            (branchType) => !selectedBranchTypeIds.includes(branchType.branchTypeId)
+          );
+          setBranchTypes(updatedBranchTypes);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting branch types:", error);
+        }
+      }
     }
   };
 
-    if (!branchTypes) return; 
-    const handleEdit = async (branchType: BranchTypes | null) => {
-      if (!branchType) return; 
-    
-      const { branchTypeName, description } = branchType;
-      try {
-        await updateBranchType({
-          variables: { branchTypeName, description },
-        });
-        setSelectedBranchType(branchType); 
-      } catch (error) {
-        console.error("Error updating branch type:", error);
-      }
-    };
+  const handleEdit = async () => {
+    if (selected.length === 1) {
+      navigateToEditPage();
+    }
+  };
+
+
+  const navigateToEditPage = () => {
+    const selectedRecord = branchTypes[selected[0]];
+
+    <Route
+    path="/edit-branch-type"
+    element={<EditBranchTypes branchTypeName={selectedRecord?.branchTypeName || ""} />}
+  />
+        const branchName = selectedRecord.branchTypeName;
+  
+    navigate("/edit-branch-type", { state: { branchType: selectedRecord, branchName } });
+  };
+
+
 
   return (
     <div>
@@ -109,42 +134,46 @@ const BranchType: FC<BranchesProps> = () => {
             <p>Error: {error}</p>
           ) : (
             <DataTable
-            columns={columns}
-            data={branchTypes}
-            sorting={sorting}
+              columns={columns}
+              data={branchTypes}
+              sorting={sorting}
+              onRowSelect={setSelected}
             />
           )}
         </div>
         <div className="flex items-center my-4">
           <div className="mr-2">
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-[#36459C]"
-            onClick={() => handleEdit(selectedBranchType)}          >
-            Edit
-          </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={handleEdit}
+              disabled={selected.length !== 1} // Disable Edit button if more than one record is selected
+            >
+              Edit
+            </Button>
           </div>
           <div className="mr-2">
             <Button
               size="sm"
               variant="outline"
               className="border-[#36459C]"
-              onClick={() => {}}
+              // onClick={handleCopy}
+              disabled={selected.length !== 1} // Disable Copy button if more than one record is selected
             >
               Copy
             </Button>
           </div>
           <div className="mr-2">
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-[#36459C]"
-            onClick={() => handleDelete(selectedBranchType?.branchTypeName || '')}
-          >
-            Delete
-          </Button>
-
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#36459C]"
+              onClick={handleDelete}
+              disabled={selected.length === 0} // Disable Delete button if no record is selected
+            >
+              Delete
+            </Button>
           </div>
         </div>
       </div>

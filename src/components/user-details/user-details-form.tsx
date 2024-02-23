@@ -99,7 +99,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
         description: <div className="text-black">
         <div className="text-lg">
           New User {" "}
-          <Link to={`/administration/static-data/fee-types`} className="underline text-blue-500">
+          <Link to={`/administration/user-details`} className="underline text-blue-500">
             {data.username}
           </Link>
            , has been successfully created

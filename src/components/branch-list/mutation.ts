@@ -55,3 +55,29 @@ export const CREATE_BRANCH = gql`
     }
   }
 `;
+
+
+export const DELETE_BRANCH = gql`
+mutation DeleteBranch($branchId: String!) {
+  deleteBranch(branchId: $branchId) {
+    branchId
+    branchName
+    branchType
+    description
+    phoneNumber
+    branchCode
+    SWIFTCode
+    localBankCode
+    country
+    countrySubdivision
+    streetName
+    buildingNumber
+    buildingName
+    postalAddress
+    AllowedProductTypes
+    email
+    isHeadOfficeBranch
+    headOfficeBranch
+  }
+}
+`
