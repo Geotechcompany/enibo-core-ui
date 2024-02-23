@@ -294,3 +294,15 @@ export interface BranchForm {
   postalAddress: string;
   streetName: string;
 }
+
+
+export interface BranchTypes{
+    branchTypeId: number;
+    branchTypeName: string;
+    description: string;
+    modifiedBy: string;
+    modifiedOn: string;
+    createdBy: string;
+    createdAt: string;
+    updatedAt: string;
+}

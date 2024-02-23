@@ -1,8 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
-import { BranchTypes } from "./schema";
-
+import { BranchTypes } from "@/types/global";
  
 
 export const columns: ColumnDef<BranchTypes>[] = [
@@ -32,11 +31,11 @@ export const columns: ColumnDef<BranchTypes>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "branchTypeID",
+    accessorKey: "branchTypeId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Branch Type ID" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("branchTypeID")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("branchTypeId")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
@@ -68,5 +67,4 @@ export const columns: ColumnDef<BranchTypes>[] = [
       enableHiding: true,
      
   },
-    
 ];
