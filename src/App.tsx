@@ -49,6 +49,7 @@ import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
 import EditBranchTypes from "./Pages/Branches/EditBranchType";
 import EditBranch from "./Pages/Branches/EditBranch";
+import NewTransfer from "./Pages/Transfer/NewTransfer";
 
 function App() {
   return (
@@ -61,6 +62,14 @@ function App() {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/new-transfer"
+          element={
+            <MainLayout>
+              <NewTransfer />
             </MainLayout>
           }
         />

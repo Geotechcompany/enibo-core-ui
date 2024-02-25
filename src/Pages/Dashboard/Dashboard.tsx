@@ -12,6 +12,8 @@ import {
 } from "recharts";
 import { useState } from "react";
 import ExampleTable from "../Branches/DetailsTable";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const data = [
   { name: "Jan", amount: 150 },
@@ -75,26 +77,29 @@ const Dashboard = () => {
       <div className="flex">
         <div className="flex-1 max-w-full mt-4 ml-10 mr-8 bg-white max-h-96">
           <div className="flex justify-between p-2">
-            <dl className=" justify-start">
-              <dt className="pb-1 text-4xl text-black  dark:text-gray-400">
+            <dl className="justify-start ">
+              <dt className="pb-1 text-4xl text-black dark:text-gray-400">
                  Nairobi Branch
               </dt>
               {/* <dd className="ml-2 text-lg leading-none text-blue-900 dark:text-white">
                 Nairobi Branch - Kenya
               </dd> */}
             </dl>
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end gap-4">
+              <Button>
+                <Link to="/new-transfer">New Transfer</Link>
+              </Button>
               <input
                 type="date"
                 value={selectedDate.toISOString().split("T")[0]}
                 onChange={(e) => handleDateChange(new Date(e.target.value))}
-                className="border border-gray-400 rounded-md p-2"
+                className="p-1 border border-gray-400 rounded-md"
               />
             </div>
           </div>
 
-          <div className="gap-6 mb-8 flex justify-center items-stretch">
-            <div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 ml-20">
+          <div className="flex items-stretch justify-center gap-6 mb-8">
+            <div className="ml-20 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
               <div className="flex items-center justify-between p-4 md:w-72">
                 <div>
                   <p className="text-base font-medium dark:text-gray-400">
@@ -140,7 +145,7 @@ const Dashboard = () => {
                   </p>
                 </div>
                 <div className="flex items-center ml-5">
-                  <div className="p-3 mr-4 pl-5 text-orange-500 bg-orange-100 rounded dark:text-orange-100 dark:bg-orange-500">
+                  <div className="p-3 pl-5 mr-4 text-orange-500 bg-orange-100 rounded dark:text-orange-100 dark:bg-orange-500">
                     <i className="ri-donut-chart-fill" aria-setsize={100}></i>
                   </div>
                 </div>
@@ -148,11 +153,11 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="grid mb-8  flex-1 gap-8">
+          <div className="grid flex-1 gap-8 mb-8">
             <div className="flex justify-start mt-8">
-              <div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 mr-20">
+              <div className="mr-20 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
                 <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2">
+                  <h2 className="mb-2 text-xl font-semibold">
                     Total Active Accounts By Product Type
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
@@ -214,7 +219,7 @@ const Dashboard = () => {
               </div>
               <div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
                 <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2">
+                  <h2 className="mb-2 text-xl font-semibold">
                     Total Balances By Risk Rating
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
@@ -257,11 +262,11 @@ const Dashboard = () => {
                       </PieChart>
                     </div>
                     <div className="relative">
-                      <div className="absolute -top-10 -right-3 pr-2">
+                      <div className="absolute pr-2 -top-10 -right-3">
                         <select
                           value={selectedRiskRating}
                           onChange={handleRiskRatingChange}
-                          className="border rounded-md p-2"
+                          className="p-2 border rounded-md"
                         >
                           {Object.keys(branchDummyData.totalBalancesByRisk).map(
                             (rating) => (
@@ -271,7 +276,7 @@ const Dashboard = () => {
                             )
                           )}
                         </select>
-                        <p className="font-semibold ml-4">
+                        <p className="ml-4 font-semibold">
                           Balance: {"$20000"}
                         </p>
                       </div>
@@ -283,7 +288,7 @@ const Dashboard = () => {
           </div>
           {/* <div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-4">
+              <h2 className="mb-4 text-xl font-semibold">
                 Total Balances By Risk Rating
               </h2>
               <BarChart
@@ -321,7 +326,7 @@ const Dashboard = () => {
               </BarChart>
             </div>
           </div> */}
-          <div className="pb-4 text-2xl text-black  dark:text-gray-400">
+          <div className="pb-4 text-2xl text-black dark:text-gray-400">
             Recent Live Transactions
           </div>
           <ExampleTable />
