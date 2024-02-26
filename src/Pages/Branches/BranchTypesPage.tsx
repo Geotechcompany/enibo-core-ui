@@ -146,9 +146,8 @@ const BranchType: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={handleEdit}
-              disabled={selected.length !== 1} // Disable Edit button if more than one record is selected
             >
               Edit
             </Button>
@@ -157,9 +156,8 @@ const BranchType: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               // onClick={handleCopy}
-              disabled={selected.length !== 1} // Disable Copy button if more than one record is selected
             >
               Copy
             </Button>
@@ -168,9 +166,8 @@ const BranchType: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
               onClick={handleDelete}
-              disabled={selected.length === 0} // Disable Delete button if no record is selected
             >
               Delete
             </Button>

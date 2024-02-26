@@ -2,8 +2,6 @@ import { columns } from "@/components/branch-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-// import { Branch } from "@/components/branch-list/schema";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import queryBranchList from "@/components/branch-list/query";
@@ -54,10 +52,10 @@ const Branches: FC<BranchesProps> = () => {
             })
           );
   
-          const updatedBranchess = branches.filter(
+          const updatedBranches = branches.filter(
             (branches) => !selectedBranchesIds.includes(branches.branchId)
           );
-          setBranches(updatedBranchess);
+          setBranches(updatedBranches);
           setSelected([]);
           window.location.reload();
         } catch (error) {
@@ -117,7 +115,6 @@ const Branches: FC<BranchesProps> = () => {
               columns={columns}
               data={branches}
               onRowSelect={setSelected} 
-              
             />
           )}
         </div>
@@ -126,9 +123,9 @@ const Branches: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={() => {}}
-              disabled={selected.length !== 1}
+            
             >
               Edit
             </Button>
@@ -137,9 +134,8 @@ const Branches: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={() => {}}
-              disabled={selected.length !== 1}
             >
               Copy
             </Button>
@@ -159,9 +155,8 @@ const Branches: FC<BranchesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
               onClick={handleDelete}
-              disabled={selected.length === 0}
             >
               Delete
             </Button>
