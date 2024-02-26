@@ -52,12 +52,12 @@ export const columns: ColumnDef<TransactionType>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "transactionTypeDescription",
+    accessorKey: "description",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => (
-      <div className="">{row.getValue("transactionTypeDescription")}</div>
+      <div className="">{row.getValue("description")}</div>
     ),
     enableSorting: true,
     enableHiding: true,
@@ -68,6 +68,15 @@ export const columns: ColumnDef<TransactionType>[] = [
       <DataTableColumnHeader column={column} title="Currency" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("currency")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "modifiedOn",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Modified On" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
     enableSorting: true,
     enableHiding: true,
   },

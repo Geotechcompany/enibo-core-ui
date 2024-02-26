@@ -5,8 +5,6 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -23,32 +21,33 @@ import {
 } from "../ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
-// import { DataTableToolbar } from "../components/data-table-toolbar"
+import { useEffect, useState } from "react";
 
 export interface SortingState {
   id: string;
   desc: boolean;
 }
+interface RowSelectionState {
+  [key: string]: boolean;
+}
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  sorting?: SortingState[]; // Sorting configuration
+  sorting?: SortingState[];
+  onRowSelect?: (ids: number[]) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   sorting,
+  onRowSelect,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-
-
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -67,40 +66,46 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  useEffect(() => {
+    if (onRowSelect) {
+      const selectedRowIds = Object.keys(rowSelection).filter(
+        (key) => rowSelection[key]
+      );
+      const selectedIds = selectedRowIds.map((id) => parseInt(id, 10));
+      onRowSelect(selectedIds);
+    }
+  }, [rowSelection, onRowSelect]);
 
   return (
     <div className="space-y-4">
-      {/* TODO: Add custom reusable toolbar */}
-      {/* <DataTableToolbar table={table} /> */}
       <div className="border-b">
         <Table>
           <TableHeader className="border-b-4">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan} className="pl-2">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div className="pl-2">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
+                    )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody className="text-gray-800">
-          {table.getRowModel().rows?.length && columns && columns.length  ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() ? "selected" : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-2">

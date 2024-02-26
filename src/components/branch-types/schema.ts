@@ -35,7 +35,7 @@ const UpdateBranchTypeResponseSchema = z.object({
 
 // Original branch types schema
 const branchTypesSchema = z.object({
-  branchTypeID: z.number(),
+  branchTypeId: z.number(),
   branchTypeName: z.string(),
   description: z.string(),
   createdBy: z.string(),

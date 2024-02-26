@@ -14,7 +14,7 @@ const FeeTypes: FC<FeeProps> = () => {
   const [FeeTypes, setFeeTypes] = useState<FeeType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [sorting] = useState([{ id: "effectiveDate", desc: true }])
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
 
 
   const location = useLocation();

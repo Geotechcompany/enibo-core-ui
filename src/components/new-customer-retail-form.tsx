@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FC, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,9 +15,11 @@ import {
   SelectValue,
 } from "./ui/select";
 
-import { X } from "lucide-react";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { KYCType, MandateType, ProductType } from "@/types/global";
+import {  CREATE_RETAIL } from "./customer-list/mutation";
+import { Link, useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 const customerRetailSchema = z.object({
   jointKYC: z.array(z.object({ value: z.string(), label: z.string() })),
@@ -41,18 +44,19 @@ const customerRetailSchema = z.object({
   signingRules: z.array(
     z.object({
       signingRule: z.string().min(3, { message: "Signing Rule is required" }),
-      signingMandateType: z
-        .array(z.object({ value: z.number(), label: z.number() }))
-        .min(3, { message: "Signing Mandate Type is required" }),
+      signingMandateType: z.string().min(3, { message: "Signing Mandate Type is required" }),
       minimumPaymentAmount: z
-        .number()
+        .string()
         .min(3, { message: "Minimum Payment Amount is required" }),
       maximumPaymentAmount: z
-        .number()
+        .string()
         .min(3, { message: "Maximum Payment Amount is required" }),
       maximumDailyLimit: z
-        .number()
+        .string()
         .min(3, { message: "Maximum Daily Limit is required" }),
+        
+        modifiedBy: z.string().min(3, { message: "Modified By is required" }),
+        modifiedOn: z.string().min(3, { message: "Modified On is required" }),
     })
   ),
 });
@@ -130,6 +134,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<CustomerRetailInput>({
     resolver: zodResolver(customerRetailSchema),
@@ -162,16 +167,59 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
       setIndividualKYCs(individualKycData.individualKYCs);
     }
   }, [individualKycData]);
+  const getDesignation = (kycType: string, individualKYCs: any[], selectedIndividualKYC: string) => {
+    if (kycType === "personal") {
+      const selectedKYC = individualKYCs.find(kyc => kyc.kycType === selectedIndividualKYC);
+      return selectedKYC ? selectedKYC.designation : "";
+    } else {
+      return "";
+    }
+  };
+ // Refs for firstName, middleName, and lastName input fields
+ const firstNameRef = useRef<HTMLInputElement>(null);
+ const middleNameRef = useRef<HTMLInputElement>(null);
+ const lastNameRef = useRef<HTMLInputElement>(null);
+ const [createRetail] = useMutation(CREATE_RETAIL);
+ const navigate  = useNavigate();
 
-  const onSubmit = (data: CustomerRetailInput) => {
-    toast({
+  const onSubmit = async (data: CustomerRetailInput) => {
+    try {
+      await createRetail({ 
+        variables: {
+        retailType: data.kycType === "personal" ? "Personal" : "Joint",
+        designation: getDesignation(data.kycType, individualKYCs, data.individualKYC),
+        firstName: firstNameRef.current?.value || "",
+        middleName: middleNameRef.current?.value || "",
+        lastName: lastNameRef.current?.value || "", 
+        individualKyc: data.individualKYC,
+        productTypes: data.productTypes,
+        accountCurrency: data.accountCurrency,
+        riskRating: data.riskRating,
+        accountMandates: JSON.stringify(data.mandates),
+      },
+     });
+
+     toast({
       title: "Customer Retail Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      description: <div className="text-black">
+      <div className="text-lg">
+        New Customer Retail {" "}
+        <Link to={`/customers`} className="underline text-blue-500">
+          {data.kycType}
+        </Link>
+         , has been successfully created
+      </div>
+    </div>,
     });
+    reset();
+    navigate("/customers"); 
+  } catch (error) {
+    console.error("Error creating fee type:", error);
+    toast({
+      title: "Error",
+      description: "Failed to create fee type. Please try again.",
+    });
+  }
   };
 
   return (
@@ -483,7 +531,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                   </Label>
                   <Controller
                     control={control}
-                    name={`mandates.${index}.mandateType`}
+                    name={`signingRules.${index}.signingMandateType`}
                     render={({ field: { onChange, value } }) => (
                       <Select onValueChange={onChange} value={value}>
                         <SelectTrigger>
@@ -551,7 +599,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       <Input
                         onChange={onChange}
                         value={value}
-                        type="number"
+                        type="text"
                         placeholder="Enter Minimum Payment Amount"
                       />
                     )}
@@ -579,7 +627,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       <Input
                         onChange={onChange}
                         value={value}
-                        type="number"
+                        type="text"
                         placeholder="Enter Maximum Payment Amount"
                       />
                     )}
@@ -607,7 +655,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
                       <Input
                         onChange={onChange}
                         value={value}
-                        type="number"
+                        type="text"
                         placeholder="Enter Maximum Daily Limit"
                       />
                     )}

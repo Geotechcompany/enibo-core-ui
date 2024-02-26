@@ -7,8 +7,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import queryBranchList from "@/components/branch-list/query";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { BranchForm } from "@/types/global";
+import { DELETE_BRANCH } from "@/components/branch-list/mutation";
 
 
 interface BranchesProps {}
@@ -28,6 +29,10 @@ const Branches: FC<BranchesProps> = () => {
   };
   const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryBranchList);
 
+  const [deleteBranch] = useMutation(DELETE_BRANCH);
+  const [selected, setSelected] = useState<number[]>([]);
+
+
   useEffect(() => {
     if (data) {
       setBranches(data.branches);
@@ -36,6 +41,31 @@ const Branches: FC<BranchesProps> = () => {
     refetch();
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
+
+  const handleDelete = async () => {
+    if (selected.length) {
+      if (window.confirm(`Confirm deletion of selected record/s`)) {
+        try {
+          const selectedBranchesIds = selected.map(branchesIndex => branches[branchesIndex].branchId);
+  
+          await Promise.all(
+            selectedBranchesIds.map(async (branchId) => {
+              await deleteBranch({ variables: { branchId} });
+            })
+          );
+  
+          const updatedBranchess = branches.filter(
+            (branches) => !selectedBranchesIds.includes(branches.branchId)
+          );
+          setBranches(updatedBranchess);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting branch types:", error);
+        }
+      }
+    }
+  };
 
 
   return (
@@ -85,7 +115,8 @@ const Branches: FC<BranchesProps> = () => {
           ) : (
             <DataTable
               columns={columns}
-              data={branches} 
+              data={branches}
+              onRowSelect={setSelected} 
               
             />
           )}
@@ -97,6 +128,7 @@ const Branches: FC<BranchesProps> = () => {
               variant="outline"
               className="border-[#36459C]"
               onClick={() => {}}
+              disabled={selected.length !== 1}
             >
               Edit
             </Button>
@@ -107,6 +139,7 @@ const Branches: FC<BranchesProps> = () => {
               variant="outline"
               className="border-[#36459C]"
               onClick={() => {}}
+              disabled={selected.length !== 1}
             >
               Copy
             </Button>
@@ -117,6 +150,7 @@ const Branches: FC<BranchesProps> = () => {
               variant="outline"
               className="border-[#36459C]"
               onClick={() => navigate(to, { replace: true })}
+              disabled={selected.length !== 1}
             >
               View branch details
             </Button>
@@ -126,7 +160,8 @@ const Branches: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className="border-[#36459C]"
-              onClick={() => {}}
+              onClick={handleDelete}
+              disabled={selected.length === 0}
             >
               Delete
             </Button>

@@ -15,20 +15,23 @@ const Users: FC<UsersProps> = () => {
   const [users, setUsers] = useState<UserDetailsType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
 
 
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/user-details/user-details-form" };
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryUsersList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryUsersList);
 
   useEffect(() => {
     if (data) {
       setUsers(data.users);
     }
+    refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);  
+  }, [data, queryLoading, queryError, refetch]);  
+
   return (
     <div>
       <div className="mx-4">
@@ -54,7 +57,7 @@ const Users: FC<UsersProps> = () => {
           </nav>
         </div>
         <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">User Management</h1></div>
+          <div className=""><h1 className="text-4xl text-[#36459C]">Users</h1></div>
           <div className="">
           <Button
             size="sm"
@@ -72,7 +75,8 @@ const Users: FC<UsersProps> = () => {
           ) : (
             <DataTable
               columns={userColumns}
-              data={users} 
+              data={users}
+              sorting={sorting} 
             />
           )}
         </div>

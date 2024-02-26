@@ -22,12 +22,15 @@ export const CREATE_BranchType = gql`
 `;
 
 export const DELETE_BRANCH_TYPE = gql`
-mutation DeleteBranchType($branchTypeName: String!) {
-  deleteBranchType(branchTypeName: $branchTypeName) {
+mutation Mutation($branchTypeId: String!) {
+  deleteBranchType(branchTypeId: $branchTypeId) {
+    branchTypeId
     branchTypeName
     description
     modifiedBy
     modifiedOn
+    createdAt
+    updatedAt
   }
 }
 `;

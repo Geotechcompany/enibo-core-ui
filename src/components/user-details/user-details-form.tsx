@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { useMutation } from "@apollo/client";
 import SIGNUP_MUTATION from "../UserList/UserList";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const isEmailExists = (email: string) => {
   const existingEmails = ["example@example.com", "test@test.com"];
@@ -59,6 +59,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<UserDetailsInput>({
     resolver: zodResolver(userDetailsSchema),
@@ -75,9 +76,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
       return;
     }
     try {
-      const {
-        data: { createUser },
-      } = await signUpMutation({
+      await signUpMutation({
         variables: {
           email: data.email,
           password: data.password,
@@ -95,24 +94,27 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           modifiedOn: data.modifiedOn,
         },
       });
-      console.log("Sign up successful:", createUser);
+      toast({
+        title: "New User Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New User {" "}
+          <Link to={`/administration/user-details`} className="underline text-blue-500">
+            {data.username}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
       navigate("/administration/user-details");
     } catch (error) {
-      console.error("Error signing up:", error);
-      setErrorMessage("Error signing up. Please try again.");
-    } finally {
-      setIsLoading(false);
+      console.error("Error creating new user:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create new user. Please try again.",
+      });
     }
-
-    console.log(data);
-    toast({
-      title: "You submitted the following user details:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
   };
 
   const onCancel = () => {
@@ -135,14 +137,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
         autoComplete="off"
       >
         <div className="col-span-1">
-          <Label htmlFor="username" className="text-[#36459C] text-base">
+          <Label htmlFor="username" className="text-base">
             Username
           </Label>
           <Input
             {...register("username")}
             placeholder="Username"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.username && (
@@ -150,14 +152,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div className="col-span-1">
-          <Label htmlFor="email" className="text-[#36459C] text-base space-y-2">
+          <Label htmlFor="email" className="text-base space-y-2">
             Email
           </Label>
           <Input
             {...register("email")}
             placeholder="Your email"
             type="email"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.email && (
@@ -165,14 +167,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div className="col-span-1">
-          <Label htmlFor="phoneNumber" className="text-[#36459C] text-base">
+          <Label htmlFor="phoneNumber" className="text-base">
             Phone Number
           </Label>
           <Input
             {...register("phoneNumber")}
             placeholder="Phone Number"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.phoneNumber && (
@@ -180,14 +182,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="password" className="text-[#36459C] text-base">
+          <Label htmlFor="password" className="text-base">
             Password
           </Label>
           <Input
             {...register("password")}
             type="password"
             placeholder="Password"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.password && (
@@ -195,14 +197,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="confirmPassword" className="text-[#36459C] text-base">
+          <Label htmlFor="confirmPassword" className="text-base">
             Confirm Password
           </Label>
           <Input
             {...register("confirmPassword")}
             type="password"
             placeholder="Confirm Password"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.confirmPassword && (
@@ -212,29 +214,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="username" className="text-[#36459C] text-base">
-            Username
-          </Label>
-          <Input
-            {...register("username")}
-            placeholder="Username"
-            type="text"
-            className="h-12 text-base bg-blue-50"
-            autoComplete="false"
-          />
-          {errors.username && (
-            <span className="text-red-500">{errors.username.message}</span>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="firstName" className="text-[#36459C] text-base">
+          <Label htmlFor="firstName" className="text-base">
             First Name
           </Label>
           <Input
             {...register("firstName")}
             placeholder="First Name"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.firstName && (
@@ -242,14 +229,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="middleName" className="text-[#36459C] text-base">
+          <Label htmlFor="middleName" className="text-base">
             Middle Name
           </Label>
           <Input
             {...register("middleName")}
             placeholder="Middle Name"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.middleName && (
@@ -257,14 +244,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="lastName" className="text-[#36459C] text-base">
+          <Label htmlFor="lastName" className="text-base">
             Last Name
           </Label>
           <Input
             {...register("lastName")}
             placeholder="Last Name"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.lastName && (
@@ -272,29 +259,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="phoneNumber" className="text-[#36459C] text-base">
-            Phone Number
-          </Label>
-          <Input
-            {...register("phoneNumber")}
-            placeholder="Phone Number"
-            type="text"
-            className="h-12 text-base bg-blue-50"
-            autoComplete="false"
-          />
-          {errors.phoneNumber && (
-            <span className="text-red-500">{errors.phoneNumber.message}</span>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="employeeNumber" className="text-[#36459C] text-base">
+          <Label htmlFor="employeeNumber" className="text-base">
             Employee Number
           </Label>
           <Input
             {...register("employeeNumber")}
             placeholder="Employee Number"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.employeeNumber && (
@@ -304,14 +276,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="branch" className="text-[#36459C] text-base">
+          <Label htmlFor="branch" className="text-base">
             Branch
           </Label>
           <Input
             {...register("branch")}
             placeholder="Branch"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.branch && (
@@ -319,14 +291,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div>
-          <Label htmlFor="profile" className="text-[#36459C] text-base">
+          <Label htmlFor="profile" className="text-base">
             Profile
           </Label>
           <Input
             {...register("profile")}
             placeholder="Profile"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.profile && (
@@ -336,7 +308,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
         <div>
           <Label
             htmlFor="documentAttachment"
-            className="text-[#36459C] text-base"
+            className="text-base"
           >
             Copy of Employee ID
           </Label>
@@ -344,7 +316,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
             {...register("documentAttachment")}
             id="documentAttachment"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
           />
           {errors.documentAttachment && (
@@ -354,14 +326,14 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div className="hidden">
-          <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+          <Label htmlFor="modifiedBy" className="text-base">
             Modified By
           </Label>
           <Input
             {...register("modifiedBy")}
             placeholder="Modified By"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
             defaultValue={"User"}
           />
@@ -370,16 +342,16 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
           )}
         </div>
         <div className="hidden">
-          <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
+          <Label htmlFor="modifiedOn" className="text-base">
             Modified On
           </Label>
           <Input
             {...register("modifiedOn")}
             placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
             type="text"
-            className="h-12 text-base bg-blue-50"
+            className="h-12 text-base"
             autoComplete="false"
-            defaultValue={defaultModifiedOn} // Set the default value
+            defaultValue={defaultModifiedOn}
           />
           {errors.modifiedOn && (
             <span className="text-red-500">{errors.modifiedOn.message}</span>

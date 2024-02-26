@@ -19,6 +19,8 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
   const from = location.state?.from || { pathname: "/administration/static-data/transaction-types/new-transaction-type" };
   const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryTransactionTypesList);
 
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
+
   useEffect(() => {
     if (data) {
       setTransactionTypesList(data.transactionTypes);
@@ -86,7 +88,8 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
             ) : (
               <DataTable
                 columns={columns}
-                data={TransactionTypesList} 
+                data={TransactionTypesList}
+                sorting={sorting} 
               />
             )}
               </div>
