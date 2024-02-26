@@ -16,6 +16,8 @@ import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
 import { gql, useQuery } from "@apollo/client";
 import { LedgerCategory } from "@/types/global";
+import { Link, useNavigate } from "react-router-dom";
+
 const LedgerCategorySchema = z.object({
   ledgerCategory: z.string().min(3, { message: "Ledger Category is required" }),
   ledgerCategoryDescription: z
@@ -43,9 +45,11 @@ query AccountCategories {
 const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   const { toast } = useToast();
   const [LedgerAccountCategories, setLedgerAccountCategories] = useState<LedgerCategory[]>([]);
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
     control,
   } = useForm<LedgerCategoryFormInputs>({
@@ -53,14 +57,28 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   });
 
   const onSubmit = (data: LedgerCategoryFormInputs) => {
-    toast({
-      title: "Ledger Category Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try{
+      toast({
+        title: "Ledger Category Created",
+        description: <div className="text-black">
+        <div className="text-lg">
+          New Ledger Category Created {" "}
+          <Link to={`/administration/ledger-management/ledger-account-categories`} className="underline text-blue-500">
+            {data.ledgerCategory}
+          </Link>
+           , has been successfully created
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/ledger-management/ledger-account-categories"); 
+    } catch (error) {
+      console.error("Error creating ledger category ", error);
+      toast({
+        title: "Error",
+        description: "Failed to create ledger category. Please try again.",
+      });
+    }
   };
 
   const { data } = useQuery(GET_ACCOUNT_CATEGORIES);

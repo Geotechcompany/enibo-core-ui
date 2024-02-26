@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -14,10 +15,11 @@ import {
   SelectValue,
 } from "./ui/select";
 import { MultiSelect } from "./multi-select";
-import { X } from "lucide-react";
+import { Link, X } from "lucide-react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { KYCType, MandateType, ProductType } from "@/types/global";
 import { CREATE_BUSINESS } from "./customer-list/mutation";
+import { useNavigate } from "react-router";
 
 const businessRetailSchema = z.object({
   businessKYC: z.string().min(3, { message: "Business KYC is required" }),
@@ -108,6 +110,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
   const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [businessKYCs, setbusinessKYCs] = useState<any[]>([]);
   const [KYCType, setKycTypes] = useState<KYCType[]>([]);
+  const navigate  = useNavigate();
   const [accountMandates, setAccountMandates] = useState([
     
     {
@@ -131,6 +134,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<BusinessRetailInput>({
     resolver: zodResolver(businessRetailSchema),
@@ -177,36 +181,42 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
  const [createRetail] = useMutation(CREATE_BUSINESS);
  const onSubmit = async (data: BusinessRetailInput) => {
   try {
-    const variables = {
+    await createRetail({
+      variables: {
       retailType: data.kycType === "personal" ? "Personal" : "Joint",
       designation: getDesignation(data.kycType, businessKYCs, data.businessKYC),
-      firstName: firstNameRef.current?.value || "", // Extract firstName from ref
-      middleName: middleNameRef.current?.value || "", // Extract middleName from ref
-      lastName: lastNameRef.current?.value || "", // Extract lastName from ref
+      firstName: firstNameRef.current?.value || "",
+      middleName: middleNameRef.current?.value || "", 
+      lastName: lastNameRef.current?.value || "", 
       individualKyc: data.businessKYC,
       productTypes: data.productTypes,
       accountCurrency: data.accountCurrency,
       riskRating: data.riskRating,
-      accountMandates: JSON.stringify(data.mandates), // Convert to JSON string
-    };
+      accountMandates: JSON.stringify(data.mandates), 
+    },
+  });
 
-    // Execute mutation
-    const { data: responseData } = await createRetail({ variables });
-
-    // Handle success
-    toast({
-      title: "Customer Retail Created",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(responseData, null, 2)}</code>
-        </pre>
-      ),
-    });
-
-  } catch (err) {
-    // Handle error
-    console.error("Error creating customer retail:", err);
-  }
+  toast({
+    title: "Customer Retail Created",
+    description: <div className="text-black">
+    <div className="text-lg">
+      New Customer Retail {" "}
+      <Link to={`/customers`} className="underline text-blue-500">
+        {data.businessKYC}
+      </Link>
+       , has been successfully created
+    </div>
+  </div>,
+  });
+  reset();
+  navigate("/customers"); 
+} catch (error) {
+  console.error("Error creating customer retail", error);
+  toast({
+    title: "Error",
+    description: "Failed to create customer retail. Please try again.",
+  });
+}
 };
   return (
     <section>

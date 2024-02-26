@@ -16,6 +16,7 @@ import {
 import { useToast } from "./ui/use-toast";
 import { useMutation } from "@apollo/client";
 import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
+import { Link, useNavigate } from "react-router-dom";
 
 const productTypeSchema = z.object({
   productTypeName: z
@@ -30,12 +31,12 @@ const productTypeSchema = z.object({
     .string()
     .min(1, { message: "Fixed Interest Rate is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
-  fees: z.boolean(),
+  fees: z.string(),
   feeTypes: z
     .array(z.object({ value: z.string(), label: z.string() }))
     .min(1, { message: "Fee Types is required" }),
-  riskRating: z.string().min(3, { message: "Risk Rating is required" }),
-  prefix: z.string().min(3, { message: "Prefix is required" }),
+  riskRating: z.string().min(1, { message: "Risk Rating is required" }),
+  prefix: z.string().min(1, { message: "Prefix is required" }),
   numberSchema: z.string().min(3, { message: "Number Schema is required" }),
   startingValue: z
     .string()
@@ -50,9 +51,11 @@ interface NewProductTypeFormProps {}
 
 const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const { toast } = useToast();
+  const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { errors },
   } = useForm<ProductTypeInput>({
@@ -60,44 +63,60 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   });
 
   const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
+  const [interestBearing, setInterestBearing] = useState(false);
+  const [active, setActive] = useState(false); 
 
-  const onSubmit = handleSubmit((data: ProductTypeInput) => {
+  const handleInterestBearingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInterestBearing(e.target.checked);
+  };
+
+  const handleActiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setActive(e.target.checked);
+  };
+
+
+  const onSubmit = handleSubmit(async (data: ProductTypeInput) => {
     console.log(data)
-    createProductTypeMutation({
+    try {
+     await createProductTypeMutation({
       variables: {
         productTypeName: data.productTypeName,
         description: data.description,
-        active: data.active,
-        interestBearing: data.interestBearing,
+        active: true,
+        interestBearing: true,
         fixedInterestRate: parseFloat(data.fixedInterestRate),
-        effectiveDate: new Date(data.effectiveDate).toISOString(),
+        effectiveDate: data.effectiveDate,
         fees: data.fees,
-        feeTypes: data.feeTypes,
+        feeTypes: [data.feeTypes],
         riskRating: data.riskRating,
         prefix: data.prefix,
         numberSchema: data.numberSchema,
         startingValue: data.startingValue,
+        modifiedBy: "tester",
+        modifiedOn: data.modifiedOn, 
       },
     })
-      .then(() => {
         toast({
           title: "Product Type Created",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(data, null, 2)}
-              </code>
-            </pre>
-          ),
+          description: <div className="text-black">
+          <div className="text-lg">
+            New Product Type {" "}
+            <Link to={`/administration/products/product-types`} className="underline text-blue-500">
+              {data.productTypeName}
+            </Link>
+             , has been successfully created
+          </div>
+        </div>,
         });
-      })
-      .catch((error) => {
+        reset();
+        navigate("/administration/products/product-types"); 
+      } catch (error) {
         console.error("Error creating product type:", error);
         toast({
           title: "Error",
           description: "Failed to create product type. Please try again.",
         });
-      });
+      }
   });
 
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
@@ -110,6 +129,23 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     <section>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
         <div className="grid grid-cols-1 gap-4 w-[30%]">
+        <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            placeholder="active"
+            checked={active}
+            onChange={handleActiveChange}
+            className="flex w-4 h-4"
+          />
+          <label>Active</label>
+        </div>
+        {errors.active && (
+          <span className="text-sm text-red-500">
+            {errors.active.message}
+          </span>
+        )}
+      </div>
           <div>
             <Label>Product Type Name</Label>
             <Input
@@ -137,37 +173,22 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             )}
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <Input
-                type="checkbox"
-                placeholder="interestBearing"
-                {...register("interestBearing")}
-                className="flex w-4 h-4"
-              />
-              <Label>interestBearing?</Label>
-            </div>
-            {errors.active && (
-              <span className="text-sm text-red-500">
-                {errors.active.message}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <Input
-                type="checkbox"
-                placeholder="active"
-                {...register("active")}
-                className="flex w-4 h-4"
-              />
-              <Label>Active</Label>
-            </div>
-            {errors.active && (
-              <span className="text-sm text-red-500">
-                {errors.active.message}
-              </span>
-            )}
-          </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            placeholder="interestBearing"
+            checked={interestBearing}
+            onChange={handleInterestBearingChange} // Handle interestBearing checkbox change
+            className="flex w-4 h-4"
+          />
+          <label>interestBearing?</label>
+        </div>
+        {errors.interestBearing && (
+          <span className="text-sm text-red-500">
+            {errors.interestBearing.message}
+          </span>
+        )}
+      </div>
           <div className="flex w-full gap-2">
               <div className="w-full">
                 <Label>Fixed Interest Rate</Label>
@@ -196,36 +217,13 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
                 )}
               </div>
             </div>
-          <div className="hidden">
-            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
-              Modified By
-            </Label>
-            <Input
-              {...register("modifiedBy")}
-              placeholder="Modified By"
-              type="text"
-              className="h-12 text-base bg-blue-50"
-              autoComplete="false"
-              defaultValue={"User"}
-            />
-            {errors.modifiedBy && (
-              <span className="text-red-500">{errors.modifiedBy.message}</span>
-            )}
-          </div>
-          <div className="hidden">
-            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
-              Modified On
-            </Label>
-            <Input
-              {...register("modifiedOn")}
-              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
-              type="text"
-              className="h-12 text-base bg-blue-50"
-              autoComplete="false"
-              defaultValue={defaultModifiedOn} // Set the default value
-            />
-            {errors.modifiedOn && (
-              <span className="text-red-500">{errors.modifiedOn.message}</span>
+            <div>
+            <Label>Fees</Label>
+            <Input type="text" placeholder="fees" {...register("fees")} />
+            {errors.fees && (
+              <span className="text-sm text-red-500">
+                {errors.fees.message}
+              </span>
             )}
           </div>
             <div>
@@ -313,7 +311,22 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               </span>
             )}
           </div>
-
+          <div className="hidden">
+            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+              Modified By
+            </Label>
+            <Input
+              {...register("modifiedBy")}
+              placeholder="Modified By"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={"User"}
+            />
+            {errors.modifiedBy && (
+              <span className="text-red-500">{errors.modifiedBy.message}</span>
+            )}
+          </div>
           <div className="hidden">
             <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
               Modified On
@@ -324,7 +337,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               type="text"
               className="h-12 text-base bg-blue-50"
               autoComplete="false"
-              defaultValue={defaultModifiedOn} // Set the default value
+              defaultValue={defaultModifiedOn}
             />
             {errors.modifiedOn && (
               <span className="text-red-500">{errors.modifiedOn.message}</span>

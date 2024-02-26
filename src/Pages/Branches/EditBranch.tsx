@@ -6,37 +6,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "../ui/use-toast";
-import { useMutation } from "@apollo/client";
-import CREATE_NEW_BRANCH_TYPE_MUTATION from "@/Pages/Branches/BranchTypeMutation";
+import { useMutation, useQuery } from "@apollo/client";
 import { useLocation, useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-
+import { useToast } from "@/components/ui/use-toast";
+import { UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
+import queryBranchTypesList from "@/components/branch-types/query";
 
 export const newBranchTypeSchema = z.object({
-  branchName: z.string().min(3, { message: "Branch name is required" }),
+  branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
-
-  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
+  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type newBranchInput = z.infer<typeof newBranchTypeSchema>;
 
-interface NewBranchTypesProps {}
+interface NewBranchTypesProps {
+  branchTypeName: string; // Add prop to receive branch type ID
+}
 
-const NewBranchTypes: FC<NewBranchTypesProps> = () => {
+const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
   const { toast } = useToast();
-  const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || {
-    pathname: "/administration/branches/branch-types",
-  };
-  
+  const location = useLocation();
+  const { state: locationState } = location;
+  const from = locationState?.from || "/administration/branches/branch-types"; // Define the 'from' variable
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue, // Add setValue from useForm
     formState: { errors },
   } = useForm<newBranchInput>({
     resolver: zodResolver(newBranchTypeSchema),
@@ -45,42 +45,39 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
     new Date().toISOString()
   );
 
-  const [createBranchTypeMutation] = useMutation(
-    CREATE_NEW_BRANCH_TYPE_MUTATION
-  );
+  const { data: branchTypeData, loading: branchTypeLoading } = useQuery(queryBranchTypesList, {
+    variables: { branchTypeName },
+  });
 
+  const [updateBranchTypeMutation] = useMutation(UPDATE_BRANCH_TYPE);
 
   const onSubmit = async (data: newBranchInput) => {
     try {
-      const { branchName, description, modifiedBy, modifiedOn } = data;
-      await createBranchTypeMutation({
+      await updateBranchTypeMutation({
         variables: {
-          branchTypeName: branchName,
-          description: description || "N/A"  ,
-          modifiedBy,
-          modifiedOn,
+          branchTypeName: data.branchTypeName,
+          description: data.description,
+          modifiedBy: data.modifiedBy,
+          modifiedOn: data.modifiedOn,
         },
       });
       toast({
-        title: "Branch Type Created",
-        description: <div className="text-black">
-        <div className="text-lg">
-          New Branch Type {" "}
-          <Link to={`/administration/branches/branch-types`} className="underline text-blue-500">
-            {data.branchName}
-          </Link>
-           , has been successfully created
-        </div>
-      </div>,
+        title: "Branch Type Updated",
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              Branch Type {data.branchTypeName}, has been successfully updated
+            </div>
+          </div>
+        ),
       });
       reset();
       navigate("/administration/branches/branch-types"); 
-
     } catch (error) {
-      console.error("Error creating branch type:", error);
+      console.error("Error updating branch type:", error);
       toast({
         title: "Error",
-        description: "Failed to create branch type. Please try again.",
+        description: "Failed to update branch type. Please try again.",
       });
     }
   };
@@ -88,6 +85,18 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   useEffect(() => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
+
+  useEffect(() => {
+    if (!branchTypeLoading && branchTypeData) {
+      // Set default form values based on fetched branch type data
+      const { branchTypeName, description, modifiedBy, modifiedOn } = branchTypeData;
+      setValue("branchTypeName", branchTypeName);
+      setValue("description", description);
+      setValue("modifiedBy", modifiedBy);
+      setValue("modifiedOn", modifiedOn);
+    }
+  }, [branchTypeData, branchTypeLoading, setValue]);
+
   return (
     <section className="w-1/2">
       <form
@@ -96,14 +105,14 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         autoComplete="off"
       >
         <div>
-          <Label htmlFor="branchName">Branch Name</Label>
+          <Label htmlFor="branchTypeName">Branch Name</Label>
           <Input
-            id="branchName"
+            id="branchTypeName"
             type="text"
-            {...register("branchName", { required: true })}
+            {...register("branchTypeName", { required: true })}
           />
-          {errors.branchName && (
-            <span className="text-red-500">{errors.branchName.message}</span>
+          {errors.branchTypeName && (
+            <span className="text-red-500">{errors.branchTypeName.message}</span>
           )}
         </div>
         <div>
@@ -156,13 +165,13 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           >
             Submit
           </Button>
-          <Button size="lg"
-           onClick={() => navigate(from, { replace: true })}
-          >Cancel</Button>
+          <Button size="lg" onClick={() => navigate(from, { replace: true })}>
+            Cancel
+          </Button>
         </div>
       </form>
     </section>
   );
 };
 
-export default NewBranchTypes;
+export default EditBranchTypes;

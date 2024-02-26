@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -14,10 +15,11 @@ import {
   SelectValue,
 } from "./ui/select";
 
-import { X } from "lucide-react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { KYCType, MandateType, ProductType } from "@/types/global";
 import {  CREATE_RETAIL } from "./customer-list/mutation";
+import { Link, useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 const customerRetailSchema = z.object({
   jointKYC: z.array(z.object({ value: z.string(), label: z.string() })),
@@ -132,6 +134,7 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<CustomerRetailInput>({
     resolver: zodResolver(customerRetailSchema),
@@ -177,40 +180,46 @@ const NewCustomerRetailForm: FC<NewCustomerRetailFormProps> = () => {
  const middleNameRef = useRef<HTMLInputElement>(null);
  const lastNameRef = useRef<HTMLInputElement>(null);
  const [createRetail] = useMutation(CREATE_RETAIL);
+ const navigate  = useNavigate();
 
   const onSubmit = async (data: CustomerRetailInput) => {
     try {
-      const variables = {
+      await createRetail({ 
+        variables: {
         retailType: data.kycType === "personal" ? "Personal" : "Joint",
         designation: getDesignation(data.kycType, individualKYCs, data.individualKYC),
-        firstName: firstNameRef.current?.value || "", // Extract firstName from ref
-        middleName: middleNameRef.current?.value || "", // Extract middleName from ref
-        lastName: lastNameRef.current?.value || "", // Extract lastName from ref
+        firstName: firstNameRef.current?.value || "",
+        middleName: middleNameRef.current?.value || "",
+        lastName: lastNameRef.current?.value || "", 
         individualKyc: data.individualKYC,
         productTypes: data.productTypes,
         accountCurrency: data.accountCurrency,
         riskRating: data.riskRating,
-        accountMandates: JSON.stringify(data.mandates), // Convert to JSON string
-      
-      };
+        accountMandates: JSON.stringify(data.mandates),
+      },
+     });
 
-      // Execute mutation
-      await createRetail({ variables });
-
-      // Handle success
-      toast({
-        title: "Customer Retail Created",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-      });
-
-    } catch (err) {
-      // Handle error
-      console.error("Error creating customer retail:", err);
-    }
+     toast({
+      title: "Customer Retail Created",
+      description: <div className="text-black">
+      <div className="text-lg">
+        New Customer Retail {" "}
+        <Link to={`/customers`} className="underline text-blue-500">
+          {data.kycType}
+        </Link>
+         , has been successfully created
+      </div>
+    </div>,
+    });
+    reset();
+    navigate("/customers"); 
+  } catch (error) {
+    console.error("Error creating fee type:", error);
+    toast({
+      title: "Error",
+      description: "Failed to create fee type. Please try again.",
+    });
+  }
   };
 
   return (
