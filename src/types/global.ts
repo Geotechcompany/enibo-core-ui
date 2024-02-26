@@ -142,6 +142,7 @@ export type LedgerRule = {
 };
 
 export type LedgerCategory = {
+  id: string;
   ledgerCategory: string;
   description: string;
   categoryNumber: string;

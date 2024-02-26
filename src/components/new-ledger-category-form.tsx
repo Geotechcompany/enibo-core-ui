@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +14,8 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
+import { gql, useQuery } from "@apollo/client";
+import { LedgerCategory } from "@/types/global";
 import { Link, useNavigate } from "react-router-dom";
 
 const LedgerCategorySchema = z.object({
@@ -28,8 +30,21 @@ type LedgerCategoryFormInputs = z.infer<typeof LedgerCategorySchema>;
 
 interface NewLedgerCategoryFormProps {}
 
+const GET_ACCOUNT_CATEGORIES = gql`
+query AccountCategories {
+  accountCategories {
+    id
+    ledgerCategory
+    description
+    categoryNumber
+    modifiedBy
+    modifiedOn
+  }
+}
+`;
 const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   const { toast } = useToast();
+  const [LedgerAccountCategories, setLedgerAccountCategories] = useState<LedgerCategory[]>([]);
   const navigate  = useNavigate();
   const {
     register,
@@ -66,6 +81,13 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     }
   };
 
+  const { data } = useQuery(GET_ACCOUNT_CATEGORIES);
+  useEffect(() => {
+    if (data && data.accountCategories) {
+      setLedgerAccountCategories(data.accountCategories);
+    }
+  }, [data]);
+
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,9 +103,11 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">Category 1</SelectItem>
-                    <SelectItem value="2">Category 2</SelectItem>
-                    <SelectItem value="3">Category 3</SelectItem>
+                    {LedgerAccountCategories.map((type) => (
+                      <SelectItem key={type.id} value={type.id}>
+                        {type.ledgerCategory}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -115,9 +139,7 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+          <Button className="ml-2">Cancel</Button>
         </div>
       </form>
     </section>
