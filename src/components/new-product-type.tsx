@@ -15,7 +15,7 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { useMutation } from "@apollo/client";
-import CREATE_PRODUCT_TYPE_MUTATION from "@/Pages/Products/ProductMutation";
+import { CREATE_PRODUCT_TYPE_MUTATION }from "@/Pages/Products/ProductMutation";
 import { Link, useNavigate } from "react-router-dom";
 
 const productTypeSchema = z.object({
@@ -25,8 +25,8 @@ const productTypeSchema = z.object({
     description: z
     .string()
     .min(3, { message: "Product Type Description is required" }),
-  active: z.boolean(),
-  interestBearing: z.boolean(),
+    active: z.boolean().optional(),
+  interestBearing: z.boolean().optional(),
   fixedInterestRate: z
     .string()
     .min(1, { message: "Fixed Interest Rate is required" }),
@@ -82,12 +82,12 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       variables: {
         productTypeName: data.productTypeName,
         description: data.description,
-        active: true,
-        interestBearing: true,
+        active: data.active,
+        interestBearing: data.interestBearing,
         fixedInterestRate: parseFloat(data.fixedInterestRate),
         effectiveDate: data.effectiveDate,
         fees: data.fees,
-        feeTypes: [data.feeTypes],
+        feeTypes: data.feeTypes,
         riskRating: data.riskRating,
         prefix: data.prefix,
         numberSchema: data.numberSchema,

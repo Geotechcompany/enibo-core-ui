@@ -1,5 +1,3 @@
-import { Key, ReactNode } from "react";
-
 export type CustomerType = "Retail" | "Business";
 
 enum RetailType {
@@ -49,11 +47,8 @@ export type Customer = {
 };
 
 export type ProductType = {
-  label: ReactNode;
-  value: Key | null | undefined;
   productTypeId: string;
   productTypeName: string;
-  productType: string;
   description: string;
   active: boolean;
   interestBearing: boolean;

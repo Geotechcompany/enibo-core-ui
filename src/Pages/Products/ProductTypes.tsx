@@ -5,8 +5,9 @@ import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/product-type-list/columns";
 import { FaPlus } from "react-icons/fa";
 import { ProductType } from "@/types/global";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryProductTypesList from "@/components/product-type-list/query";
+import { DELETE_PRODUCT_TYPE } from "./ProductMutation";
 
 interface ProductTypesProps {}
 
@@ -20,15 +21,45 @@ const ProductTypes: FC<ProductTypesProps> = () => {
   const from = location.state?.from || {
     pathname: "/administration/products/product-types/new-product-type",
   };
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryProductTypesList);
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryProductTypesList);
+
+  const [deleteProductType] = useMutation(DELETE_PRODUCT_TYPE);
+  const [selected, setSelected] = useState<number[]>([]);
+
 
   useEffect(() => {
     if (data) {
       setProductTypes(data.productTypes);
     }
+    refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [data, queryLoading, queryError, refetch]);
+
+  const handleDelete = async () => {
+    if (selected.length) {
+      if (window.confirm(`Confirm deletion of selected record/s`)) {
+        try {
+          const selectedproductTypeIds = selected.map(productTypeIndex => ProductTypes[productTypeIndex].productTypeId);
+  
+          await Promise.all(
+            selectedproductTypeIds.map(async (productTypeId) => {
+              await deleteProductType({ variables: { productTypeId} });
+            })
+          );
+  
+          const updatedProductTypes = ProductTypes.filter(
+            (ProductTypes) => !selectedproductTypeIds.includes(ProductTypes.productTypeId)
+          );
+          setProductTypes(updatedProductTypes);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting branch types:", error);
+        }
+      }
+    }
+  };
 
   return (
     <div>
@@ -86,7 +117,8 @@ const ProductTypes: FC<ProductTypesProps> = () => {
             ) : (
               <DataTable
                 columns={columns}
-                data={ProductTypes} 
+                data={ProductTypes}
+                onRowSelect={setSelected}  
               />
             )}
               </div>
@@ -95,7 +127,7 @@ const ProductTypes: FC<ProductTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={() => {}}
             >
               Edit
@@ -105,7 +137,7 @@ const ProductTypes: FC<ProductTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={() => {}}
             >
               Copy
@@ -116,8 +148,8 @@ const ProductTypes: FC<ProductTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
+              onClick={handleDelete}
             >
               Delete
             </Button>

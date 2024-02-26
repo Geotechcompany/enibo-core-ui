@@ -33,9 +33,18 @@ export const columns: ColumnDef<ProductType>[] = [
     enableHiding: true,
   },
   {
+    accessorKey: "productTypeId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Product Type Id" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("productTypeId")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
     accessorKey: "productTypeName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Product Type Code" />
+      <DataTableColumnHeader column={column} title="Product Type Name" />
     ),
     cell: ({ row }) => <div className="">{row.getValue("productTypeName")}</div>,
     enableSorting: true,
@@ -108,6 +117,16 @@ export const columns: ColumnDef<ProductType>[] = [
         enableSorting: true,
         enableHiding: true,
     },
+    {
+      accessorKey: "riskRating",
+      accessorFn: (row) => row.feeTypes?.map((feeType:string) => feeType).join(", "),
+      header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Risk Rating" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("riskRating")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
     {
         accessorKey: "prefix",
         header: ({ column }) => (
