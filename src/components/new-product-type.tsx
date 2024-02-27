@@ -5,7 +5,6 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { MultiSelect } from "./multi-select";
 import {
   Select,
   SelectContent,
@@ -14,9 +13,11 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT_TYPE_MUTATION }from "@/Pages/Products/ProductMutation";
 import { Link, useNavigate } from "react-router-dom";
+import queryFeeTypesList from "./fee-type-list/query";
+
 
 const productTypeSchema = z.object({
   productTypeName: z
@@ -33,8 +34,8 @@ const productTypeSchema = z.object({
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
   fees: z.string(),
   feeTypes: z
-    .array(z.object({ value: z.string(), label: z.string() }))
-    .min(1, { message: "Fee Types is required" }),
+    .string()
+    .min(3, { message: "Fee Types is required" }),
   riskRating: z.string().min(1, { message: "Risk Rating is required" }),
   prefix: z.string().min(1, { message: "Prefix is required" }),
   numberSchema: z.string().min(3, { message: "Number Schema is required" }),
@@ -63,6 +64,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   });
 
   const [createProductTypeMutation] = useMutation(CREATE_PRODUCT_TYPE_MUTATION);
+  const [feeTypes, setfeeTypes] = useState<any[]>([]); 
   const [interestBearing, setInterestBearing] = useState(false);
   const [active, setActive] = useState(false); 
 
@@ -125,6 +127,19 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   useEffect(() => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
+  
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryFeeTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setfeeTypes(data.feeTypes);
+    }
+  }, [data, queryLoading, queryError]);
+
   return (
     <section>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
@@ -229,22 +244,27 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             <div>
               <Label>Fee Types</Label>
               <Controller
-                control={control}
-                name="feeTypes"
-                render={({ field: { onChange, value } }) => (
-                  <MultiSelect
-                    onChange={onChange}
-                    placeholder="Fee Types"
-                    selected={value}
-                    className="w-[451px]"
-                    options={[
-                      { label: "Fee Type 1", value: "fee-type-1" },
-                      { label: "Fee Type 2", value: "fee-type-2" },
-                      { label: "Fee Type 3", value: "fee-type-3" },
-                    ]}
-                  />
-                )}
-              />
+                  control={control}
+                  name="feeTypes"
+                  render={({ field: { onChange, value } }) => (
+                    <Select value={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select fee Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {feeTypes.map((type) => (
+                          <SelectItem
+                            key={type.feeTypeName}
+                            value={type.feeTypeName}
+                          >
+                            {type.feeTypeName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                
               {errors.feeTypes && (
                 <span className="text-sm text-red-500">
                   {errors.feeTypes.message}
