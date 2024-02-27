@@ -8,11 +8,13 @@ import 'remixicon/fonts/remixicon.css'
 import { ApolloProvider } from "@apollo/client";
 import client from "./store/index.ts";
 import { UserProvider } from "./types/userContext.tsx";
+import BranchProvider from "./store/branch.tsx";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
      <UserProvider>
+      <BranchProvider>
     <BrowserRouter>
       <Routes>
         <Route
@@ -25,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         />
       </Routes>
     </BrowserRouter>
+    </BranchProvider>
     </UserProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Link, Route, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/datatable/data-table";
@@ -8,11 +8,12 @@ import { columns } from "@/components/branch-types/columns";
 import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { BranchTypes } from "@/types/global";
-import EditBranchTypes from "./EditBranch";
+import { useBranchState } from "@/store/branch";
 
 interface BranchesProps {}
 
 const BranchType: FC<BranchesProps> = () => {
+  const { setState} = useBranchState();
   const [branchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,19 +75,36 @@ const BranchType: FC<BranchesProps> = () => {
     }
   };
 
+  const handleCopy = () => {
+    if (selected.length === 1) {
+      const selectedRecord = branchTypes[selected[0]];
+      setState({
+        branchTypeName: selectedRecord.branchTypeName,
+        description: selectedRecord.description,
 
-  const navigateToEditPage = () => {
-    const selectedRecord = branchTypes[selected[0]];
-
-    <Route
-    path="/edit-branch-type"
-    element={<EditBranchTypes branchTypeName={selectedRecord?.branchTypeName || ""} />}
-  />
-        const branchName = selectedRecord.branchTypeName;
-  
-    navigate("/edit-branch-type", { state: { branchType: selectedRecord, branchName } });
+      })
+      navigate("/administration/branches/new-branch-type", {
+        state: {
+          from: from,
+          branchType: selectedRecord,
+          branchName: selectedRecord.branchTypeName,
+        },
+      });
+    }
   };
 
+
+  const navigateToEditPage = () => {
+    if (selected.length === 1) {
+      const selectedRecord = branchTypes[selected[0]];
+      const branchName = selectedRecord.branchTypeName;
+      navigate(`/edit-branch-type/${selectedRecord.branchTypeId}`, {
+        state: { from: from, branchType: selectedRecord, branchName: branchName },
+      });
+    }
+  };
+
+  //save data and then navigate to create new
 
 
   return (
@@ -157,7 +175,7 @@ const BranchType: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              // onClick={handleCopy}
+              onClick={handleCopy}
             >
               Copy
             </Button>

@@ -40,6 +40,37 @@ const Branches: FC<BranchesProps> = () => {
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
 
+
+  const handleEdit = () => {
+    if (selected.length === 1) {
+      const selectedRecord = branches[selected[0]];
+      navigate(`/administration/branches/edit-branch/${selectedRecord.branchId}`, {
+        state: {
+          from: from,
+          branchData: {
+            branchId: selectedRecord.branchId,
+            branchName: selectedRecord.branchName,
+            branchType: selectedRecord.branchType,
+            description: selectedRecord.description,
+            phoneNumber: selectedRecord.phoneNumber,
+            branchCode: selectedRecord.branchCode,
+            localBankCode: selectedRecord.localBankCode,
+            country: selectedRecord.country,
+            countrySubdivision: selectedRecord.countrySubdivision,
+            streetName: selectedRecord.streetName,
+            buildingNumber: selectedRecord.buildingNumber,
+            buildingName: selectedRecord.buildingName,
+            postalAddress: selectedRecord.postalAddress,
+            email: selectedRecord.email,
+            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
+            headOfficeBranch: selectedRecord.headOfficeBranch
+          }
+        }
+      });
+    }
+  };
+
+
   const handleDelete = async () => {
     if (selected.length) {
       if (window.confirm(`Confirm deletion of selected record/s`)) {
@@ -124,8 +155,7 @@ const Branches: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={() => {}}
-            
+              onClick={handleEdit}
             >
               Edit
             </Button>
