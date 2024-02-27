@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,13 +14,15 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
-import { gql, useQuery } from "@apollo/client";
-import { LedgerCategory } from "@/types/global";
+
+
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { CREATE_LEDGER_ACCOUNT_CATEGORIES } from "./ledger-categories-list/mutation";
 
 const LedgerCategorySchema = z.object({
   ledgerCategory: z.string().min(3, { message: "Ledger Category is required" }),
-  ledgerCategoryDescription: z
+  description: z
     .string()
     .min(3, { message: "Ledger Category Description is required" }),
   categoryNumber: z.string().min(1, { message: "Category Number is required" }),
@@ -30,21 +32,10 @@ type LedgerCategoryFormInputs = z.infer<typeof LedgerCategorySchema>;
 
 interface NewLedgerCategoryFormProps {}
 
-const GET_ACCOUNT_CATEGORIES = gql`
-query AccountCategories {
-  accountCategories {
-    id
-    ledgerCategory
-    description
-    categoryNumber
-    modifiedBy
-    modifiedOn
-  }
-}
-`;
+
 const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   const { toast } = useToast();
-  const [LedgerAccountCategories, setLedgerAccountCategories] = useState<LedgerCategory[]>([]);
+  const [createAccountCategory] = useMutation(CREATE_LEDGER_ACCOUNT_CATEGORIES);
   const navigate  = useNavigate();
   const {
     register,
@@ -56,22 +47,42 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     resolver: zodResolver(LedgerCategorySchema),
   });
 
-  const onSubmit = (data: LedgerCategoryFormInputs) => {
-    try{
+  const onSubmit = async (data: LedgerCategoryFormInputs) => {
+    try {
+      const { ledgerCategory, description, categoryNumber } = data;
+
+      // Perform mutation
+      const { data: { createAccountCategory: createdCategory } } = await createAccountCategory({
+        variables: {
+          ledgerCategory,
+          description,
+          categoryNumber,
+          modifiedBy: "tester",
+          modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
+          .toISOString()
+          .split(".")[0],
+        }
+      });
+
+      // Show success toast
       toast({
         title: "Ledger Category Created",
-        description: <div className="text-black">
-        <div className="text-lg">
-          New Ledger Category Created {" "}
-          <Link to={`/administration/ledger-management/ledger-account-categories`} className="underline text-blue-500">
-            {data.ledgerCategory}
-          </Link>
-           , has been successfully created
-        </div>
-      </div>,
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              New Ledger Category Created {" "}
+              <Link to={`/administration/ledger-management/ledger-account-categories`} className="underline text-blue-500">
+                {createdCategory.ledgerCategory}
+              </Link>
+              , has been successfully created
+            </div>
+          </div>
+        ),
       });
+
+      // Reset form and navigate
       reset();
-      navigate("/administration/ledger-management/ledger-account-categories"); 
+      navigate("/administration/ledger-management/ledger-account-categories");
     } catch (error) {
       console.error("Error creating ledger category ", error);
       toast({
@@ -81,12 +92,6 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     }
   };
 
-  const { data } = useQuery(GET_ACCOUNT_CATEGORIES);
-  useEffect(() => {
-    if (data && data.accountCategories) {
-      setLedgerAccountCategories(data.accountCategories);
-    }
-  }, [data]);
 
   return (
     <section>
@@ -99,19 +104,16 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
               name="ledgerCategory"
               render={({ field: { onChange, value } }) => (
                 <Select onValueChange={onChange} value={value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {LedgerAccountCategories.map((type) => (
-                      <SelectItem key={type.id} value={type.id}>
-                        {type.ledgerCategory}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+                <SelectTrigger>
+                  <SelectValue placeholder="Select ..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Sales">Sales </SelectItem>
+                  <SelectItem value="Internal">Internal</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
             {errors.ledgerCategory && (
               <span className="text-red-500">
                 {errors.ledgerCategory.message}
@@ -120,10 +122,10 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
           </div>
           <div>
             <Label>Ledger Category Description</Label>
-            <Textarea {...register("ledgerCategoryDescription")} />
-            {errors.ledgerCategoryDescription && (
+            <Textarea {...register("description")} />
+            {errors.description && (
               <span className="text-red-500">
-                {errors.ledgerCategoryDescription.message}
+                {errors.description.message}
               </span>
             )}
           </div>
