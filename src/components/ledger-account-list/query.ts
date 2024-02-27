@@ -1,13 +1,17 @@
 import { gql } from "@apollo/client";
 
-const queryaccountcategoriesList = gql`
-query AccountCategories {
-  accountCategories {
+const queryaccountList = gql`
+query Accounts {
+  accounts {
     id
-    ledgerCategory
-    description
-    categoryNumber
+    name
+    account_owner
+    account_number
+    account_type
+    bank
+    bank_id
+    normal_balance
   }
 }`
 
-  export default queryaccountcategoriesList;
+  export default queryaccountList;
