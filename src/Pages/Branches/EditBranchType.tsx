@@ -7,12 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQuery } from "@apollo/client";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useToast } from "@/components/ui/use-toast";
 import { UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
+import { Link } from "react-router-dom";
 
 export const newBranchTypeSchema = z.object({
+  branchTypeId: z.string(),
   branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
@@ -21,33 +23,28 @@ export const newBranchTypeSchema = z.object({
 
 type newBranchInput = z.infer<typeof newBranchTypeSchema>;
 
-interface NewBranchTypesProps {
-  branchTypeName: string; // Add prop to receive branch type ID
-}
-
-const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
+const EditBranchTypes: FC = () => {
+  const { branchTypeId } = useParams<{ branchTypeId: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { state: locationState } = location;
-  const from = locationState?.from || "/administration/branches/branch-types"; // Define the 'from' variable
+  const [isFormModified, setIsFormModified] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
-    setValue, // Add setValue from useForm
+    setValue,
     formState: { errors },
   } = useForm<newBranchInput>({
     resolver: zodResolver(newBranchTypeSchema),
   });
-  const [defaultModifiedOn, setDefaultModifiedOn] = useState(
-    new Date().toISOString()
-  );
 
-  const { data: branchTypeData, loading: branchTypeLoading } = useQuery(queryBranchTypesList, {
-    variables: { branchTypeName },
-  });
+  const { data: branchTypeData, loading: branchTypeLoading } = useQuery(
+    queryBranchTypesList,
+    {
+      variables: { branchTypeId }, // Pass branchTypeId as a variable to the query
+    }
+  );
 
   const [updateBranchTypeMutation] = useMutation(UPDATE_BRANCH_TYPE);
 
@@ -55,6 +52,7 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
     try {
       await updateBranchTypeMutation({
         variables: {
+          branchTypeId: data.branchTypeId,
           branchTypeName: data.branchTypeName,
           description: data.description,
           modifiedBy: data.modifiedBy,
@@ -72,7 +70,7 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
         ),
       });
       reset();
-      navigate("/administration/branches/branch-types"); 
+      navigate("/administration/branches/branch-types");
     } catch (error) {
       console.error("Error updating branch type:", error);
       toast({
@@ -82,23 +80,41 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
     }
   };
 
+  const branchType = branchTypeData?.branchTypes.find(
+    (branchType: { branchTypeId: string | undefined }) =>
+      branchType.branchTypeId === branchTypeId
+  );
+
   useEffect(() => {
-    setDefaultModifiedOn(new Date().toISOString());
+    if (!branchTypeLoading && branchType) {
+      const { branchTypeId, branchTypeName, description, modifiedBy, modifiedOn } =
+        branchType;
+      setValue("branchTypeId", branchTypeId);
+      setValue("branchTypeName", branchTypeName || "");
+      setValue("description", description || "");
+      setValue("modifiedBy", modifiedBy || "");
+      setValue("modifiedOn", modifiedOn || new Date().toISOString());
+    }
+  }, [branchType, branchTypeLoading, setValue]);
+
+  useEffect(() => {
+    const handleFormChange = () => {
+      setIsFormModified(true);
+    };
+
+    window.addEventListener("input", handleFormChange);
+
+    return () => {
+      window.removeEventListener("input", handleFormChange);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!branchTypeLoading && branchTypeData) {
-      // Set default form values based on fetched branch type data
-      const { branchTypeName, description, modifiedBy, modifiedOn } = branchTypeData;
-      setValue("branchTypeName", branchTypeName);
-      setValue("description", description);
-      setValue("modifiedBy", modifiedBy);
-      setValue("modifiedOn", modifiedOn);
-    }
-  }, [branchTypeData, branchTypeLoading, setValue]);
 
   return (
-    <section className="w-1/2">
+    <section className="w-1/2 px-4">
+       <div className="flex items-center justify-between my-4">
+        <div className=""><h1 className="text-4xl text-[#36459C]"> Edit Branch Details</h1></div>
+      </div>
       <form
         className="flex flex-col gap-8"
         onSubmit={handleSubmit(onSubmit)}
@@ -110,6 +126,7 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
             id="branchTypeName"
             type="text"
             {...register("branchTypeName", { required: true })}
+            defaultValue={branchType?.branchTypeName || ""}
           />
           {errors.branchTypeName && (
             <span className="text-red-500">{errors.branchTypeName.message}</span>
@@ -120,41 +137,10 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
           <Textarea
             id="description"
             {...register("description", { required: true })}
+            defaultValue={branchType?.description || ""}
           />
           {errors.description && (
             <span className="text-red-500">{errors.description.message}</span>
-          )}
-        </div>
-        <div className="hidden">
-          <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
-            Modified By
-          </Label>
-          <Input
-            {...register("modifiedBy")}
-            placeholder="Modified By"
-            type="text"
-            className="h-12 text-base bg-blue-50"
-            autoComplete="false"
-            defaultValue={"User"}
-          />
-          {errors.modifiedBy && (
-            <span className="text-red-500">{errors.modifiedBy.message}</span>
-          )}
-        </div>
-        <div className="hidden">
-          <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
-            Modified On
-          </Label>
-          <Input
-            {...register("modifiedOn")}
-            placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
-            type="text"
-            className="h-12 text-base bg-blue-50"
-            autoComplete="false"
-            defaultValue={defaultModifiedOn}
-          />
-          {errors.modifiedOn && (
-            <span className="text-red-500">{errors.modifiedOn.message}</span>
           )}
         </div>
         <div className="flex gap-2">
@@ -162,12 +148,15 @@ const EditBranchTypes: FC<NewBranchTypesProps> = ({ branchTypeName }) => {
             type="submit"
             size="lg"
             className="bg-[#36459C] hover:bg-[#253285]"
+            disabled={!isFormModified}
           >
-            Submit
+            Update
           </Button>
-          <Button size="lg" onClick={() => navigate(from, { replace: true })}>
-            Cancel
-          </Button>
+          <Link to={`/administration/branches/branch-types`}>
+          <Button size="lg"
+          >Cancel</Button>
+
+          </Link>
         </div>
       </form>
     </section>

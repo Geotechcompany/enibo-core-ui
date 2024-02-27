@@ -11,10 +11,11 @@ import { useMutation } from "@apollo/client";
 import CREATE_NEW_BRANCH_TYPE_MUTATION from "@/Pages/Branches/BranchTypeMutation";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { useBranchState } from "@/store/branch";
 
 
 export const newBranchTypeSchema = z.object({
-  branchName: z.string().min(3, { message: "Branch name is required" }),
+  branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
 
@@ -26,6 +27,8 @@ type newBranchInput = z.infer<typeof newBranchTypeSchema>;
 interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
+  const { state } = useBranchState();
+  const  isCopyMode  = !state;
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,6 +39,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<newBranchInput>({
@@ -52,10 +56,10 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
 
   const onSubmit = async (data: newBranchInput) => {
     try {
-      const { branchName, description, modifiedBy, modifiedOn } = data;
+      const { branchTypeName, description, modifiedBy, modifiedOn } = data;
       await createBranchTypeMutation({
         variables: {
-          branchTypeName: branchName,
+          branchTypeName: branchTypeName,
           description: description || "N/A"  ,
           modifiedBy,
           modifiedOn,
@@ -67,7 +71,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         <div className="text-lg">
           New Branch Type {" "}
           <Link to={`/administration/branches/branch-types`} className="underline text-blue-500">
-            {data.branchName}
+            {data.branchTypeName}
           </Link>
            , has been successfully created
         </div>
@@ -88,6 +92,17 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   useEffect(() => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
+
+
+  useEffect(() => {
+    if (!isCopyMode && state) {
+      const { branchTypeName, description } = state;
+
+      setValue("branchTypeName", branchTypeName);
+      setValue("description", description);
+
+    }
+  }, [])
   return (
     <section className="w-1/2">
       <form
@@ -96,14 +111,14 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         autoComplete="off"
       >
         <div>
-          <Label htmlFor="branchName">Branch Name</Label>
+          <Label htmlFor="branchTypeName">Branch Name</Label>
           <Input
-            id="branchName"
+            id="branchTypeName"
             type="text"
-            {...register("branchName", { required: true })}
+            {...register("branchTypeName", { required: true })}
           />
-          {errors.branchName && (
-            <span className="text-red-500">{errors.branchName.message}</span>
+          {errors.branchTypeName && (
+            <span className="text-red-500">{errors.branchTypeName.message}</span>
           )}
         </div>
         <div>

@@ -37,17 +37,20 @@ export const DELETE_BRANCH_TYPE = gql`
 
 export const UPDATE_BRANCH_TYPE = gql`
   mutation UpdateBranchType(
+    $branchTypeId: String!
     $branchTypeName: String!
     $description: String!
     $modifiedBy: String!
     $modifiedOn: String!
   ) {
     updateBranchType(
+      branchTypeId: $branchTypeId
       branchTypeName: $branchTypeName
       description: $description
       modifiedBy: $modifiedBy
       modifiedOn: $modifiedOn
     ) {
+      branchTypeId
       branchTypeName
       description
       modifiedBy

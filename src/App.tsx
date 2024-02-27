@@ -47,6 +47,7 @@ import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
+import EditBranchTypes from "./Pages/Branches/EditBranchType";
 
 function App() {
   return (
@@ -99,6 +100,14 @@ function App() {
           element={
             <MainLayout>
               <BranchType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/edit-branch-type/:branchTypeId"
+          element={
+            <MainLayout>
+              <EditBranchTypes/>
             </MainLayout>
           }
         />
