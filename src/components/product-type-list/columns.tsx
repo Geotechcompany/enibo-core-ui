@@ -154,22 +154,5 @@ export const columns: ColumnDef<ProductType>[] = [
         enableSorting: true,
         enableHiding: true,
     },
-    {
-      accessorKey: "modifiedBy",
-      header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Modified By" />
-      ),
-      cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
-      enableSorting: true,
-      enableHiding: true,
-  },
-  {
-    accessorKey: "modifiedOn",
-    header: ({ column }) => (
-    <DataTableColumnHeader column={column} title="Modified On" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-},
+   
 ];

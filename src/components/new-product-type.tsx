@@ -84,8 +84,8 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       variables: {
         productTypeName: data.productTypeName,
         description: data.description,
-        active: data.active,
-        interestBearing: data.interestBearing,
+        active: data.active || true,
+        interestBearing: data.interestBearing || true,
         fixedInterestRate: parseFloat(data.fixedInterestRate),
         effectiveDate: data.effectiveDate,
         fees: data.fees,
