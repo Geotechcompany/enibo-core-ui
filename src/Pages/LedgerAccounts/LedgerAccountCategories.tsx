@@ -7,7 +7,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { FaPlus } from 'react-icons/fa';
 import queryaccountcategoriesList from '@/components/ledger-categories-list/query';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { DELETE_ACCOUNT_CATEGORY_TYPE } from '@/types/mutations';
 
 interface LedgerAccountCategoriesProps {
   
@@ -15,6 +16,7 @@ interface LedgerAccountCategoriesProps {
 
 const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
   const [ledgerAccountCategory, setledgerAccountCategories] = useState<LedgerCategory[]>([]);
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
  const location = useLocation();
@@ -22,6 +24,8 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
     const from = location.state?.from || { pathname: "/administration/ledger-management/ledger-account-categories/new-ledger-account-category" };
     const { data, loading: queryLoading, error: queryError } = useQuery(queryaccountcategoriesList);
     console.log(data)
+    const [deleteAccountCategory] = useMutation(DELETE_ACCOUNT_CATEGORY_TYPE);
+    const [selected, setSelected] = useState<number[]>([]);
 
     useEffect(() => {
       if (data) {
@@ -31,7 +35,34 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
       setError(queryError ? queryError.message : null);
     }, [data, queryLoading, queryError]);
   
-     
+    const handleDelete = async () => {
+      if (selected.length) {
+        // Show confirmation dialog
+        if (window.confirm(`Confirm deletion of selected record/s`)) {
+          try {
+            // Extracting Account Categories type IDs from selected array
+            const selectedledgerAccountCategoriesIds = selected.map(accountCategoriesIndex => ledgerAccountCategory[accountCategoriesIndex].id);
+    
+            // Deleting selected Account Categories types
+            await Promise.all(
+              selectedledgerAccountCategoriesIds.map(async (id) => {
+                await deleteAccountCategory({ variables: {deleteAccountCategoryId: id } });
+              })
+            );
+    
+            // Filter out deleted items from UI
+            const updatedaccountCategories = ledgerAccountCategory.filter(
+              (ledgerAccountCategory) => !selectedledgerAccountCategoriesIds.includes(ledgerAccountCategory.id)
+            );
+            setledgerAccountCategories(updatedaccountCategories);
+            setSelected([]);
+            window.location.reload();
+          } catch (error) {
+            console.error("Error deleting Account Category types:", error);
+          }
+        }
+      }
+    };
     return (
       <div>
         <div className="mx-4">
@@ -90,6 +121,8 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
               <DataTable
                 columns={columns}
                 data={ledgerAccountCategory} 
+                sorting={sorting}
+                onRowSelect={setSelected}
               />
             )}
               </div>
@@ -117,11 +150,11 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
           </div>
 
           <div className="mr-2">
-            <Button
+          <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
+              onClick={handleDelete}
             >
               Delete
             </Button>

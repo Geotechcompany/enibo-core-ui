@@ -2,11 +2,11 @@ import { gql } from "@apollo/client";
 
 export const CREATE_KYC_TYPE = gql`
   mutation CreateKYCType(
-  $kycTypeCode: String!
-  $kycTypeName: String!
-  $kycTypeDescription: String!
-  $modifiedBy: String!
-  $modifiedOn: String!
+    $kycTypeCode: String!
+    $kycTypeName: String!
+    $kycTypeDescription: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
   ) {
     createKYCType(
       kycTypeCode: $kycTypeCode
@@ -21,30 +21,32 @@ export const CREATE_KYC_TYPE = gql`
       modifiedBy
       modifiedOn
     }
-  }`;
+  }
+`;
 
 export const CREATE_MANDATE_TYPE = gql`
-    mutation CreateMandateType(
+  mutation CreateMandateType(
     $mandateTypeCode: String!
     $mandateTypeName: String!
     $mandateTypeDescription: String!
     $modifiedBy: String!
     $modifiedOn: String!
+  ) {
+    createMandateType(
+      mandateTypeCode: $mandateTypeCode
+      mandateTypeName: $mandateTypeName
+      mandateTypeDescription: $mandateTypeDescription
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
     ) {
-        createMandateType(
-        mandateTypeCode: $mandateTypeCode
-        mandateTypeName: $mandateTypeName
-        mandateTypeDescription: $mandateTypeDescription
-        modifiedBy: $modifiedBy
-        modifiedOn: $modifiedOn
-        ) {
-        mandateTypeCode
-        mandateTypeName
-        mandateTypeDescription
-        modifiedBy
-        modifiedOn
-        }
-    }`;
+      mandateTypeCode
+      mandateTypeName
+      mandateTypeDescription
+      modifiedBy
+      modifiedOn
+    }
+  }
+`;
 /**
  * 
  *  
@@ -68,7 +70,7 @@ export const CREATE_MANDATE_TYPE = gql`
     attachDocumentsField: string[];
     signature: string;
  */
-  export const CREATE_INDIVIDUAL_KYC = gql`
+export const CREATE_INDIVIDUAL_KYC = gql`
   mutation CreateIndividualKYC(
     $kycType: String!
     $designation: String!
@@ -134,7 +136,8 @@ export const CREATE_MANDATE_TYPE = gql`
       modifiedBy
       modifiedOn
     }
-  }`;
+  }
+`;
 
 /**
  * 
@@ -157,7 +160,7 @@ export const CREATE_MANDATE_TYPE = gql`
     modifiedOn: string;
  */
 
-  export const CREATE_BUSINESS_KYC = gql`
+export const CREATE_BUSINESS_KYC = gql`
   mutation CreateBusinessKYC(
     $kycType: String!
     $legalEntityName: String!
@@ -214,16 +217,49 @@ export const CREATE_MANDATE_TYPE = gql`
       modifiedBy
       modifiedOn
     }
-  }`;
-  export const CREATE_LEDGER_ACCOUNT_CATEGORIES = gql`
-mutation CreateAccountCategory($ledgerCategory: String!, $description: String!, $categoryNumber: String!, $modifiedBy: String!) {
-  createAccountCategory(ledgerCategory: $ledgerCategory, description: $description, categoryNumber: $categoryNumber, modifiedBy: $modifiedBy) {
-    ledgerCategory
-    description
-    categoryNumber
-    modifiedBy
   }
-}
 `;
-
- 
+export const CREATE_LEDGER_ACCOUNT_CATEGORIES = gql`
+  mutation CreateAccountCategory(
+    $ledgerCategory: String!
+    $description: String!
+    $categoryNumber: String!
+    $modifiedBy: String!
+  ) {
+    createAccountCategory(
+      ledgerCategory: $ledgerCategory
+      description: $description
+      categoryNumber: $categoryNumber
+      modifiedBy: $modifiedBy
+    ) {
+      ledgerCategory
+      description
+      categoryNumber
+      modifiedBy
+    }
+  }
+`;
+export const DELETE_MANDATE_TYPE = gql`
+  mutation DeleteMandateType($mandateTypeId: String!) {
+    deleteMandateType(mandateTypeId: $mandateTypeId) {
+      mandateTypeId
+      mandateTypeName
+      mandateTypeDescription
+      mandateTypeCode
+      modifiedBy
+      modifiedOn
+    }
+  }
+`;
+export const DELETE_ACCOUNT_CATEGORY_TYPE = gql`
+  mutation DeleteAccountCategory($deleteAccountCategoryId: String!) {
+    deleteAccountCategory(id: $deleteAccountCategoryId) {
+      id
+      ledgerCategory
+      description
+      categoryNumber
+      modifiedBy
+      modifiedOn
+    }
+  }
+`;
