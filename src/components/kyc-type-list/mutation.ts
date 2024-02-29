@@ -24,8 +24,17 @@ export const CREATE_KycType = gql`
     }
   }
 `;
-
-
+export const DELETE_KYCType = gql`
+mutation DeleteKYCType($kycTypeId: String!) {
+  deleteKYCType(kycTypeId: $kycTypeId) {
+    kycTypeName
+    kycTypeDescription
+    kycTypeCode
+    modifiedBy
+    modifiedOn
+  }
+}
+`;
 
 
 

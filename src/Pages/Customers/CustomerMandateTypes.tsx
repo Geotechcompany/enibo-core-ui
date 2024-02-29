@@ -4,15 +4,17 @@ import { MandateType } from "@/types/global";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryMandateList from "@/components/mandate-type-list/query";
 import { columns } from "@/components/mandate-type-list/columns";
+import { DELETE_MANDATE_TYPE } from "@/types/mutations";
 
 interface CustomerMandateTypesProps {}
 
 const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
   const [MandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,17 +25,48 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
   const {
     data,
     loading: queryLoading,
-    error: queryError,
+    error: queryError, refetch
   } = useQuery(queryMandateList);
+  const [deleteMandateType] = useMutation(DELETE_MANDATE_TYPE);
+  const [selected, setSelected] = useState<number[]>([]);
 
   useEffect(() => {
     if (data) {
       setMandateTypes(data.mandateTypes);
     }
+    refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [data, queryLoading, queryError, refetch]);
 
+  const handleDelete = async () => {
+    if (selected.length) {
+      // Show confirmation dialog
+      if (window.confirm(`Confirm deletion of selected record/s`)) {
+        try {
+          // Extracting mandate type IDs from selected array
+          const selectedMandateTypeIds = selected.map(MandateTypeIndex => MandateTypes[MandateTypeIndex].mandateTypeId);
+  
+          // Deleting selected mandate types
+          await Promise.all(
+            selectedMandateTypeIds.map(async (mandateTypeId) => {
+              await deleteMandateType({ variables: { mandateTypeId } });
+            })
+          );
+  
+          // Filter out deleted items from UI
+          const updatedMandateTypes = MandateTypes.filter(
+            (MandateType) => !selectedMandateTypeIds.includes(MandateType.mandateTypeId)
+          );
+          setMandateTypes(updatedMandateTypes);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting mandate types:", error);
+        }
+      }
+    }
+  };
   return (
     <div>
       <div className="mx-4">
@@ -78,7 +111,8 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
           ) : error ? (
             <p>Error: {error}</p>
           ) : (
-            <DataTable columns={columns} data={MandateTypes} />
+            <DataTable columns={columns} data={MandateTypes} sorting={sorting}
+            onRowSelect={setSelected}/>
           )}
         </div>
         <div className="flex items-center my-4">
@@ -104,11 +138,11 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
           </div>
 
           <div className="mr-2">
-            <Button
+          <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
+              onClick={handleDelete}
             >
               Delete
             </Button>
