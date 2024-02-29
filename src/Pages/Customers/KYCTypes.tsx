@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryKycTypesList from "@/components/kyc-type-list/query";
 import { columns } from "@/components/kyc-type-list/columns";
 import { KYCType } from "@/types/global";
+import { DELETE_KYCType } from "@/components/kyc-type-list/mutation";
 
 interface KYCTypesProps {}
 
@@ -15,22 +16,52 @@ const KYCTypes: FC<KYCTypesProps> = () => {
   const [kycTypes, setKycTypes] = useState<KYCType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [selected, setSelected] = useState<number[]>([]);
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/customers/kyc-types/new-kyc-type",
   };
-  const { data, loading: queryLoading, error: queryError } = useQuery(queryKycTypesList);
-
+  const { data, loading: queryLoading, error: queryError,refetch} = useQuery(queryKycTypesList);
+  const [DeleteKYCType] = useMutation(DELETE_KYCType);
   useEffect(() => {
     if (data) {
       setKycTypes(data.kycTypes);
     }
+    refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [data, queryLoading, queryError, refetch]);
 
+  const handleDelete = async () => {
+    if (selected.length) {
+      // Show confirmation dialog
+      if (window.confirm(`Confirm deletion of selected record/s`)) {
+        try {
+          // Extracting kyc type IDs from selected array
+          const selectedKycTypeIds = selected.map(kycTypesIndex => kycTypes[kycTypesIndex].kycTypeId);
+  
+          // Deleting selected kyc types
+          await Promise.all(
+            selectedKycTypeIds.map(async (kycTypeId) => {
+              await DeleteKYCType({ variables: { kycTypeId } });
+            })
+          );
+  
+          // Filter out deleted items from UI
+          const updatedkycTypes = kycTypes.filter(
+            (kycType) => !selectedKycTypeIds.includes(kycType.kycTypeId)
+          );
+          setKycTypes(updatedkycTypes);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting kyc types:", error);
+        }
+      }
+    }
+  };
 
   return (
     <div>
@@ -79,6 +110,8 @@ const KYCTypes: FC<KYCTypesProps> = () => {
               <DataTable
                 columns={columns}
                 data={kycTypes} 
+                sorting={sorting}
+              onRowSelect={setSelected}
               />
             )}
               </div>
@@ -105,11 +138,11 @@ const KYCTypes: FC<KYCTypesProps> = () => {
           </div>
 
           <div className="mr-2">
-            <Button
+          <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
+              onClick={handleDelete}
             >
               Delete
             </Button>
@@ -120,3 +153,4 @@ const KYCTypes: FC<KYCTypesProps> = () => {
   );
 };
 export default KYCTypes;
+
