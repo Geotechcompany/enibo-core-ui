@@ -163,7 +163,8 @@ export type MandateType = {
   modifiedOn: string;
 };
 
-type KYCIndividual = {
+export type KYCIndividual = {
+  IndividualKYCId: string;
   kycType: "Individual";
   kycTypeId: string;
   designation: string;
@@ -187,7 +188,8 @@ type KYCIndividual = {
   modifiedOn: string;
 };
 
-type KYCBusiness = {
+export type KYCBusiness = {
+  businessKYCId: string;
   kycType: "Business";
   legalEntityName: string;
   legalStatus:
