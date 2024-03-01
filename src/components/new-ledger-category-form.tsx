@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,6 +19,7 @@ import { Textarea } from "./ui/textarea";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { CREATE_LEDGER_ACCOUNT_CATEGORIES } from "./ledger-categories-list/mutation";
+import { useLedgerState } from "@/store/ledger";
 
 const LedgerCategorySchema = z.object({
   ledgerCategory: z.string().min(3, { message: "Ledger Category is required" }),
@@ -34,12 +35,15 @@ interface NewLedgerCategoryFormProps {}
 
 
 const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
+  const { state } = useLedgerState();
+  const  isCopyMode  = !state;
   const { toast } = useToast();
   const [createAccountCategory] = useMutation(CREATE_LEDGER_ACCOUNT_CATEGORIES);
   const navigate  = useNavigate();
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
     control,
@@ -91,7 +95,16 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
       });
     }
   };
+  useEffect(() => {
+    if (!isCopyMode && state) {
+      const { ledgerCategory, description ,categoryNumber} = state;
 
+      setValue("ledgerCategory", ledgerCategory);
+      setValue("description", description);
+      setValue("categoryNumber", categoryNumber);
+
+    }
+  }, [])
 
   return (
     <section>
@@ -141,7 +154,9 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button className="ml-2">Cancel</Button>
+          <Link to={`/administration/ledger-management/ledger-account-categories`}>
+            <Button size="lg">Cancel</Button>
+          </Link>
         </div>
       </form>
     </section>
