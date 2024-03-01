@@ -144,7 +144,7 @@ const EditBranchTypes: FC = () => {
           )}
         </div>
         <div className="flex gap-2">
-          <Button
+        <Button
             type="submit"
             size="lg"
             className="bg-[#36459C] hover:bg-[#253285]"
