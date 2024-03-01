@@ -3,18 +3,38 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/logo";
-
+import { useAppState } from "@/store/state";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     authenticate(email: $email, password: $password) {
       token
+      user {
+        id
+        username
+        firstName
+        middleName
+        lastName
+        email
+        phoneNumber
+        employeeNumber
+        branch
+        profile
+        documentAttachment
+        modifiedBy
+        modifiedOn
+      }
     }
   }
 `;
@@ -31,10 +51,11 @@ interface LoginProps {}
 const Login: FC<LoginProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null); // State to hold the error message
+  const {state,  setState } = useAppState();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || { pathname: "/dashboard"};
+  const from = location.state?.from || { pathname: "/dashboard" };
 
   const {
     register,
@@ -47,7 +68,12 @@ const Login: FC<LoginProps> = () => {
   const [loginMutation] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
       if (data && data.authenticate && data.authenticate.token) {
-        localStorage.setItem('token', data.authenticate.token);
+        localStorage.setItem("token", data.authenticate.token);
+        localStorage.setItem("user", JSON.stringify(data.authenticate.user));
+        setState({
+          ...state,
+          user: data.authenticate.user
+        });
         setIsLoading(false);
         navigate(from, { replace: true });
       } else {
@@ -56,8 +82,8 @@ const Login: FC<LoginProps> = () => {
       }
     },
     onError: (error) => {
-      console.log("Log error", error)
-      setError(`${error.message}. Sign up or try again.` );
+      console.log("Log error", error);
+      setError(`${error.message}. Sign up or try again.`);
       setIsLoading(false);
     },
   });
@@ -81,7 +107,8 @@ const Login: FC<LoginProps> = () => {
             <div className="flex justify-center">
               <Logo />
             </div>
-            {error && <div className="text-red-500 text-center">{error}</div>} {/* Display error message */}
+            {error && <div className="text-center text-red-500">{error}</div>}{" "}
+            {/* Display error message */}
             <div className="flex flex-col gap-4">
               <div>
                 <Label
@@ -125,9 +152,9 @@ const Login: FC<LoginProps> = () => {
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? 'Logging in...' : 'Login'}
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
-              
+
               <Link to="/" className="text-[#36459C] hover:text-[#253285]">
                 Forgot Password?
               </Link>

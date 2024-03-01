@@ -48,6 +48,9 @@ import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
 import EditBranchTypes from "./Pages/Branches/EditBranchType";
+import EditBranch from "./Pages/Branches/EditBranch";
+import NewTransfer from "./Pages/Transfer/NewTransfer";
+import Wizard from "./components/customer-wizard";
 
 function App() {
   return (
@@ -60,6 +63,14 @@ function App() {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/new-transfer"
+          element={
+            <MainLayout>
+              <NewTransfer />
             </MainLayout>
           }
         />
@@ -116,6 +127,14 @@ function App() {
           element={
             <MainLayout>
               <NewBranchTypes />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/branches/edit-branch/:branchId"
+          element={
+            <MainLayout>
+              <EditBranch/>
             </MainLayout>
           }
         />
@@ -412,6 +431,14 @@ function App() {
         element={
           <MainLayout>
            <AppSettingsDetails />
+          </MainLayout>
+        }
+          />
+        <Route
+        path="/customers/customer-wizard/*"
+        element={
+          <MainLayout>
+           <Wizard />
           </MainLayout>
         }
           />

@@ -74,6 +74,7 @@ const GET_PRODUCT_TYPES = gql`
     }
   }
 `;
+
 const GET_KYC_TYPES = gql`
   query kycType {
     kycTypes {
@@ -82,6 +83,7 @@ const GET_KYC_TYPES = gql`
     }
   }
 `;
+
 const GET_MANDATE_TYPES = gql`
   query MandateTypes {
     mandateTypes {
@@ -91,6 +93,7 @@ const GET_MANDATE_TYPES = gql`
     }
   }
 `;
+
 const GET_BUSINESS_KYCS = gql`
   query BusinessKYCs {
     businessKYCs {
@@ -112,7 +115,6 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
   const [KYCType, setKycTypes] = useState<KYCType[]>([]);
   const navigate  = useNavigate();
   const [accountMandates, setAccountMandates] = useState([
-    
     {
       signatory: [],
       mandateType: [],
@@ -201,7 +203,7 @@ const NewBusinessRetailForm: FC<NewBusinessRetailFormProps> = () => {
     description: <div className="text-black">
     <div className="text-lg">
       New Customer Retail {" "}
-      <Link to={`/customers`} className="underline text-blue-500">
+      <Link to={`/customers`} className="text-blue-500 underline">
         {data.businessKYC}
       </Link>
        , has been successfully created
