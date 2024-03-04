@@ -8,13 +8,16 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "../ui/use-toast";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import CREATE_NEW_BRANCH_TYPE_MUTATION from "@/Pages/Branches/BranchTypeMutation";
-import { useNavigate } from "react-router";
+import { UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
+import queryBranchTypesList from "@/components/branch-types/query";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useBranchState } from "@/store/branch";
 
 export const newBranchTypeSchema = z.object({
+  branchTypeId: z.string().optional(),
   branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
@@ -27,8 +30,11 @@ type newBranchInput = z.infer<typeof newBranchTypeSchema>;
 interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
+  const { branchTypeId } = useParams<{ branchTypeId: string }>();
   const { state, setState } = useBranchState();
   const isCopyMode = !state;
+  const formMode = state?.mode
+  console.log(state, formMode, "Form")
   const { toast } = useToast();
   const navigate = useNavigate();
     
@@ -42,15 +48,61 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   } = useForm<newBranchInput>({
     resolver: zodResolver(newBranchTypeSchema),
   });
+  const { data: branchTypeData, loading: branchTypeLoading } = useQuery(
+    queryBranchTypesList,
+    {
+      variables: { branchTypeId }, // Pass branchTypeId as a variable to the query
+    }
+  );
+  const [updateBranchTypeMutation] = useMutation(UPDATE_BRANCH_TYPE);
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
   );
 
+  const [isFormModified, setIsFormModified] = useState(false);
+
   const [createBranchTypeMutation] = useMutation(
     CREATE_NEW_BRANCH_TYPE_MUTATION
   );
+  const handleEdit =  async (data: newBranchInput) => {
+    try {
+      await updateBranchTypeMutation({
+        variables: {
+          branchTypeId: data.branchTypeId,
+          branchTypeName: data.branchTypeName,
+          description: data.description,
+          modifiedBy: data.modifiedBy,
+          modifiedOn: data.modifiedOn,
+        },
+      });
+      toast({
+        title: "Branch Type Updated",
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              Branch Type{" "} 
+              <Link
+                to={`/administration/branches/branch-types`}
+                className="underline text-blue-500"
+              >
+                {data.branchTypeName}
+              </Link>, has been successfully updated
+            </div>
+          </div>
+        ),
+      });
+      reset();
+      navigate("/administration/branches/branch-types");
+    } catch (error) {
+      console.error("Error updating branch type:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update branch type. Please try again.",
+      });
+    }
+  };
 
-  const onSubmit = async (data: newBranchInput) => {
+  const handleCreate = async (data: newBranchInput) => {
     try {
       const { branchTypeName, description, modifiedBy, modifiedOn } = data;
 
@@ -93,11 +145,21 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         description: `"Failed to create branch type. Please try again." `,
       });
     }
+  }
+
+  const onSubmit = async (data: newBranchInput) => {
+     if(formMode  === "ADD" || formMode === "COPY") {
+      handleCreate(data);
+     } else if(formMode === "EDIT") {
+      console.log('edit mode')
+      handleEdit(data);
+     }
   };
 
   useEffect(() => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
+
 
   const cancelForm = () =>{
     setState({
@@ -108,21 +170,42 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
       title: "Form Cancelled",
     })
   }
+  const branchType = branchTypeData?.branchTypes.find(
+    (branchType: { branchTypeId: string | undefined }) =>
+      branchType.branchTypeId === branchTypeId
+  );
 
   useEffect(() => {
-    if (!isCopyMode && state) {
+    if (formMode === "COPY" && state) {
       const { branchTypeName, description } = state;
 
       setValue("branchTypeName", branchTypeName);
       setValue("description", description);
-    } else {
-
-      setState({
-         branchTypeName: "",
-         description: "",
-      })
+    } else if (formMode === "EDIT") {
+      if (!branchTypeLoading && branchType) {
+        const { branchTypeId, branchTypeName, description, modifiedBy, modifiedOn } =
+          branchType;
+        setValue("branchTypeId", branchTypeId);
+        setValue("branchTypeName", branchTypeName || "");
+        setValue("description", description || "");
+        setValue("modifiedBy", modifiedBy || "");
+        setValue("modifiedOn", modifiedOn || new Date().toISOString());
+      }
     }
-  }, [isCopyMode, reset, setValue, state, setState]);
+  }, [formMode, reset, setValue, state, setState, branchType, branchTypeLoading]);
+
+  useEffect(() => {
+    const handleFormChange = () => {
+      setIsFormModified(true);
+    };
+
+    window.addEventListener("input", handleFormChange);
+
+    return () => {
+      window.removeEventListener("input", handleFormChange);
+    };
+  }, []);
+
   return (
     <section className="w-1/2">
       <form
@@ -186,12 +269,13 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           )}
         </div>
         <div className="flex gap-2">
-          <Button
+        <Button
             type="submit"
             size="lg"
             className="bg-[#36459C] hover:bg-[#253285]"
+            disabled={!isFormModified}
           >
-            Submit
+            {formMode === "EDIT" ? "Update" : "Submit"}
           </Button>
 
           <Link to={`/administration/branches/branch-types`}>
