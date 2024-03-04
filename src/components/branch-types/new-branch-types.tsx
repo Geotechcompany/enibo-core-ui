@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,10 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "../ui/use-toast";
 import { useMutation } from "@apollo/client";
 import CREATE_NEW_BRANCH_TYPE_MUTATION from "@/Pages/Branches/BranchTypeMutation";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useBranchState } from "@/store/branch";
-
 
 export const newBranchTypeSchema = z.object({
   branchTypeName: z.string().min(3, { message: "Branch name is required" }),
@@ -27,15 +27,12 @@ type newBranchInput = z.infer<typeof newBranchTypeSchema>;
 interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
-  const { state } = useBranchState();
-  const  isCopyMode  = !state;
+  const { state, setState } = useBranchState();
+  const isCopyMode = !state;
   const { toast } = useToast();
-  const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || {
-    pathname: "/administration/branches/branch-types",
-  };
-  
+    
+  console.log(isCopyMode, "Copy Mode");
   const {
     register,
     handleSubmit,
@@ -53,38 +50,47 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
     CREATE_NEW_BRANCH_TYPE_MUTATION
   );
 
-
   const onSubmit = async (data: newBranchInput) => {
     try {
       const { branchTypeName, description, modifiedBy, modifiedOn } = data;
+
       await createBranchTypeMutation({
         variables: {
           branchTypeName: branchTypeName,
-          description: description || "N/A"  ,
+          description: description || "N/A",
           modifiedBy,
           modifiedOn,
         },
       });
       toast({
         title: "Branch Type Created",
-        description: <div className="text-black">
-        <div className="text-lg">
-          New Branch Type {" "}
-          <Link to={`/administration/branches/branch-types`} className="underline text-blue-500">
-            {data.branchTypeName}
-          </Link>
-           , has been successfully created
-        </div>
-      </div>,
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              New Branch Type{" "}
+              <Link
+                to={`/administration/branches/branch-types`}
+                className="underline text-blue-500"
+              >
+                {data.branchTypeName}
+              </Link>
+              , has been successfully created
+            </div>
+          </div>
+        ),
       });
       reset();
-      navigate("/administration/branches/branch-types"); 
-
+      setState({
+        branchTypeName: "",
+        description: "",
+     })
+     console.log(state, "checking state")
+      navigate("/administration/branches/branch-types");
     } catch (error) {
       console.error("Error creating branch type:", error);
       toast({
         title: "Error",
-        description: "Failed to create branch type. Please try again.",
+        description: `"Failed to create branch type. Please try again." `,
       });
     }
   };
@@ -93,6 +99,15 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
 
+  const cancelForm = () =>{
+    setState({
+      branchTypeName: "",
+      description: "",
+   });
+    toast({
+      title: "Form Cancelled",
+    })
+  }
 
   useEffect(() => {
     if (!isCopyMode && state) {
@@ -100,9 +115,14 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
 
       setValue("branchTypeName", branchTypeName);
       setValue("description", description);
+    } else {
 
+      setState({
+         branchTypeName: "",
+         description: "",
+      })
     }
-  }, [])
+  }, [isCopyMode, reset, setValue, state, setState]);
   return (
     <section className="w-1/2">
       <form
@@ -118,7 +138,9 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
             {...register("branchTypeName", { required: true })}
           />
           {errors.branchTypeName && (
-            <span className="text-red-500">{errors.branchTypeName.message}</span>
+            <span className="text-red-500">
+              {errors.branchTypeName.message}
+            </span>
           )}
         </div>
         <div>
@@ -171,9 +193,15 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           >
             Submit
           </Button>
-          <Button size="lg"
-           onClick={() => navigate(from, { replace: true })}
-          >Cancel</Button>
+
+          <Link to={`/administration/branches/branch-types`}>
+            <Button
+              size="lg"
+              onClick={cancelForm}
+            >
+              Cancel
+            </Button>
+          </Link>
         </div>
       </form>
     </section>

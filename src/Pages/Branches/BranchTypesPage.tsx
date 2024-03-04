@@ -9,6 +9,7 @@ import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { BranchTypes } from "@/types/global";
 import { useBranchState } from "@/store/branch";
+import { toast } from "@/components/ui/use-toast";
 
 interface BranchesProps {}
 
@@ -42,33 +43,57 @@ const BranchType: FC<BranchesProps> = () => {
 
   const handleDelete = async () => {
     if (selected.length) {
-      // Show confirmation dialog
-      if (window.confirm(`Confirm deletion of selected record/s`)) {
-        try {
-          // Extracting branch type IDs from selected array
-          const selectedBranchTypeIds = selected.map(branchTypeIndex => branchTypes[branchTypeIndex].branchTypeId);
-  
-          // Deleting selected branch types
-          await Promise.all(
-            selectedBranchTypeIds.map(async (branchTypeId) => {
-              await deleteBranchType({ variables: { branchTypeId } });
-            })
-          );
-  
-          // Filter out deleted items from UI
-          const updatedBranchTypes = branchTypes.filter(
-            (branchType) => !selectedBranchTypeIds.includes(branchType.branchTypeId)
-          );
-          setBranchTypes(updatedBranchTypes);
-          setSelected([]);
-          window.location.reload();
-        } catch (error) {
-          console.error("Error deleting branch types:", error);
-        }
+      try {
+        toast({
+          title: "Confirm deletion",
+          description: (
+            <div className="text-black">
+              <div className="text-lg">
+                Confirm deletion of selected record/s
+              </div>
+              <div className="flex justify-end mt-4">
+              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
+                // Code to uncheck selected records
+                setSelected([]);
+                window.location.reload();
+                toast({}).dismiss();
+               
+              }}>Cancel</Button>
+              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+            onClick={async () => {
+                try {
+                  // Extracting branch type IDs from selected array
+                  const selectedBranchTypeIds = selected.map(branchTypeIndex => branchTypes[branchTypeIndex].branchTypeId);
+          
+                  // Deleting selected branch types
+                  await Promise.all(
+                    selectedBranchTypeIds.map(async (branchTypeId) => {
+                      await deleteBranchType({ variables: { branchTypeId } });
+                    })
+                  );
+          
+                  // Filter out deleted items from UI
+                  const updatedBranchTypes = branchTypes.filter(
+                    (branchType) => !selectedBranchTypeIds.includes(branchType.branchTypeId)
+                  );
+                  setBranchTypes(updatedBranchTypes);
+                  setSelected([]);
+                  toast({}).dismiss();
+                  window.location.reload();
+                } catch (error) {
+                  console.error("Error deleting branch types:", error);
+                }
+              }}
+              >Confirm</Button>
+          </div>
+            </div>
+          ),
+        });
+      } catch (error) {
+        console.error("Error showing confirmation toast:", error);
       }
     }
   };
-
   const handleEdit = async () => {
     if (selected.length === 1) {
       navigateToEditPage();
