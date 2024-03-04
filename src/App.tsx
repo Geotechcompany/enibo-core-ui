@@ -51,6 +51,7 @@ import BranchType from "./Pages/Branches/BranchTypesPage";
 import EditBranch from "./Pages/Branches/EditBranch";
 import NewTransfer from "./Pages/Transfer/NewTransfer";
 import Wizard from "./components/customer-wizard";
+import EditLedgerAccountCategory from "./Pages/LedgerAccounts/EditLedgerAccountCategory";
 
 function App() {
   return (
@@ -183,6 +184,14 @@ function App() {
           element={
             <MainLayout>
               <NewTransactionType />
+            </MainLayout>
+          }
+        />
+          <Route
+          path="/edit-Ledger-Account-Category/:LedgerCategory"
+          element={
+            <MainLayout>
+              <EditLedgerAccountCategory/>
             </MainLayout>
           }
         />
