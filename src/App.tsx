@@ -47,10 +47,11 @@ import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
-import EditBranchTypes from "./Pages/Branches/EditBranchType";
+// import EditBranchTypes from "./Pages/Branches/EditBranchType";
 import EditBranch from "./Pages/Branches/EditBranch";
 import NewTransfer from "./Pages/Transfer/NewTransfer";
 import Wizard from "./components/customer-wizard";
+import EditLedgerAccountCategory from "./Pages/LedgerAccounts/EditLedgerAccountCategory";
 
 function App() {
   return (
@@ -118,7 +119,7 @@ function App() {
           path="/edit-branch-type/:branchTypeId"
           element={
             <MainLayout>
-              <EditBranchTypes/>
+              <NewBranchTypes />
             </MainLayout>
           }
         />
@@ -183,6 +184,14 @@ function App() {
           element={
             <MainLayout>
               <NewTransactionType />
+            </MainLayout>
+          }
+        />
+          <Route
+          path="/edit-Ledger-Account-Category/:LedgerCategory"
+          element={
+            <MainLayout>
+              <EditLedgerAccountCategory/>
             </MainLayout>
           }
         />

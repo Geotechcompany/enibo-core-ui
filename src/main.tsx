@@ -10,12 +10,14 @@ import client from "./store/index.ts";
 import { UserProvider } from "./types/userContext.tsx";
 import BranchProvider from "./store/branch.tsx";
 import { AppProvider } from "./store/state.tsx";
+import LedgerProvider  from "./store/ledger.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
       <UserProvider>
         <BranchProvider>
+        <LedgerProvider>
           <BrowserRouter>
             <Routes>
               <Route
@@ -28,6 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               />
             </Routes>
           </BrowserRouter>
+          </LedgerProvider>
         </BranchProvider>
       </UserProvider>
     </AppProvider>
