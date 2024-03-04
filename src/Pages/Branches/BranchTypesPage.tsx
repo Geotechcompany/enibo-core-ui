@@ -94,29 +94,43 @@ const BranchType: FC<BranchesProps> = () => {
       }
     }
   };
-  const handleEdit = async () => {
-    if (selected.length === 1) {
-      navigateToEditPage();
-    }
-  };
 
-  const handleCopy = () => {
-    if (selected.length === 1) {
-      const selectedRecord = branchTypes[selected[0]];
+
+  const handleRedirect = (mode: string) => {
+    if (mode === "ADD") {
+      navigate(from, { replace: true })
       setState({
-        branchTypeName: selectedRecord.branchTypeName,
-        description: selectedRecord.description,
-
-      })
-      navigate("/administration/branches/new-branch-type", {
-        state: {
-          from: from,
-          branchType: selectedRecord,
-          branchName: selectedRecord.branchTypeName,
-        },
+        branchTypeName: "",
+        description: "",
+        mode: "ADD",
       });
+    } else if (mode === "EDIT") {
+      if (selected.length === 1) {
+        navigateToEditPage();
+      }
+      setState({
+        branchTypeName: "",
+        description: "",
+        mode: "EDIT",
+      });
+    } else if (mode === "COPY") {
+      if (selected.length === 1) {
+        const selectedRecord = branchTypes[selected[0]];
+        setState({
+          branchTypeName: selectedRecord.branchTypeName,
+          description: selectedRecord.description,
+          mode: "COPY",
+        })
+        navigate("/administration/branches/new-branch-type", {
+          state: {
+            from: from,
+            branchType: selectedRecord,
+            branchName: selectedRecord.branchTypeName,
+          },
+        });
+      }
     }
-  };
+  }
 
 
   const navigateToEditPage = () => {
@@ -128,9 +142,6 @@ const BranchType: FC<BranchesProps> = () => {
       });
     }
   };
-
-  //save data and then navigate to create new
-
 
   return (
     <div>
@@ -164,7 +175,7 @@ const BranchType: FC<BranchesProps> = () => {
             <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" /> Add
             </Button>
@@ -190,7 +201,7 @@ const BranchType: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleEdit}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -200,7 +211,7 @@ const BranchType: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleCopy}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>

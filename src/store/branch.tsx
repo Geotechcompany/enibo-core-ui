@@ -1,6 +1,8 @@
 import { Dispatch, FunctionComponent, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
 
+
 interface BranchState {
+    mode?: "ADD" | "COPY" | "EDIT"; 
     branchTypeName: string;
     description: string;
 }
