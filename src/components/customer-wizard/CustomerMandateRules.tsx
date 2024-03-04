@@ -107,6 +107,7 @@ const CustomerMandateRules: FC<CustomerMandateRulesProps> = () => {
       ...state,
       signingRules: rules
     })
+    navigate("/customers")
   }
   return (
     <div>
