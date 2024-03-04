@@ -16,7 +16,7 @@ import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useBranchState } from "@/store/branch";
 
-export const newBranchTypeSchema = z.object({
+const newBranchTypeSchema = z.object({
   branchTypeId: z.string().optional(),
   branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
@@ -83,7 +83,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
               Branch Type{" "} 
               <Link
                 to={`/administration/branches/branch-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.branchTypeName}
               </Link>, has been successfully updated
@@ -93,11 +93,12 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
       });
       reset();
       navigate("/administration/branches/branch-types");
-    } catch (error) {
-      console.error("Error updating branch type:", error);
+    } catch (error:any) {
+      const errorMessage = error.graphQLErrors?.[0]?.extensions?.response?.body?.message || 'Unknown error';
       toast({
         title: "Error",
-        description: "Failed to update branch type. Please try again.",
+        description: `"Failed ${errorMessage}. Please try again."`,
+        variant: 'destructive',
       });
     }
   };
@@ -122,7 +123,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
               New Branch Type{" "}
               <Link
                 to={`/administration/branches/branch-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.branchTypeName}
               </Link>
@@ -136,17 +137,17 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         branchTypeName: "",
         description: "",
      })
-     console.log(state, "checking state")
       navigate("/administration/branches/branch-types");
-    } catch (error) {
-      console.error("Error creating branch type:", error);
+    } catch (error: any) {
+      const errorMessage = error.graphQLErrors?.[0]?.extensions?.response?.body?.message || 'Unknown error';
+  
       toast({
-        title: "Error",
-        description: `"Failed to create branch type. Please try again." `,
+        title: 'Error',
+        description: `Failed ${errorMessage}. Please try again.`,
+        variant: 'destructive',
       });
     }
   }
-
   const onSubmit = async (data: newBranchInput) => {
      if(formMode  === "ADD" || formMode === "COPY") {
       handleCreate(data);
