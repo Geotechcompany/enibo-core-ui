@@ -10,12 +10,13 @@ import {
 } from "react";
 
 
-// Define the shape of the ledger state
 interface LedgerState {
-    ledgerCategory: string;
-    description: string;
-    categoryNumber: string;
+  mode?: "ADD" | "COPY" | "EDIT"; 
+  ledgerCategory: string;
+  categoryNumber: string;
+  description: string;
 }
+
 
 // Define the props for the LedgerProvider component
 interface LedgerProviderProps {
