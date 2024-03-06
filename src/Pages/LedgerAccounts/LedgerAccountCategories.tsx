@@ -10,6 +10,7 @@ import queryaccountcategoriesList from "@/components/ledger-categories-list/quer
 import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_ACCOUNT_CATEGORY_TYPE } from "@/types/mutations";
 import {  useLedgerState } from "@/store/ledger";
+import { toast } from "@/components/ui/use-toast";
 interface LedgerAccountCategoriesProps {}
 
 const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
@@ -43,71 +44,108 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
 
+  
   const handleDelete = async () => {
     if (selected.length) {
-      // Show confirmation dialog
-      if (window.confirm(`Confirm deletion of selected record/s`)) {
-        try {
-          // Extracting Account Categories type IDs from selected array
-          const selectedledgerAccountCategoriesIds = selected.map(
-            (accountCategoriesIndex) =>
-              ledgerAccountCategory[accountCategoriesIndex].id
-          );
-
-          // Deleting selected Account Categories types
-          await Promise.all(
-            selectedledgerAccountCategoriesIds.map(async (id) => {
-              await deleteAccountCategory({
-                variables: { deleteAccountCategoryId: id },
-              });
-            })
-          );
-
-          // Filter out deleted items from UI
-          const updatedaccountCategories = ledgerAccountCategory.filter(
-            (ledgerAccountCategory) =>
-              !selectedledgerAccountCategoriesIds.includes(
-                ledgerAccountCategory.id
-              )
-          );
-          setledgerAccountCategories(updatedaccountCategories);
-          setSelected([]);
-          window.location.reload();
-        } catch (error) {
-          console.error("Error deleting Account Category types:", error);
-        }
+      try {
+        toast({
+          title: "Confirm deletion",
+          description: (
+            <div className="text-black">
+              <div className="text-lg">
+                Confirm deletion of selected record/s
+              </div>
+              <div className="flex justify-end mt-4">
+              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
+                // Code to uncheck selected records
+                setSelected([]);
+                window.location.reload();
+                toast({}).dismiss();
+               
+              }}>Cancel</Button>
+              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+            onClick={async () => {
+                try {
+                  // Extracting ledger categories IDs from selected array
+                  const selectedledgerAccountCategoriesIds = selected.map(
+                    (accountCategoriesIndex) =>
+                      ledgerAccountCategory[accountCategoriesIndex].id
+                  );
+                  // Deleting selected ledger Account Categories
+                  await Promise.all(
+                    selectedledgerAccountCategoriesIds.map(async (id) => {
+                      await deleteAccountCategory({ variables: { id } });
+                    })
+                  );
+          
+                  // Filter out deleted items from UI
+                  const updatedaccountCategories = ledgerAccountCategory.filter(
+                    (accountCategories) => !selectedledgerAccountCategoriesIds.includes(accountCategories.id)
+                  );
+                  setledgerAccountCategories(updatedaccountCategories);
+                  setSelected([]);
+                  toast({}).dismiss();
+                  window.location.reload();
+                } catch (error) {
+                  console.error("Error deleting ledger Account Categories:", error);
+                }
+              }}
+              >Confirm</Button>
+          </div>
+            </div>
+          ),
+        });
+      } catch (error) {
+        console.error("Error showing confirmation toast:", error);
       }
     }
   };
-  const handleEdit = async () => {
-    if (selected.length === 1) {
-      navigateToEditPage();
-    }
-  };
-  const handleCopy = () => {
-    if (selected.length === 1) {
-      const selectedRecord = ledgerAccountCategory[selected[0]];
+
+  const handleRedirect = (mode: string) => {
+    if (mode === "ADD") {
+      navigate(from, { replace: true })
       setState({
-        ledgerCategory: selectedRecord.ledgerCategory,
-        description: selectedRecord.description,
-        categoryNumber: selectedRecord.categoryNumber
+       ledgerCategory: "",
+       categoryNumber:"",
+        description: "",
+        mode: "ADD",
       });
-      navigate("/administration/ledger-management/ledger-account-categories/new-ledger-account-category", {
-        state: {
-          from: from,
-          ledgerCategory: selectedRecord,
-          description: selectedRecord.ledgerCategory,
-          categoryNumber: selectedRecord.categoryNumber
-        },
+    } else if (mode === "EDIT") {
+      if (selected.length === 1) {
+        navigateToEditPage();
+      }
+      setState({
+       ledgerCategory: "",
+       categoryNumber:"",
+        description: "",
+        mode: "EDIT",
       });
+    } else if (mode === "COPY") {
+      if (selected.length === 1) {
+        const selectedRecord = ledgerAccountCategory[selected[0]];
+        setState({
+         ledgerCategory: selectedRecord.ledgerCategory,
+         categoryNumber: selectedRecord.categoryNumber,
+          description: selectedRecord.description,
+          mode: "COPY",
+        })
+        navigate("/administration/ledger-management/ledger-account-categories/new-ledger-account-category/", {
+          state: {
+            from: from,
+            LedgerAccountCategories: selectedRecord,
+            ledgerAccountCategory: selectedRecord.ledgerCategory,
+          },
+        });
+      }
     }
-  };
+  }
+
 
   const navigateToEditPage = () => {
     if (selected.length === 1) {
       const selectedRecord = ledgerAccountCategory[selected[0]];
       const ledgerCategory = selectedRecord.ledgerCategory;
-      navigate(`/edit-Ledger-Account-Category/${selectedRecord.ledgerCategory}`, {
+      navigate(`/edit-ledger-account-category/${selectedRecord.id}`, {
         state: { from: from, LedgerAccountCategories: selectedRecord, ledgerCategory: ledgerCategory },
       });
     }
@@ -156,7 +194,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
             <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" /> Add
             </Button>
@@ -183,7 +221,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleEdit}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -194,7 +232,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleCopy}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>

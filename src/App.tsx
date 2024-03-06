@@ -186,10 +186,10 @@ function App() {
           }
         />
           <Route
-          path="/edit-Ledger-Account-Category/:LedgerCategory"
+          path="/edit-ledger-account-category/:id"
           element={
             <MainLayout>
-              <EditLedgerAccountCategory/>
+              <NewLedgerAccountCategory/>
             </MainLayout>
           }
         />

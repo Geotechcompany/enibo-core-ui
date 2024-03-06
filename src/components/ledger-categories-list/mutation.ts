@@ -20,7 +20,7 @@ export const CREATE_LEDGER_ACCOUNT_CATEGORIES = gql`
     }
   }
 `;
-export const UPDATE_LEDGER_CATEGORIES = gql`
+export const UPDATE_LEDGER_ACCOUNT_CATEGORIES = gql`
   mutation UpdateAccountCategory(
     $ledgerCategory: String!
     $description: String!

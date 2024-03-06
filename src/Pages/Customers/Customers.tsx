@@ -19,7 +19,7 @@ const Customers: FC<CustomersProps> = () => {
 
   const location = useLocation();
     const navigate = useNavigate();
-    const from = location.state?.from || { pathname: "/customers/new-customer" };
+    const from = location.state?.from || { pathname: "/customers/customer-wizard/" };
    
     const { data, loading: queryLoading, error: queryError } = useQuery(queryCustomersList);
 
