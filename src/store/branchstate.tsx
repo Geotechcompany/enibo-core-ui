@@ -3,8 +3,23 @@ import { Dispatch, FunctionComponent, ReactNode, SetStateAction, createContext, 
 
 interface BranchState {
     mode?: "ADD" | "COPY" | "EDIT"; 
-    branchTypeName: string;
+    branchId?: string;
+    branchName: string;
+    branchType: string;
     description: string;
+    branchCode: string;
+    SWIFTCode: string;
+    localBankCode: string;
+    country: string;
+    countrySubdivision: string;
+    streetName: string;
+    buildingNumber: string;
+    buildingName: string;
+    postalAddress: string;
+    email: string;
+    phoneNumber: string;
+    isHeadOfficeBranch: boolean;
+    headOfficeBranch?:string;
 }
 
 interface BranchProviderProps {

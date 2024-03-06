@@ -47,11 +47,8 @@ import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
-// import EditBranchTypes from "./Pages/Branches/EditBranchType";
-import EditBranch from "./Pages/Branches/EditBranch";
 import NewTransfer from "./Pages/Transfer/NewTransfer";
 import Wizard from "./components/customer-wizard";
-import EditLedgerAccountCategory from "./Pages/LedgerAccounts/EditLedgerAccountCategory";
 
 function App() {
   return (
@@ -132,10 +129,10 @@ function App() {
           }
         />
         <Route
-          path="administration/branches/edit-branch/:branchId"
+          path="/edit-branch/:branchId"
           element={
             <MainLayout>
-              <EditBranch/>
+              <NewBranch/>
             </MainLayout>
           }
         />

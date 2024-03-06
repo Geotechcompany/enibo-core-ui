@@ -21,6 +21,8 @@ query Branches {
     email
     isHeadOfficeBranch
     headOfficeBranch
+    createdAt
+    updatedAt
   }
 }`
 
