@@ -8,11 +8,13 @@ import queryBranchList from "@/components/branch-list/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { BranchForm } from "@/types/global";
 import { DELETE_BRANCH } from "@/components/branch-list/mutation";
+import { useBranchState } from "@/store/branchstate";
 
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
+  const { setState } = useBranchState();
   const [branches, setBranches] = useState<BranchForm[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,35 +43,6 @@ const Branches: FC<BranchesProps> = () => {
   }, [data, queryLoading, queryError, refetch]);
 
 
-  const handleEdit = () => {
-    if (selected.length === 1) {
-      const selectedRecord = branches[selected[0]];
-      navigate(`/administration/branches/edit-branch/${selectedRecord.branchId}`, {
-        state: {
-          from: from,
-          branchData: {
-            branchId: selectedRecord.branchId,
-            branchName: selectedRecord.branchName,
-            branchType: selectedRecord.branchType,
-            description: selectedRecord.description,
-            phoneNumber: selectedRecord.phoneNumber,
-            branchCode: selectedRecord.branchCode,
-            localBankCode: selectedRecord.localBankCode,
-            country: selectedRecord.country,
-            countrySubdivision: selectedRecord.countrySubdivision,
-            streetName: selectedRecord.streetName,
-            buildingNumber: selectedRecord.buildingNumber,
-            buildingName: selectedRecord.buildingName,
-            postalAddress: selectedRecord.postalAddress,
-            email: selectedRecord.email,
-            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
-            headOfficeBranch: selectedRecord.headOfficeBranch
-          }
-        }
-      });
-    }
-  };
-
 
   const handleDelete = async () => {
     if (selected.length) {
@@ -95,6 +68,113 @@ const Branches: FC<BranchesProps> = () => {
       }
     }
   };
+
+  const handleRedirect = (mode: string) => {
+    if (mode === "ADD") {
+      navigate(from, { replace: true })
+      setState({
+        branchId: "",
+        branchName: "",
+        branchType: "",
+        description: "",
+        phoneNumber: "",
+        branchCode: "",
+        SWIFTCode: "",
+        localBankCode: "",
+        country: "",
+        countrySubdivision: "",
+        streetName: "",
+        buildingNumber: "",
+        buildingName: "",
+        postalAddress: "",
+        email: "",
+        isHeadOfficeBranch: false,
+        headOfficeBranch: "",
+        mode: "ADD",
+      });
+    } else if (mode === "EDIT") {
+      if (selected.length === 1) {
+        navigateToEditPage();
+      }
+      setState({
+        branchId: "",
+        branchName: "",
+        branchType: "",
+        description: "",
+        phoneNumber: "",
+        branchCode: "",
+        SWIFTCode: "",
+        localBankCode: "",
+        country: "",
+        countrySubdivision: "",
+        streetName: "",
+        buildingNumber: "",
+        buildingName: "",
+        postalAddress: "",
+        email: "",
+        isHeadOfficeBranch: false,
+        headOfficeBranch: "",
+        mode: "EDIT",
+      });
+    } else if (mode === "COPY") {
+      if (selected.length === 1) {
+        const selectedRecord = branches[selected[0]];
+        setState({
+          branchId: selectedRecord.branchId,
+            branchName: selectedRecord.branchName,
+            branchType: selectedRecord.branchType,
+            description: selectedRecord.description,
+            phoneNumber: selectedRecord.phoneNumber,
+            branchCode: selectedRecord.branchCode,
+            SWIFTCode: selectedRecord.SWIFTCode,
+            localBankCode: selectedRecord.localBankCode,
+            country: selectedRecord.country,
+            countrySubdivision: selectedRecord.countrySubdivision,
+            streetName: selectedRecord.streetName,
+            buildingNumber: selectedRecord.buildingNumber,
+            buildingName: selectedRecord.buildingName,
+            postalAddress: selectedRecord.postalAddress,
+            email: selectedRecord.email,
+            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
+            headOfficeBranch: selectedRecord.headOfficeBranch,
+            mode: "COPY",
+        })
+        navigate("/administration/branches/new-branch", {
+          state: {
+            from: from,
+            branchId: selectedRecord.branchId,
+            branchName: selectedRecord.branchName,
+            branchType: selectedRecord.branchType,
+            description: selectedRecord.description,
+            phoneNumber: selectedRecord.phoneNumber,
+            branchCode: selectedRecord.branchCode,
+            localBankCode: selectedRecord.localBankCode,
+            country: selectedRecord.country,
+            countrySubdivision: selectedRecord.countrySubdivision,
+            streetName: selectedRecord.streetName,
+            buildingNumber: selectedRecord.buildingNumber,
+            buildingName: selectedRecord.buildingName,
+            postalAddress: selectedRecord.postalAddress,
+            email: selectedRecord.email,
+            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
+            headOfficeBranch: selectedRecord.headOfficeBranch
+          },
+        });
+      }
+    }
+  }
+
+  const navigateToEditPage = () => {
+    if (selected.length === 1) {
+      const selectedRecord = branches[selected[0]];
+      navigate(`/edit-branch/${selectedRecord.branchId}`, {
+        state: { from: from,
+          ...selectedRecord,
+        },
+      });
+    }
+  };
+
 
 
   return (
@@ -130,7 +210,7 @@ const Branches: FC<BranchesProps> = () => {
               size="sm" 
               variant="outline" 
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" />  Add
             </Button>
@@ -155,7 +235,7 @@ const Branches: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleEdit}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -165,7 +245,7 @@ const Branches: FC<BranchesProps> = () => {
               size="sm"
               variant="outline"
               className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={() => {}}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>

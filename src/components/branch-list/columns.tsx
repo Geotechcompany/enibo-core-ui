@@ -85,15 +85,6 @@ export const columns: ColumnDef<BranchForm>[] = [
     enableHiding: true,
   },
     {
-        accessorKey: "branchCode",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Branch Code" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("branchCode")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
         accessorKey: "SWIFTCode",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="SWIFT Code" />

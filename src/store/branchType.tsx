@@ -18,7 +18,7 @@ interface BranchContextType {
  
 export const BranchStateContext = createContext<BranchContextType | undefined>(undefined)
 
-const BranchProvider: FunctionComponent<BranchProviderProps> = ({children}: BranchProviderProps) => {
+const BranchTypeProvider: FunctionComponent<BranchProviderProps> = ({children}: BranchProviderProps) => {
     const [state, setState] = useState<BranchState | undefined >(undefined)
     const value: BranchContextType = {
         state,
@@ -31,9 +31,9 @@ const BranchProvider: FunctionComponent<BranchProviderProps> = ({children}: Bran
     );
 }
  
-export default BranchProvider;
+export default BranchTypeProvider;
 
-export const useBranchState = () => {
+export const useBranchTypeState = () => {
     const context = useContext(BranchStateContext)
 
     if(!context) {

@@ -14,7 +14,7 @@ import { UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { useBranchState } from "@/store/branch";
+import { useBranchTypeState } from "@/store/branchType";
 
 export const newBranchTypeSchema = z.object({
   branchTypeId: z.string().optional(),
@@ -31,7 +31,7 @@ interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   const { branchTypeId } = useParams<{ branchTypeId: string }>();
-  const { state, setState } = useBranchState();
+  const { state, setState } = useBranchTypeState();
   const isCopyMode = !state;
   const formMode = state?.mode
   console.log(state, formMode, "Form")
