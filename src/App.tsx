@@ -49,7 +49,6 @@ import Signup from "./Pages/SignUp/SignUp";
 import BranchType from "./Pages/Branches/BranchTypesPage";
 import NewTransfer from "./Pages/Transfer/NewTransfer";
 import Wizard from "./components/customer-wizard";
-import EditLedgerAccountCategory from "./Pages/LedgerAccounts/EditLedgerAccountCategory";
 
 function App() {
   return (

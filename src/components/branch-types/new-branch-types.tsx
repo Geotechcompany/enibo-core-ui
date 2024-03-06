@@ -286,7 +286,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
             >
               Cancel
             </Button>
-          </Link>
+          </Link> 
         </div>
       </form>
     </section>

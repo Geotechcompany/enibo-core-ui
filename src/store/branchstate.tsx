@@ -8,7 +8,7 @@ interface BranchState {
     branchType: string;
     description: string;
     branchCode: string;
-    SWIFTCode?: string;
+    SWIFTCode: string;
     localBankCode: string;
     country: string;
     countrySubdivision: string;

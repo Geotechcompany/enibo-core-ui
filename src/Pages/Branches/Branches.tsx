@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { BranchForm } from "@/types/global";
 import { DELETE_BRANCH } from "@/components/branch-list/mutation";
 import { useBranchState } from "@/store/branchstate";
+import { toast } from "@/components/ui/use-toast";
 
 
 interface BranchesProps {}
@@ -46,7 +47,24 @@ const Branches: FC<BranchesProps> = () => {
 
   const handleDelete = async () => {
     if (selected.length) {
-      if (window.confirm(`Confirm deletion of selected record/s`)) {
+      try {
+        toast({
+          title: "Confirm deletion",
+          description: (
+            <div className="text-black">
+              <div className="text-lg">
+                Confirm deletion of selected record/s
+              </div>
+              <div className="flex justify-end mt-4">
+              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
+                // Code to uncheck selected records
+                setSelected([]);
+                window.location.reload();
+                toast({}).dismiss();
+               
+              }}>Cancel</Button>
+              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+            onClick={async () => {
         try {
           const selectedBranchesIds = selected.map(branchesIndex => branches[branchesIndex].branchId);
   
@@ -65,10 +83,17 @@ const Branches: FC<BranchesProps> = () => {
         } catch (error) {
           console.error("Error deleting branch types:", error);
         }
-      }
-    }
-  };
-
+      }}
+      >Confirm</Button>
+  </div>
+    </div>
+  ),
+});
+} catch (error) {
+console.error("Error showing confirmation toast:", error);
+}
+}
+};
   const handleRedirect = (mode: string) => {
     if (mode === "ADD") {
       navigate(from, { replace: true })

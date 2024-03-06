@@ -156,15 +156,15 @@ export const columns: ColumnDef<BranchForm>[] = [
       enableSorting: true,
       enableHiding: true,
   },
-  {
-    accessorKey: "AllowedProductTypes",
-    header: ({ column }) => (
-    <DataTableColumnHeader column={column} title="Allowed Product Types" />
-    ),
-    cell: ({ row }) => <div className="">{row.getValue("AllowedProductTypes")}</div>,
-    enableSorting: true,
-    enableHiding: true,
-},
+//   {
+//     accessorKey: "AllowedProductTypes",
+//     header: ({ column }) => (
+//     <DataTableColumnHeader column={column} title="Allowed Product Types" />
+//     ),
+//     cell: ({ row }) => <div className="">{row.getValue("AllowedProductTypes")}</div>,
+//     enableSorting: true,
+//     enableHiding: true,
+// },
 {
   accessorKey: "email",
   header: ({ column }) => (
@@ -176,6 +176,7 @@ export const columns: ColumnDef<BranchForm>[] = [
 },
 {
   accessorKey: "isHeadOfficeBranch",
+  accessorFn: (row) => row.isHeadOfficeBranch ? "Yes" : "No",
   header: ({ column }) => (
   <DataTableColumnHeader column={column} title="isHeadOfficeBranch" />
   ),
