@@ -8,13 +8,13 @@ import { columns } from "@/components/branch-types/columns";
 import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { BranchTypes } from "@/types/global";
-import { useBranchState } from "@/store/branch";
+import { useBranchTypeState } from "@/store/branchType";
 import { toast } from "@/components/ui/use-toast";
 
 interface BranchesProps {}
 
 const BranchType: FC<BranchesProps> = () => {
-  const { setState} = useBranchState();
+  const { setState} = useBranchTypeState();
   const [branchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

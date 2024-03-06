@@ -8,14 +8,16 @@ import "remixicon/fonts/remixicon.css";
 import { ApolloProvider } from "@apollo/client";
 import client from "./store/index.ts";
 import { UserProvider } from "./types/userContext.tsx";
-import BranchProvider from "./store/branch.tsx";
+import BranchTypeProvider from "./store/branchType.tsx";
 import { AppProvider } from "./store/state.tsx";
 import LedgerProvider  from "./store/ledger.tsx";
+import BranchProvider from "./store/branchstate.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
       <UserProvider>
+        <BranchTypeProvider>
         <BranchProvider>
         <LedgerProvider>
           <BrowserRouter>
@@ -31,7 +33,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             </Routes>
           </BrowserRouter>
           </LedgerProvider>
-        </BranchProvider>
+          </BranchProvider>
+        </BranchTypeProvider>
       </UserProvider>
     </AppProvider>
   </React.StrictMode>
