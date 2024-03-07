@@ -74,7 +74,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
                   // Deleting selected ledger Account Categories
                   await Promise.all(
                     selectedledgerAccountCategoriesIds.map(async (id) => {
-                      await deleteAccountCategory({ variables: { id } });
+                      await deleteAccountCategory({ variables: { deleteAccountCategoryId: id  } });
                     })
                   );
           

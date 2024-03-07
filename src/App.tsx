@@ -320,6 +320,14 @@ function App() {
             </MainLayout>
           }
         />
+          <Route
+          path="/edit-kyc-type/:kycTypeId"
+          element={
+            <MainLayout>
+              <NewKYCType />
+            </MainLayout>
+          }
+        />
         <Route
           path="customers/account-mandate-types"
           element={
