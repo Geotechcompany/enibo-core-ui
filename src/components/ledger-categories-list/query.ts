@@ -7,6 +7,8 @@ query AccountCategories {
     ledgerCategory
     description
     categoryNumber
+    modifiedBy
+    modifiedOn
   }
 }`
 

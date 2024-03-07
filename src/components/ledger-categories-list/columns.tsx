@@ -81,4 +81,14 @@ export const columns: ColumnDef<LedgerCategory>[] = [
     enableHiding: true,
    
   },  
+  {
+    accessorKey: "modifiedBy",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="modifiedBy" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+   
+  },  
 ];
