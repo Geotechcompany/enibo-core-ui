@@ -34,7 +34,7 @@ export const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: "id",
-    accessorFn: (row) => row.business?.businessKYC || row.retail?.individualKYC,
+    accessorFn: (row) => row.customerId,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer ID" />
     ),

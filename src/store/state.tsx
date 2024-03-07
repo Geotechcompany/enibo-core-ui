@@ -61,8 +61,8 @@ signingRules: {
 }
 
 interface AppContextType {
-  state: AppState;
-  setState: Dispatch<SetStateAction<AppState>>;
+  appState: AppState;
+  setAppState: Dispatch<SetStateAction<AppState>>;
 }
 
 export const AppStateContext = createContext<AppContextType | undefined>(
@@ -75,7 +75,7 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   // Use useState with the initial state
-  const [state, setState] = useState<AppState>({
+  const [appState, setAppState] = useState<AppState>({
     // Initialize your state properties here
     customerType: "",
     retail: "",
@@ -107,8 +107,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   });
 
   const value: AppContextType = {
-    state,
-    setState,
+    appState,
+    setAppState,
   };
 
   return (

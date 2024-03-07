@@ -14,6 +14,7 @@ import { useState } from "react";
 import ExampleTable from "../Branches/DetailsTable";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAppState } from "@/store/state";
 
 const data = [
   { name: "Jan", amount: 150 },
@@ -60,6 +61,8 @@ export const branchDummyData = {
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Dashboard = () => {
+  const {appState} = useAppState();
+  console.log(appState, "State")
   const [selectedRiskRating, setSelectedRiskRating] = useState<string>("High");
 
   const handleRiskRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

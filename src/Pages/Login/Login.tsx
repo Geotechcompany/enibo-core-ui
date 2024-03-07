@@ -51,7 +51,7 @@ interface LoginProps {}
 const Login: FC<LoginProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null); // State to hold the error message
-  const {state,  setState } = useAppState();
+  const {appState,  setAppState } = useAppState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,9 +70,11 @@ const Login: FC<LoginProps> = () => {
       if (data && data.authenticate && data.authenticate.token) {
         localStorage.setItem("token", data.authenticate.token);
         localStorage.setItem("user", JSON.stringify(data.authenticate.user));
-        setState({
-          ...state,
-          user: data.authenticate.user
+        setAppState({
+          ...appState,
+          user: {
+            ...data.authenticate.user
+          }
         });
         setIsLoading(false);
         navigate(from, { replace: true });
