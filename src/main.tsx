@@ -12,6 +12,7 @@ import BranchTypeProvider from "./store/branchType.tsx";
 import { AppProvider } from "./store/state.tsx";
 import LedgerProvider  from "./store/ledger.tsx";
 import BranchProvider from "./store/branchstate.tsx";
+import KycProvider from "./store/kyc.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <BranchTypeProvider>
         <BranchProvider>
         <LedgerProvider>
+          <KycProvider>
           <BrowserRouter>
             <Routes>
               <Route
@@ -32,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               />
             </Routes>
           </BrowserRouter>
+          </KycProvider>
           </LedgerProvider>
           </BranchProvider>
         </BranchTypeProvider>
