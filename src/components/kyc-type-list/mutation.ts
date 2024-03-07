@@ -41,6 +41,7 @@ export const UPDATE_KYCType = gql`
     $kycTypeCode: String!
     $modifiedBy: String!
     $modifiedOn: String!
+    $kycTypeId: String
   ) {
     updateKYCType(
       kycTypeName: $kycTypeName
@@ -48,6 +49,7 @@ export const UPDATE_KYCType = gql`
       kycTypeCode: $kycTypeCode
       modifiedBy: $modifiedBy
       modifiedOn: $modifiedOn
+      kycTypeId: $kycTypeId
     ) {
       kycTypeName
       kycTypeDescription

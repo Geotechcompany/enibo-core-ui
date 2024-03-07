@@ -3,8 +3,10 @@ import { Dispatch, FunctionComponent, ReactNode, SetStateAction, createContext, 
 
 interface KycState {
     mode?: "ADD" | "COPY" | "EDIT"; 
+    kycTypeId: string;
+    kycTypeCode: string;
     kycTypeName: string;
-    KYCTypeDescription: string;
+    kycTypeDescription: string;
 }
 
 interface KycProviderProps {
