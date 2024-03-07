@@ -8,6 +8,20 @@ import {
 } from "react";
 
 interface AppState {
+  session: {
+    token: string;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      employeeNumber: string;
+      branch: string;
+      profile: string;
+    };
+    ip: string;
+    host: string;
+    userAgent: string;
+  }
   customerType: string;
   customer: string;
   retail: string;
