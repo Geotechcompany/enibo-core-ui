@@ -1,5 +1,4 @@
-
-  import { gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const CREATE_KycType = gql`
   mutation CreateKYCType(
@@ -25,20 +24,38 @@ export const CREATE_KycType = gql`
   }
 `;
 export const DELETE_KYCType = gql`
-mutation DeleteKYCType($kycTypeId: String!) {
-  deleteKYCType(kycTypeId: $kycTypeId) {
-    kycTypeName
-    kycTypeDescription
-    kycTypeCode
-    modifiedBy
-    modifiedOn
+  mutation DeleteKYCType($kycTypeId: String!) {
+    deleteKYCType(kycTypeId: $kycTypeId) {
+      kycTypeName
+      kycTypeDescription
+      kycTypeCode
+      modifiedBy
+      modifiedOn
+    }
   }
-}
 `;
-
-
-
-
-
-
-
+export const UPDATE_KYCType = gql`
+  mutation UpdateKYCType(
+    $kycTypeName: String!
+    $kycTypeDescription: String!
+    $kycTypeCode: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
+    $kycTypeId: String
+  ) {
+    updateKYCType(
+      kycTypeName: $kycTypeName
+      kycTypeDescription: $kycTypeDescription
+      kycTypeCode: $kycTypeCode
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+      kycTypeId: $kycTypeId
+    ) {
+      kycTypeName
+      kycTypeDescription
+      kycTypeCode
+      modifiedBy
+      modifiedOn
+    }
+  }
+`;

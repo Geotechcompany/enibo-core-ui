@@ -1,10 +1,17 @@
-import { FC, useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  CREATE_LEDGER_ACCOUNT_CATEGORIES,
+  UPDATE_LEDGER_ACCOUNT_CATEGORIES,
+} from "./ledger-categories-list/mutation";
+import queryaccountcategoriesList from "./ledger-categories-list/query";
 import {
   Select,
   SelectContent,
@@ -12,27 +19,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
-
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_LEDGER_ACCOUNT_CATEGORIES,
-  UPDATE_LEDGER_ACCOUNT_CATEGORIES,
-} from "./ledger-categories-list/mutation";
+import { useToast } from "./ui/use-toast";
 import { useLedgerState } from "@/store/ledger";
-import queryaccountcategoriesList from "./ledger-categories-list/query";
+import { useEffect, useState, FC } from "react";
 
 const LedgerCategorySchema = z.object({
+  id: z.string().optional(),
   ledgerCategory: z.string().min(3, { message: "Ledger Category is required" }),
   description: z
     .string()
     .min(3, { message: "Ledger Category Description is required" }),
   categoryNumber: z.string().min(1, { message: "Category Number is required" }),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
-
-  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
+  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type LedgerCategoryFormInputs = z.infer<typeof LedgerCategorySchema>;
@@ -44,14 +44,8 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   const { state, setState } = useLedgerState();
   const isCopyMode = !state;
   const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  console.log(state, formMode, "Form")
   const { toast } = useToast();
-  const [updateLedgerAccountCategoriesMutation] = useMutation(
-    UPDATE_LEDGER_ACCOUNT_CATEGORIES
-  );
-  const [createledgerAccountCategories] = useMutation(
-    CREATE_LEDGER_ACCOUNT_CATEGORIES
-  );
   const navigate = useNavigate();
   console.log(isCopyMode, "Copy Mode");
   const {
@@ -64,27 +58,45 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   } = useForm<LedgerCategoryFormInputs>({
     resolver: zodResolver(LedgerCategorySchema),
   });
+
+  const [updateLedgerAccountCategoriesMutation] = useMutation(
+    UPDATE_LEDGER_ACCOUNT_CATEGORIES
+  );
+  const [createledgerAccountCategoriesMutation] = useMutation(
+    CREATE_LEDGER_ACCOUNT_CATEGORIES
+  );
+
   const {
     data: LedgerAccountCategoriesData,
     loading: LedgerAccountCategoriesLoading,
   } = useQuery(queryaccountcategoriesList, {
-    variables: { id }, //
+    variables: { id: id }, //
   });
+  
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
   );
-  const [isFormModified, setIsFormModified] = useState(false);
+ 
+
   const handleEdit = async (data: LedgerCategoryFormInputs) => {
     try {
-      await updateLedgerAccountCategoriesMutation({
-        variables: {
-          ledgerCategory: data.ledgerCategory,
-          description: data.description,
-          categoryNumber: data.categoryNumber,
-          modifiedBy: data.modifiedBy,
-          modifiedOn: data.modifiedOn,
-        },
+      console.log(data, "Checking");
+      const input = {
+       updateAccountCategoryId: data.id,
+        ledgerCategory: data.ledgerCategory,
+        description: data.description,
+        categoryNumber: data.categoryNumber,
+        modifiedBy: data.modifiedBy,
+        modifiedOn: data.modifiedOn,
+      };
+      console.log(input);
+      const response = await updateLedgerAccountCategoriesMutation({
+        variables: input,
       });
+      console.log("Updated Ledger Data", response);
+      reset();
+      navigate(`/administration/ledger-management/ledger-account-categories`);
+
       toast({
         title: "Ledger Category Updated",
         description: (
@@ -106,8 +118,14 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
       navigate("/administration/ledger-management/ledger-account-categories");
     } catch (error: any) {
       const errorMessage =
-        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        (error.graphQLErrors &&
+          error.graphQLErrors[0] &&
+          error.graphQLErrors[0].extensions &&
+          error.graphQLErrors[0].extensions.response &&
+          error.graphQLErrors[0].extensions.response.body &&
+          error.graphQLErrors[0].extensions.response.body.ledgerCategory) ||
         "Unknown error";
+
       toast({
         title: "Error",
         description: `"Failed ${errorMessage}. Please try again."`,
@@ -118,23 +136,22 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
 
   const handleCreate = async (data: LedgerCategoryFormInputs) => {
     try {
-      const {
-        ledgerCategory,
-        description,
-        categoryNumber,
-        modifiedBy,
-        modifiedOn,
-      } = data;
-
-      await createledgerAccountCategories({
-        variables: {
-          ledgerCategory: ledgerCategory,
-          description: description || "N/A",
-          categoryNumber: categoryNumber,
-          modifiedBy,
-          modifiedOn,
-        },
+      console.log(data, "Checking");
+      const input = {
+        ledgerCategory: data.ledgerCategory,
+        description: data.description,
+        categoryNumber: data.categoryNumber,
+        modifiedBy: data.modifiedBy,
+        modifiedOn: data.modifiedOn,
+      };
+      console.log(input);
+      const response = await createledgerAccountCategoriesMutation({
+        variables: input,
       });
+      console.log("Created Ledger Data:", response);
+      reset();
+      navigate(`/administration/ledger-management/ledger-account-categories`);
+
       toast({
         title: "Ledger Category Created",
         description: (
@@ -152,25 +169,27 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
           </div>
         ),
       });
-      reset();
-      setState({
-        ledgerCategory: "",
-        description: "",
-        categoryNumber: "",
-      });
-      navigate("/administration/ledger-management/ledger-account-categories");
     } catch (error: any) {
       const errorMessage =
-        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        (error.graphQLErrors &&
+          error.graphQLErrors[0] &&
+          error.graphQLErrors[0].extensions &&
+          error.graphQLErrors[0].extensions.response &&
+          error.graphQLErrors[0].extensions.response.body &&
+          error.graphQLErrors[0].extensions.response.body.ledgerCategory) ||
         "Unknown error";
 
+      console.log(errorMessage, "ERR CHECK");
       toast({
         title: "Error",
-        description: `Failed ${errorMessage}. Please try again.`,
+        description: "Failed, ${errorMessage} Please try again.",
         variant: "destructive",
       });
     }
   };
+
+
+
   const onSubmit = async (data: LedgerCategoryFormInputs) => {
     if (formMode === "ADD" || formMode === "COPY") {
       handleCreate(data);
@@ -180,20 +199,6 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     }
   };
 
-  useEffect(() => {
-    setDefaultModifiedOn(new Date().toISOString());
-  }, []);
-
-  const cancelForm = () => {
-    setState({
-      ledgerCategory: "",
-      description: "",
-      categoryNumber: "",
-    });
-    toast({
-      title: "Form Cancelled",
-    });
-  };
   const LedgerAccountCategories =
     LedgerAccountCategoriesData?.accountCategories.find(
       (LedgerAccountCategories: { id: string | undefined }) =>
@@ -201,22 +206,26 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     );
 
   useEffect(() => {
+    setDefaultModifiedOn(new Date().toISOString());
+  }, []);
+
+  useEffect(() => {
     if (formMode === "COPY" && state) {
       const { ledgerCategory, description, categoryNumber } = state;
-
       setValue("ledgerCategory", ledgerCategory);
       setValue("categoryNumber", categoryNumber);
       setValue("description", description);
     } else if (formMode === "EDIT") {
       if (!LedgerAccountCategoriesLoading && LedgerAccountCategories) {
         const {
+          id,
           ledgerCategory,
           description,
           categoryNumber,
           modifiedBy,
           modifiedOn,
         } = LedgerAccountCategories;
-
+        setValue("id", id);
         setValue("ledgerCategory", ledgerCategory || "");
         setValue("description", description || "");
         setValue("categoryNumber", categoryNumber || "");
@@ -234,17 +243,20 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     LedgerAccountCategoriesLoading,
   ]);
 
-  useEffect(() => {
-    const handleFormChange = () => {
-      setIsFormModified(true);
-    };
 
-    window.addEventListener("input", handleFormChange);
 
-    return () => {
-      window.removeEventListener("input", handleFormChange);
-    };
-  }, []);
+
+  const cancelForm = () => {
+    setState({
+      
+      ledgerCategory: "",
+      description: "",
+      categoryNumber: "",
+    });
+    toast({
+      title: "LedgerCategories Form Cancelled",
+    });
+  };
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -260,7 +272,7 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
                     <SelectValue placeholder="Select ..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Sales">Sales </SelectItem>
+                    <SelectItem value="Sales">Sales</SelectItem>
                     <SelectItem value="Internal">Internal</SelectItem>
                   </SelectContent>
                 </Select>
@@ -321,15 +333,14 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
             )}
           </div>
         </div>
-        <div className="mt-4">
-          <Button
-            type="submit"
-            size="lg"
-            className="bg-[#36459C] hover:bg-[#253285]"
-            disabled={!isFormModified}
-          >
-            {formMode === "EDIT" ? "Update" : "Submit"}
-          </Button>
+        <div className="flex gap-2">
+        <Button
+              type="submit"
+              size="lg"
+              className="bg-[#36459C] hover:bg-[#253285]"
+            >
+              Submit
+            </Button>
           <Link
             to={`/administration/ledger-management/ledger-account-categories`}
           >
