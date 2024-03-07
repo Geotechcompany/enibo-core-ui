@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,11 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useMutation } from "@apollo/client";
-import CREATE_NEW_TRANSACTION_TYPE_MUTATION from "@/Pages/Transactions/TransactionMutation";
-import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { CREATE_NEW_TRANSACTION_TYPE_MUTATION, UPDATE_TRANSACTION_TYPE_MUTATION } from "@/Pages/Transactions/TransactionMutation";
+import { useTransactionTypeState } from "@/store/transactionTypesState";
+import queryTransactionTypesList from "./transaction-type-list/query";
 
 const transactionTypeSchema = z.object({
+  transactionTypeId: z.string().optional(),
   transactionTypeName: z
     .string()
     .min(3, { message: "Transaction Type Name is required" }),
@@ -37,7 +40,16 @@ type TransactionType = z.infer<typeof transactionTypeSchema>;
 interface NewTransactionTypeFormProps {}
 
 const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
+  const { transactionTypeId } = useParams<{ transactionTypeId: string }>();
+  const { state, setState } = useTransactionTypeState();
+  const isCopyMode = !state;
+  const formMode = state?.mode;
+  console.log(state, formMode, "Form");
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  console.log(isCopyMode, "Copy Mode");
+
   const {
     register,
     handleSubmit,
@@ -49,10 +61,16 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
   });
 
   const [createTransactionTypeMutation] = useMutation(CREATE_NEW_TRANSACTION_TYPE_MUTATION);
+  const [updateTransactionTypeMutation] = useMutation(UPDATE_TRANSACTION_TYPE_MUTATION);
 
-  const navigate = useNavigate();
+  const { data: transactionData, loading: transactionLoading } = useQuery(
+    queryTransactionTypesList,
+    {
+      variables: { transactionTypeId }, // Pass branchId as a variable to the query
+    }
+  );
 
-  const onSubmit = (async (data: TransactionType) => {
+  const handleCreate = async (data: TransactionType) => {
     try {
       await createTransactionTypeMutation({
         variables: {
@@ -85,7 +103,101 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
         description: "Failed to create transaction type. Please try again.",
       });
     }
-  });
+  }
+
+  const handleEdit = async (data: TransactionType) => {
+    try {
+      await updateTransactionTypeMutation({
+        variables: {
+          transactionTypeId: data.transactionTypeId,
+          transactionTypeName: data.transactionTypeName,
+          transactionTypeCode: data.transactionTypeCode,
+          description: data.description,
+          currency: data.currency,
+          modifiedBy: "tester",
+          modifiedOn: new Date().toISOString(), 
+        },
+      });
+      toast({
+        title: "Transaction Type Updated",
+        description: <div className="text-black">
+        <div className="text-lg">
+          Transaction Type {" "}
+          <Link to={`/administration/static-data/transaction-types`} className="underline text-blue-500">
+            {data.transactionTypeName}
+          </Link>
+           , has been successfully updated
+        </div>
+      </div>,
+      });
+      reset();
+      navigate("/administration/static-data/transaction-types"); 
+    } catch (error) {
+      console.error("Error updating transaction type:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update transaction type. Please try again.",
+      });
+    }
+  }
+
+
+  const onSubmit = async (data: TransactionType) => {
+    if (formMode === "ADD" || formMode === "COPY") {
+      handleCreate(data);
+    } else if (formMode === "EDIT") {
+      console.log("edit mode");
+      handleEdit(data);
+    }
+  };
+
+  const transaction = transactionData?.transactions?.find(
+    (transaction: { transactionTypeId: string | undefined }) => transaction.transactionTypeId === transactionTypeId
+  );
+
+   
+  useEffect(() => {
+    if (formMode === "COPY" && state) {
+      const {
+        transactionTypeName,
+        transactionTypeCode,
+        description,
+        currency,
+      } = transaction;
+      console.log(transactionTypeName, transactionTypeCode, description, currency);
+      setState({
+     ...state,
+        transactionTypeName: transactionTypeName,
+        transactionTypeCode: transactionTypeCode,
+        description: description,
+        currency: currency,
+      });
+    } else if (formMode === "EDIT") {
+      if (!transactionLoading && transaction) {
+        const {
+          transactionTypeId,
+          transactionTypeName,
+          transactionTypeCode,
+          description,
+          currency,
+          modifiedBy,
+          modifiedOn,
+        } = transaction;
+        setState({
+       ...state,
+          transactionTypeId: transactionTypeId,
+          transactionTypeName: transactionTypeName,
+          transactionTypeCode: transactionTypeCode,
+          description: description,
+          currency: currency,
+          modifiedBy: modifiedBy,
+          modifiedOn: modifiedOn,
+        });
+      }
+    } else return ;
+  }, [formMode, setState, state, transaction, transactionLoading])
+
+
 
   return (
     <section>
