@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { columns } from "@/components/transaction-type-list/columns";
 import { DataTable } from "@/components/datatable/data-table";
 import { FaPlus } from "react-icons/fa";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryTransactionTypesList from "@/components/transaction-list/query";
+import { useTransactionTypeState } from "@/store/transactionTypesState";
+import { DELETE_TRANSACTION_TYPE_MUTATION } from "./TransactionMutation";
+import { toast } from "@/components/ui/use-toast";
 
 interface TransactionTypesProps {}
 
 const TransactionTypesList: FC<TransactionTypesProps> = () => {
+  const { setState } = useTransactionTypeState();
   const [TransactionTypesList, setTransactionTypesList] = useState<TransactionType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +25,9 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
 
   const [sorting] = useState([{ id: "modifiedOn", desc: true }])
 
+  const [deleteTransactionType] = useMutation(DELETE_TRANSACTION_TYPE_MUTATION);
+  const [selected, setSelected] = useState<number[]>([]);
+
   useEffect(() => {
     if (data) {
       setTransactionTypesList(data.transactionTypes);
@@ -29,6 +36,142 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
     refetch();
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
+
+  const handleDelete = async () => {
+    if (selected.length) {
+      try {
+        toast({
+          title: "Confirm deletion",
+          description: (
+            <div className="text-black">
+              <div className="text-lg">
+                Confirm deletion of selected record/s
+              </div>
+              <div className="flex justify-end mt-4">
+                <Button
+                  size={"sm"}
+                  variant={"outline"}
+                  className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2"
+                  onClick={() => {
+                    // Code to uncheck selected records
+                    setSelected([]);
+                    window.location.reload();
+                    toast({}).dismiss();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size={"sm"}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+                  onClick={async () => {
+                    try {
+                      const selectedTransactionTypeIds = selected.map(
+                        (transactionTypeIndex) =>
+                        TransactionTypesList[transactionTypeIndex].transactionTypeId
+                      );
+
+                      await Promise.all(
+                        selectedTransactionTypeIds.map(async (transactionTypeId) => {
+                          await deleteTransactionType({
+                            variables: { transactionTypeId },
+                          });
+                        })
+                      );
+
+                      const updatedTransactionTypes = TransactionTypesList.filter(
+                        (transactionTypes) =>
+                          !selectedTransactionTypeIds.includes(
+                            transactionTypes.transactionTypeId
+                          )
+                      );
+                      setTransactionTypesList(updatedTransactionTypes);
+                      setSelected([]);
+                      window.location.reload();
+                    } catch (error) {
+                      console.error("Error deleting transaction types:", error);
+                    }
+                  }}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+          ),
+        });
+      } catch (error) {
+        console.error("Error showing confirmation toast:", error);
+      }
+    }
+  };
+
+  const handleRedirect = (mode: string) => {
+    if (mode === "ADD") {
+      navigate(from, { replace: true })
+      setState({
+        transactionTypeId: "",
+        transactionTypeName: "",
+        transactionTypeCode: "",
+        description: "",
+        currency: "",
+        modifiedBy: "",
+        modifiedOn: "",
+        mode: "ADD",
+      })
+    } else if (mode === "EDIT") {
+      if (selected.length === 1) {
+        navigateToEditPage();
+      }
+      setState({
+        transactionTypeId: "",
+        transactionTypeName: "",
+        transactionTypeCode: "",
+        description: "",
+        currency: "",
+        modifiedBy: "",
+        modifiedOn: "",
+        mode: "EDIT",
+      }) 
+    } else if (mode === "COPY") {
+      if (selected.length === 1) {
+        const selectedRecord = TransactionTypesList[selected[0]];
+        setState({
+          transactionTypeId: selectedRecord.transactionTypeId,
+          transactionTypeName: selectedRecord.transactionTypeName,
+          transactionTypeCode: selectedRecord.transactionTypeCode,
+          description: selectedRecord.description,
+          currency: selectedRecord.currency,
+          modifiedBy: selectedRecord.modifiedBy,
+          modifiedOn: selectedRecord.modifiedOn,
+          mode: "COPY",
+        })
+        navigate("/administration/static-data/transaction-types/new-transaction-type", {
+          state: {
+          from: from,
+          transactionTypeId: selectedRecord.transactionTypeId,
+          transactionTypeName: selectedRecord.transactionTypeName,
+          transactionTypeCode: selectedRecord.transactionTypeCode,
+          description: selectedRecord.description,
+          currency: selectedRecord.currency,
+          modifiedBy: selectedRecord.modifiedBy,
+          modifiedOn: selectedRecord.modifiedOn,
+          },
+        });
+      }
+    }
+  }
+
+
+  const navigateToEditPage = () => {
+    if (selected.length === 1) {
+      const selectedRecord = TransactionTypesList[selected[0]];
+      navigate(`/edit-transaction-type/${selectedRecord.transactionTypeId}`, {
+        state: { from: from,
+          ...selectedRecord,
+        },
+      });
+    }
+  };
 
  
   return (
@@ -74,7 +217,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
               size="sm"
               
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" />  Add
             </Button>
@@ -99,7 +242,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
               size="sm"
               variant="outline"
               className="border-[#36459C]"
-              onClick={() => {}}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -109,7 +252,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
               size="sm"
               variant="outline"
               className="border-[#36459C]"
-              onClick={() => {}}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>
@@ -120,7 +263,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
               size="sm"
               variant="outline"
               className="border-[#36459C]"
-              onClick={() => {}}
+              onClick={handleDelete}
             >
               Delete
             </Button>

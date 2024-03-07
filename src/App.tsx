@@ -153,6 +153,14 @@ function App() {
           }
         />
         <Route
+          path="/edit-product-type/:productTypeId"
+          element={
+            <MainLayout>
+              <NewProductType />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/static-data/fee-types"
           element={
             <MainLayout>
@@ -178,6 +186,14 @@ function App() {
         />
         <Route
           path="administration/static-data/transaction-types/new-transaction-type"
+          element={
+            <MainLayout>
+              <NewTransactionType />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/edit-transaction-type/:transactionTypeId"
           element={
             <MainLayout>
               <NewTransactionType />
