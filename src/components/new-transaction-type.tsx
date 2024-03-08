@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -33,6 +34,8 @@ const transactionTypeSchema = z.object({
   currency: z
   .string()
   .min(3, { message: "Currency is required" }),
+  modifiedBy: z.string().optional(),
+  modifiedOn: z.string().optional(),
 });
 
 type TransactionType = z.infer<typeof transactionTypeSchema>;
@@ -54,6 +57,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     control,
     formState: { errors },
   } = useForm<TransactionType>({
@@ -66,7 +70,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
   const { data: transactionData, loading: transactionLoading } = useQuery(
     queryTransactionTypesList,
     {
-      variables: { transactionTypeId }, // Pass branchId as a variable to the query
+      variables: { transactionTypeId  },
     }
   );
 
@@ -96,14 +100,23 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
       });
       reset();
       navigate("/administration/static-data/transaction-types"); 
-    } catch (error) {
-      console.error("Error creating transaction type:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create transaction type. Please try again.",
-      });
-    }
+    } catch (error: any) {
+      const errorMessage =
+      (error.graphQLErrors &&
+        error.graphQLErrors[0] &&
+        error.graphQLErrors[0].extensions &&
+        error.graphQLErrors[0].extensions.response &&
+        error.graphQLErrors[0].extensions.response.body &&
+        error.graphQLErrors[0].extensions.response.body.transactionTypeCode) ||
+      "Unknown error";
+    
+    toast({
+      title: "Error",
+      description: `"Failed, ${errorMessage} Please try again."`,
+      variant: "destructive",
+    });
   }
+};
 
   const handleEdit = async (data: TransactionType) => {
     try {
@@ -115,7 +128,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
           description: data.description,
           currency: data.currency,
           modifiedBy: "tester",
-          modifiedOn: new Date().toISOString(), 
+          modifiedOn: new Date().toISOString(),
         },
       });
       toast({
@@ -132,14 +145,23 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
       });
       reset();
       navigate("/administration/static-data/transaction-types"); 
-    } catch (error) {
-      console.error("Error updating transaction type:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update transaction type. Please try again.",
-      });
-    }
+    } catch (error: any) {
+      const errorMessage =
+      (error.graphQLErrors &&
+        error.graphQLErrors[0] &&
+        error.graphQLErrors[0].extensions &&
+        error.graphQLErrors[0].extensions.response &&
+        error.graphQLErrors[0].extensions.response.body &&
+        error.graphQLErrors[0].extensions.response.body.transactionTypeCode) ||
+      "Unknown error";
+    
+    toast({
+      title: "Error",
+      description: `"Failed, ${errorMessage} Please try again."`,
+      variant: "destructive",
+    });
   }
+};
 
 
   const onSubmit = async (data: TransactionType) => {
@@ -151,8 +173,8 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
     }
   };
 
-  const transaction = transactionData?.transactions?.find(
-    (transaction: { transactionTypeId: string | undefined }) => transaction.transactionTypeId === transactionTypeId
+  const transactionType = transactionData?.transactionTypes.find(
+    (transactionType: { transactionTypeId: string | undefined }) => transactionType.transactionTypeId === transactionTypeId
   );
 
    
@@ -163,40 +185,42 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
         transactionTypeCode,
         description,
         currency,
-      } = transaction;
-      console.log(transactionTypeName, transactionTypeCode, description, currency);
-      setState({
-     ...state,
-        transactionTypeName: transactionTypeName,
-        transactionTypeCode: transactionTypeCode,
-        description: description,
-        currency: currency,
-      });
+      } = state;
+      setValue("transactionTypeName", transactionTypeName);
+      setValue("transactionTypeCode", transactionTypeCode);
+      setValue("description", description);
+      setValue("currency", currency);
     } else if (formMode === "EDIT") {
-      if (!transactionLoading && transaction) {
+      if (!transactionLoading && transactionType) {
         const {
           transactionTypeId,
           transactionTypeName,
           transactionTypeCode,
           description,
           currency,
-          modifiedBy,
-          modifiedOn,
-        } = transaction;
-        setState({
-       ...state,
-          transactionTypeId: transactionTypeId,
-          transactionTypeName: transactionTypeName,
-          transactionTypeCode: transactionTypeCode,
-          description: description,
-          currency: currency,
-          modifiedBy: modifiedBy,
-          modifiedOn: modifiedOn,
-        });
+        } = transactionType;
+        setValue("transactionTypeId", transactionTypeId);
+        setValue("transactionTypeName", transactionTypeName || "");
+        setValue("transactionTypeCode", transactionTypeCode || "");
+        setValue("description", description || "");
+        setValue("currency", currency || "");
       }
+      console.log(transactionType, "TRANSACTION TYPE");
     } else return ;
-  }, [formMode, setState, state, transaction, transactionLoading])
+  }, [formMode, setState, setValue, state, transactionType, transactionLoading])
 
+
+  const cancelForm = () => {
+    setState({
+      transactionTypeId: "",
+      transactionTypeCode: "",
+      transactionTypeName: "",
+      description: "",
+      currency: "",
+      modifiedBy: "",
+      modifiedOn: "",
+    })
+  }
 
 
   return (
@@ -220,7 +244,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
             <Label htmlFor="transactionTypeCode">Transaction Type Code</Label>
             <Input
               id="transactionTypeCode"
-              type="text"
+              type="number"
               {...register("transactionTypeCode", { required: true })}
             />
             {errors.transactionTypeCode && (
@@ -269,11 +293,21 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
             )}
           </div>
         </div>
-        <div className="mt-4">
-          <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+        <div className="flex gap-2 mt-6">
+            <Button
+              type="submit"
+              size="lg"
+              className="bg-[#36459C] hover:bg-[#253285]"
+            >
+              Submit
+            </Button>
+          <Link
+            to={`/administration/static-data/transaction-types`}
+          >
+            <Button size="lg" onClick={cancelForm}>
+              Cancel
+            </Button>
+          </Link>
         </div>
       </form>
     </section>

@@ -15,7 +15,7 @@ interface TransactionTypesProps {}
 
 const TransactionTypesList: FC<TransactionTypesProps> = () => {
   const { setState } = useTransactionTypeState();
-  const [TransactionTypesList, setTransactionTypesList] = useState<TransactionType[]>([]);
+  const [transactionTypesList, setTransactionTypesList] = useState<TransactionType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
  const location = useLocation();
@@ -48,62 +48,44 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
                 Confirm deletion of selected record/s
               </div>
               <div className="flex justify-end mt-4">
-                <Button
-                  size={"sm"}
-                  variant={"outline"}
-                  className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2"
-                  onClick={() => {
-                    // Code to uncheck selected records
-                    setSelected([]);
-                    window.location.reload();
-                    toast({}).dismiss();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size={"sm"}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
-                  onClick={async () => {
-                    try {
-                      const selectedTransactionTypeIds = selected.map(
-                        (transactionTypeIndex) =>
-                        TransactionTypesList[transactionTypeIndex].transactionTypeId
-                      );
-
-                      await Promise.all(
-                        selectedTransactionTypeIds.map(async (transactionTypeId) => {
-                          await deleteTransactionType({
-                            variables: { transactionTypeId },
-                          });
-                        })
-                      );
-
-                      const updatedTransactionTypes = TransactionTypesList.filter(
-                        (transactionTypes) =>
-                          !selectedTransactionTypeIds.includes(
-                            transactionTypes.transactionTypeId
-                          )
-                      );
-                      setTransactionTypesList(updatedTransactionTypes);
-                      setSelected([]);
-                      window.location.reload();
-                    } catch (error) {
-                      console.error("Error deleting transaction types:", error);
-                    }
-                  }}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </div>
-          ),
-        });
-      } catch (error) {
-        console.error("Error showing confirmation toast:", error);
-      }
-    }
-  };
+              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
+                // Code to uncheck selected records
+                setSelected([]);
+                window.location.reload();
+                toast({}).dismiss();
+               
+              }}>Cancel</Button>
+              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+            onClick={async () => {
+        try {
+          const selectedTransactionsIds = selected.map(transactionsIndex => transactionTypesList[transactionsIndex].transactionTypeId);
+  
+          await Promise.all(
+            selectedTransactionsIds.map(async (transactionTypeId) => {
+              await deleteTransactionType({ variables: { transactionTypeId} });
+            })
+          );
+  
+          const updatedTransactionTypes = transactionTypesList.filter(
+            (transactionTypesList) => !selectedTransactionsIds.includes(transactionTypesList.transactionTypeId)
+          );
+          setTransactionTypesList(updatedTransactionTypes);
+          setSelected([]);
+          window.location.reload();
+        } catch (error) {
+          console.error("Error deleting transaction types:", error);
+        }
+      }}
+      >Confirm</Button>
+  </div>
+    </div>
+  ),
+});
+} catch (error) {
+console.error("Error showing confirmation toast:", error);
+}
+}
+};
 
   const handleRedirect = (mode: string) => {
     if (mode === "ADD") {
@@ -134,7 +116,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
       }) 
     } else if (mode === "COPY") {
       if (selected.length === 1) {
-        const selectedRecord = TransactionTypesList[selected[0]];
+        const selectedRecord = transactionTypesList[selected[0]];
         setState({
           transactionTypeId: selectedRecord.transactionTypeId,
           transactionTypeName: selectedRecord.transactionTypeName,
@@ -164,7 +146,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
 
   const navigateToEditPage = () => {
     if (selected.length === 1) {
-      const selectedRecord = TransactionTypesList[selected[0]];
+      const selectedRecord = transactionTypesList[selected[0]];
       navigate(`/edit-transaction-type/${selectedRecord.transactionTypeId}`, {
         state: { from: from,
           ...selectedRecord,
@@ -231,7 +213,8 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
             ) : (
               <DataTable
                 columns={columns}
-                data={TransactionTypesList}
+                data={transactionTypesList}
+                onRowSelect={setSelected} 
                 sorting={sorting} 
               />
             )}
@@ -241,7 +224,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={()=>handleRedirect("EDIT")}
             >
               Edit
@@ -251,7 +234,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
               onClick={()=>handleRedirect("COPY")}
             >
               Copy
@@ -262,7 +245,7 @@ const TransactionTypesList: FC<TransactionTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
+              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
               onClick={handleDelete}
             >
               Delete

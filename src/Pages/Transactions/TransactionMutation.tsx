@@ -29,17 +29,17 @@ export const CREATE_NEW_TRANSACTION_TYPE_MUTATION = gql`
 `;
 
 export const DELETE_TRANSACTION_TYPE_MUTATION = gql`
-mutation DeleteTransactionType($transactionTypeId: String!) {
-  deleteTransactionType(transactionTypeId: $transactionTypeId) {
-    transactionTypeId
-    transactionTypeName
-    transactionTypeCode
-    description
-    currency
-    modifiedBy
-    modifiedOn
+  mutation DeleteTransactionType($transactionTypeId: String!) {
+    deleteTransactionType(transactionTypeId: $transactionTypeId) {
+      transactionTypeId
+      transactionTypeName
+      transactionTypeCode
+      description
+      currency
+      modifiedBy
+      modifiedOn
+    }
   }
-}
 `;
 
 export const UPDATE_TRANSACTION_TYPE_MUTATION = gql`

@@ -118,7 +118,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         // AllowedProductTypes: newProductType,
         email: data.email,
         isHeadOfficeBranch: data.isHeadOfficeBranch === "yes" ? true : false,
-        headOfficeBranch: data.headOfficeBranch,
+        headOfficeBranch: data.headOfficeBranch ? data.headOfficeBranch : "N/A",
       };
       console.log(input);
       const response = await updateBranchMutation({
