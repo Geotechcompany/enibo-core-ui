@@ -50,11 +50,11 @@ export const columns: ColumnDef<KYCType>[] = [
   enableHiding: true,
 },
 {
-  accessorKey: "KYCTypeDescription",
+  accessorKey: "kycTypeDescription",
   header: ({ column }) => (
   <DataTableColumnHeader column={column} title="Description" />
   ),
-  cell: ({ row }) => <div className="">{row.getValue("KYCTypeDescription")}</div>,
+  cell: ({ row }) => <div className="">{row.getValue("kycTypeDescription")}</div>,
   enableSorting: true,
   enableHiding: true,
 },
@@ -78,5 +78,14 @@ export const columns: ColumnDef<KYCType>[] = [
   enableHiding: true,
  
 },  
-  
+{
+  accessorKey: "modifiedBy",
+  header: ({ column }) => (
+  <DataTableColumnHeader column={column} title="modifiedBy" />
+  ),
+  cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
+  enableSorting: true,
+  enableHiding: true,
+ 
+},  
 ];
