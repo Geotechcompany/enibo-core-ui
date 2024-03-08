@@ -49,7 +49,7 @@ type ProductTypeInput = z.infer<typeof productTypeSchema>;
 interface NewProductTypeFormProps {}
 
 const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
-  const { id } = useParams<{ id: string }>();
+  const { productTypeId } = useParams<{ productTypeId: string }>();
   const { state, setState } = useProductTypeState();
   const isCopyMode = !state;
   const formMode = state?.mode;
@@ -90,7 +90,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const { data: productTypeData, loading: productTypeLoading } = useQuery(
     queryProductList,
     {
-      variables: { productTypeId: id }, // Pass productTypeId as a variable to the query
+      variables: { productTypeId }, // Pass productTypeId as a variable to the query
     }
   );
 
@@ -146,7 +146,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     
     toast({
       title: "Error",
-      description: `"Failed, ${errorMessage}. Please try again."`,
+      description: `"Failed, ${errorMessage} Please try again."`,
       variant: "destructive",
     });
   }
@@ -204,7 +204,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     
     toast({
       title: "Error",
-      description: `"Failed, ${errorMessage}. Please try again."`,
+      description: `"Failed, ${errorMessage} Please try again."`,
       variant: "destructive",
     });
   }
@@ -238,8 +238,8 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     }
   }, [data, queryLoading, queryError]);
 
-  const productType = productTypeData?.productType?.find(
-    (productType: {productTypeId: string | undefined}) => productType.productTypeId === id
+  const productType = productTypeData?.productTypes.find(
+    (productType: {productTypeId: string | undefined}) => productType.productTypeId === productTypeId
   );
 
   useEffect(() => {
@@ -271,6 +271,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     } else if (formMode === "EDIT") {
       if (!productTypeLoading && productType && state) {
         const {
+        productTypeId,
         productTypeName,
         description,
         active,
@@ -286,6 +287,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         modifiedBy,
         modifiedOn
       } = productType;
+      setValue("productTypeId", productTypeId);
       setValue("productTypeName", productTypeName);
       setValue("description", description);
       setValue("active", active);
