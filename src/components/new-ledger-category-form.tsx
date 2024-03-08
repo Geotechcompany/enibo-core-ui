@@ -294,7 +294,7 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
               type="text"
               className="h-12 text-base bg-blue-50"
               autoComplete="false"
-              defaultValue={"User"}
+              defaultValue={"modifiedBy"}
             />
             {errors.modifiedBy && (
               <span className="text-red-500">{errors.modifiedBy.message}</span>
@@ -333,7 +333,8 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
             )}
           </div>
         </div>
-        <div className="flex gap-2">
+    
+        <div className="flex gap-2 pt-4">
         <Button
               type="submit"
               size="lg"
