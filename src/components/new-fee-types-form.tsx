@@ -254,7 +254,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
   useEffect(() => {
     if (formMode === "COPY" && state) {
       const {
-        feeTypeId,
+        // feeTypeId,
         fixedRate,
         feeTypeName,
         effectiveDate,
