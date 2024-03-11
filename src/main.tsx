@@ -15,6 +15,8 @@ import BranchProvider from "./store/branchstate.tsx";
 import ProductTypeProvider from "./store/productTypeState.tsx";
 import TransactionTypeProvider from "./store/transactionTypesState.tsx";
 import KycProvider from "./store/kyc.tsx";
+import FeeProvider from "./store/feestate.tsx";
+import MandateProvider from "./store/mandatestate.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -26,6 +28,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <TransactionTypeProvider>
                 <LedgerProvider>
                 <KycProvider>
+                  <FeeProvider>
+                    <MandateProvider>
                   <BrowserRouter>
                     <Routes>
                       <Route
@@ -38,6 +42,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                       />
                     </Routes>
                   </BrowserRouter>
+                  </MandateProvider>
+                  </FeeProvider>
                  </KycProvider>
                 </LedgerProvider>
               </TransactionTypeProvider>

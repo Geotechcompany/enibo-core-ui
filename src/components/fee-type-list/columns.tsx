@@ -30,7 +30,7 @@ export const columns: ColumnDef<FeeType>[] = [
   },
     {
         accessorKey: "feeTypeId",
-        header: "Fee Code",
+        header: "feeTypeId",
         cell: ({ row }) => <div className="">{row.getValue("feeTypeId")}</div>,
         enableSorting: true,
         enableHiding: true,
@@ -77,6 +77,12 @@ export const columns: ColumnDef<FeeType>[] = [
         enableSorting: true,
         enableHiding: true,
     },
- 
+    {
+      accessorKey: "modifiedOn",
+      header: "modifiedOn",
+      cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+  },
 
 ];
