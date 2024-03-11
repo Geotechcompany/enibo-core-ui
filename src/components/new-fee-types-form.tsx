@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ import { UPDATE_FEE_TYPE_MUTATION } from "./fee-type-list/mutation";
 import queryFeeTypesList from "./fee-type-list/query";
 import { useFeeState } from "@/store/feestate";
 import { z } from "zod";
+import queryTransactionTypesList from "./transaction-type-list/query";
 
 const feeTypeSchema = z.object({
   // feeTypeId: z.string().min(3, { message: "Fee id is required" }),
@@ -74,49 +76,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
     new Date().toISOString()
   );
 
-  // const onSubmit = (async (data: FeeTypeInput) => {
-  //     try {
-  //       await createfeetypeMutation({
-  //         variables: {
-  //           feeTypeName: data.feeTypeName,
-  //           description: data.description,
-  //           transactionTypes: [data.transactionType],
-  //           paymentFrequency: data.paymentFrequency,
-  //           effectiveDate: data.effectiveDate,
-  //           fixedRate: parseFloat(data.fixedRate),
-  //           modifiedBy: "tester",
-  //           modifiedOn: data.modifiedOn,
-  //         },
-  //       });
-  //       toast({
-  //         title: "Fee Type Created",
-  //         description: <div className="text-black">
-  //         <div className="text-lg">
-  //           New Fee Type {" "}
-  //           <Link to={`/administration/static-data/fee-types`} className="underline text-blue-500">
-  //             {data.feeTypeName}
-  //           </Link>
-  //            , has been successfully created
-  //         </div>
-  //       </div>,
-  //       });
-  //       reset();
-  //       navigate("/administration/static-data/fee-types");
-  //     } catch (error) {
-  //       console.error("Error creating fee type:", error);
-  //       toast({
-  //         title: "Error",
-  //         description: "Failed to create fee type. Please try again.",
-  //       });
-  //     }
-  //   });
-
-  //   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
-  //     new Date().toISOString()
-  //   );
-  //   useEffect(() => {
-  //     setDefaultModifiedOn(new Date().toISOString());
-  //   }, []);
+  const [transactionTypes, setTransactionTypes] = useState<any[]>([]);
 
   const handleEdit = async (data: FeeTypeInput) => {
     try {
@@ -312,6 +272,20 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
       title: "FeeTypes Form Cancelled",
     });
   };
+
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryTransactionTypesList);
+
+  useEffect(() => {
+    if (data) {
+      setTransactionTypes(data.transactionTypes);
+    }
+  }, [data, queryLoading, queryError]);
+
+
   return (
     <section>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -356,16 +330,22 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
               Corresponding Transaction Type
             </Label>
             <Controller
-              name="transactionTypes"
               control={control}
+              name="transactionTypes"
               render={({ field: { onChange, value } }) => (
-                <Select onValueChange={onChange} value={value}>
+                <Select value={value} onValueChange={onChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select ..." />
+                    <SelectValue placeholder="Select Transaction Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Customer">Customer</SelectItem>
-                    <SelectItem value="Internal">Internal</SelectItem>
+                    {transactionTypes.map((type) => (
+                      <SelectItem
+                        key={type.transactionTypeName}
+                        value={type.transactionTypeName}
+                      >
+                        {type.transactionTypeName}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
