@@ -71,31 +71,74 @@ export const CREATE_MANDATE_TYPE = gql`
     signature: string;
  */
 export const CREATE_INDIVIDUAL_KYC = gql`
-mutation CreateIndividualKYC($kycType: String!, $designation: String!, $firstName: String!, $middleName: String!, $lastName: String!, $phoneNumber: String!, $emailAddress: String!, $postalAddress: String!, $physicalAddress: String!, $country: String!, $taxNumber: String!, $idType: String!, $idNumber: String!, $sex: String!, $nationality: String!, $riskRating: String!, $attachDocumentsField: String!, $signature: String!, $modifiedBy: String!, $modifiedOn: String!) {
-  createIndividualKYC(kycType: $kycType, designation: $designation, firstName: $firstName, middleName: $middleName, lastName: $lastName, phoneNumber: $phoneNumber, emailAddress: $emailAddress, postalAddress: $postalAddress, physicalAddress: $physicalAddress, country: $country, taxNumber: $taxNumber, idType: $idType, idNumber: $idNumber, sex: $sex, nationality: $nationality, riskRating: $riskRating, attachDocumentsField: $attachDocumentsField, signature: $signature, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
-    IndividualKYCId
-    kycType
-    designation
-    firstName
-    middleName
-    lastName
-    phoneNumber
-    emailAddress
-    postalAddress
-    physicalAddress
-    country
-    taxNumber
-    idType
-    idNumber
-    sex
-    nationality
-    riskRating
-    attachDocumentsField
-    signature
-    modifiedBy
-    modifiedOn
+  mutation CreateIndividualKYC(
+    $kycType: String!
+    $designation: String!
+    $firstName: String!
+    $middleName: String!
+    $lastName: String!
+    $phoneNumber: String!
+    $emailAddress: String!
+    $postalAddress: String!
+    $physicalAddress: String!
+    $country: String!
+    $taxNumber: String!
+    $idType: String!
+    $idNumber: String!
+    $sex: String!
+    $nationality: String!
+    $riskRating: String!
+    $attachDocumentsField: String!
+    $signature: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
+  ) {
+    createIndividualKYC(
+      kycType: $kycType
+      designation: $designation
+      firstName: $firstName
+      middleName: $middleName
+      lastName: $lastName
+      phoneNumber: $phoneNumber
+      emailAddress: $emailAddress
+      postalAddress: $postalAddress
+      physicalAddress: $physicalAddress
+      country: $country
+      taxNumber: $taxNumber
+      idType: $idType
+      idNumber: $idNumber
+      sex: $sex
+      nationality: $nationality
+      riskRating: $riskRating
+      attachDocumentsField: $attachDocumentsField
+      signature: $signature
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      IndividualKYCId
+      kycType
+      designation
+      firstName
+      middleName
+      lastName
+      phoneNumber
+      emailAddress
+      postalAddress
+      physicalAddress
+      country
+      taxNumber
+      idType
+      idNumber
+      sex
+      nationality
+      riskRating
+      attachDocumentsField
+      signature
+      modifiedBy
+      modifiedOn
+    }
   }
-}`;
+`;
 
 /**
  * 
@@ -223,60 +266,145 @@ export const DELETE_ACCOUNT_CATEGORY_TYPE = gql`
 `;
 
 export const CREATE_MANDATE = gql`
-mutation CreateMandate($signatory: String!, $category: String!, $mandateType: String!, $modifiedBy: String!, $modifiedOn: String!) {
-  createMandate(signatory: $signatory, category: $category, mandateType: $mandateType, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
-    signatory
-    category
-    mandateType
-    modifiedBy
-    modifiedOn
-    mandateId
+  mutation CreateMandate(
+    $signatory: String!
+    $category: String!
+    $mandateType: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
+  ) {
+    createMandate(
+      signatory: $signatory
+      category: $category
+      mandateType: $mandateType
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      signatory
+      category
+      mandateType
+      modifiedBy
+      modifiedOn
+      mandateId
+    }
   }
-}
-`
+`;
 
 export const CREATE_RETAIL = gql`
-mutation CreateRetail($retailType: String!, $individualKyc: String!, $productTypes: String!, $accountCurrency: String!, $riskRating: String!, $accountMandates: [String!]!, $modifiedBy: String!, $modifiedOn: String!) {
-  createRetail(retailType: $retailType, individualKYC: $individualKyc, productTypes: $productTypes, accountCurrency: $accountCurrency, riskRating: $riskRating, accountMandates: $accountMandates, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
-    retailId
-    retailType
-    individualKYC
-    productTypes
-    accountCurrency
-    riskRating
-    accountMandates
-    modifiedBy
-    modifiedOn
+  mutation CreateRetail(
+    $retailType: String!
+    $individualKyc: String!
+    $productTypes: String!
+    $accountCurrency: String!
+    $riskRating: String!
+    $accountMandates: [String!]!
+    $modifiedBy: String!
+    $modifiedOn: String!
+  ) {
+    createRetail(
+      retailType: $retailType
+      individualKYC: $individualKyc
+      productTypes: $productTypes
+      accountCurrency: $accountCurrency
+      riskRating: $riskRating
+      accountMandates: $accountMandates
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      retailId
+      retailType
+      individualKYC
+      productTypes
+      accountCurrency
+      riskRating
+      accountMandates
+      modifiedBy
+      modifiedOn
+    }
   }
-}
-`
+`;
 
 export const CREATE_CUSTOMER = gql`
-mutation CreateCustomer($customerType: String, $retail: String, $business: String, $accountMandates: [String], $modifiedBy: String, $modifiedOn: String) {
-  createCustomer(customerType: $customerType, retail: $retail, business: $business, accountMandates: $accountMandates, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
-    customerId
-    customerType
-    retail
-    business
-    accountMandates
-    modifiedBy
-    modifiedOn
+  mutation CreateCustomer(
+    $customerType: String
+    $retail: String
+    $business: String
+    $accountMandates: [String]
+    $modifiedBy: String
+    $modifiedOn: String
+  ) {
+    createCustomer(
+      customerType: $customerType
+      retail: $retail
+      business: $business
+      accountMandates: $accountMandates
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      customerId
+      customerType
+      retail
+      business
+      accountMandates
+      modifiedBy
+      modifiedOn
+    }
   }
-}
-`
+`;
 
 export const CREATE_MANDATE_RULE = gql`
-mutation CreateMandateRule($customerId: String!, $mandateType: String!, $signingRule: String!, $minimumTransactionAmount: String!, $maximumTransactionAmount: String!, $maximumDailyLimit: String!, $modifiedBy: String!, $modifiedOn: String!) {
-  createMandateRule(customerId: $customerId, mandateType: $mandateType, signingRule: $signingRule, minimumTransactionAmount: $minimumTransactionAmount, maximumTransactionAmount: $maximumTransactionAmount, maximumDailyLimit: $maximumDailyLimit, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
-    customerId
-    mandateType
-    signingRule
-    minimumTransactionAmount
-    maximumTransactionAmount
-    maximumDailyLimit
-    modifiedBy
-    modifiedOn
+  mutation CreateMandateRule(
+    $customerId: String!
+    $mandateType: String!
+    $signingRule: String!
+    $minimumTransactionAmount: String!
+    $maximumTransactionAmount: String!
+    $maximumDailyLimit: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
+  ) {
+    createMandateRule(
+      customerId: $customerId
+      mandateType: $mandateType
+      signingRule: $signingRule
+      minimumTransactionAmount: $minimumTransactionAmount
+      maximumTransactionAmount: $maximumTransactionAmount
+      maximumDailyLimit: $maximumDailyLimit
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      customerId
+      mandateType
+      signingRule
+      minimumTransactionAmount
+      maximumTransactionAmount
+      maximumDailyLimit
+      modifiedBy
+      modifiedOn
+    }
   }
-}
-`
+`;
 
+export const UPDATE_MANDATE_TYPE = gql`
+  mutation UpdateMandateType(
+    $mandateTypeName: String!
+    $mandateTypeDescription: String!
+    $mandateTypeCode: String!
+    $modifiedBy: String!
+    $modifiedOn: String!
+  ) {
+    updateMandateType(
+      mandateTypeName: $mandateTypeName
+      mandateTypeDescription: $mandateTypeDescription
+      mandateTypeCode: $mandateTypeCode
+      modifiedBy: $modifiedBy
+      modifiedOn: $modifiedOn
+    ) {
+      mandateTypeName
+      mandateTypeDescription
+      mandateTypeCode
+      modifiedBy
+      modifiedOn
+    }
+  }
+`;

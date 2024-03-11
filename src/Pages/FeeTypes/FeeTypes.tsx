@@ -5,13 +5,17 @@ import { columns } from "@/components/fee-type-list/columns";
 import { FeeType } from "@/types/global";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryFeeTypesList from "@/components/fee-type-list/query";
+import { DELETE_FEE_TYPE_LIST } from "@/components/fee-type-list/mutation";
+import { toast } from "@/components/ui/use-toast";
+import { useFeeState } from "@/store/feestate";
 
 interface FeeProps {}
 
-const FeeTypes: FC<FeeProps> = () => {
-  const [FeeTypes, setFeeTypes] = useState<FeeType[]>([]);
+const feeTypes: FC<FeeProps> = () => {
+  const { setState} = useFeeState();
+  const [feeTypes, setfeeTypes] = useState<FeeType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sorting] = useState([{ id: "modifiedOn", desc: true }])
@@ -26,13 +30,145 @@ const FeeTypes: FC<FeeProps> = () => {
     
     useEffect(() => {
       if (data) {
-        setFeeTypes(data.feeTypes);
+        setfeeTypes(data.feeTypes);
       }
       setLoading(queryLoading);
       refetch();
       setError(queryError ? queryError.message : null);
     }, [data, queryLoading, queryError, refetch]);
+    const [deleteFeeType] = useMutation(DELETE_FEE_TYPE_LIST);
+    const [selected, setSelected] = useState<number[]>([]);
+   const handleDelete = async () => {
+  if (selected.length) {
+    try {
+      toast({
+        title: "Confirm deletion",
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              Confirm deletion of selected record/s
+            </div>
+            <div className="flex justify-end mt-4">
+              <Button
+                size={"sm"}
+                variant={"outline"}
+                className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2"
+                onClick={() => {
+                  // Code to uncheck selected records
+                  setSelected([]);
+                  window.location.reload();
+                  toast({}).dismiss();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                size={"sm"}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+                onClick={async () => {
+                  try {
+                    // Extracting feeTypeIds from selected rows
+                    const selectedFeeTypeIds = selected.map(
+                      (selectedIndex) => feeTypes[selectedIndex].feeTypeId
+                    );
+                    // Deleting selected feeTypes
+                    await Promise.all(
+                      selectedFeeTypeIds.map(async (feeTypeId) => {
+                        await deleteFeeType({ variables: { feeTypeId: feeTypeId } });
+                      })
+                    );
+
+                    // Filter out deleted items from UI
+                    const updatedfeeTypes = feeTypes.filter(
+                      (feeType) => !selectedFeeTypeIds.includes(feeType.feeTypeId)
+                    );
+                    setfeeTypes(updatedfeeTypes);
+                    setSelected([]);
+                    toast({}).dismiss();
+                    window.location.reload();
+                  } catch (error) {
+                    console.error("Error deleting fee types:", error);
+                  }
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        ),
+      });
+    } catch (error) {
+      console.error("Error showing confirmation toast:", error);
+    }
+  }
+};
+
   
+
+  
+    const handleRedirect = (mode: string) => {
+      if (mode === "ADD") {
+        navigate(from, { replace: true })
+        setState({
+          feeTypeId:"",
+          feeTypeName: "",
+          description:"",
+          transactionTypes:[""],
+          paymentFrequency:"",
+          effectiveDate:"",
+          fixedRate:0.00,
+          mode: "ADD",
+        });
+      } else if (mode === "EDIT") {
+        if (selected.length === 1) {
+          navigateToEditPage();
+        }
+        setState({
+          feeTypeId:"",
+          feeTypeName: "",
+          description:"",
+          transactionTypes:[""],
+          paymentFrequency:"",
+          effectiveDate:"",
+          fixedRate:0.00,
+          mode: "EDIT",
+        });
+      } else if (mode === "COPY") {
+        if (selected.length === 1) {
+          const selectedRecord = feeTypes[selected[0]];
+          setState({
+            feeTypeId: selectedRecord.feeTypeId,
+            feeTypeName: selectedRecord.feeTypeName,
+           description: selectedRecord.description,
+           transactionTypes: selectedRecord.transactionTypes,
+           paymentFrequency: selectedRecord.paymentFrequency,
+           effectiveDate: new Date(selectedRecord.effectiveDate).toISOString().split('T')[0], // Format the date here
+
+            fixedRate: selectedRecord.fixedRate,
+            mode: "COPY",
+          })
+          navigate(`/edit-fee-type/${selectedRecord.feeTypeId}`,  {
+            state: {
+              from: from,
+              feeTypeName: selectedRecord,
+              description: selectedRecord.description,
+              transactionTypes: selectedRecord.transactionTypes,
+            },
+          });
+        }
+      }
+    }
+  
+  
+    const navigateToEditPage = () => {
+      if (selected.length === 1) {
+        const selectedRecord = feeTypes[selected[0]];
+        const feeTypeName = selectedRecord.feeTypeName;
+        navigate(`/edit-fee-type/${selectedRecord.feeTypeId}`, {
+          state: { from: from, feeTypes: selectedRecord, feeTypeName: feeTypeName},
+        });
+      }
+    };
   return (
     <div>
       <div className="mx-4">
@@ -76,7 +212,7 @@ const FeeTypes: FC<FeeProps> = () => {
               size="sm"
               
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" />  Add
             </Button>
@@ -90,8 +226,9 @@ const FeeTypes: FC<FeeProps> = () => {
             ) : (
               <DataTable
                 columns={columns}
-                data={FeeTypes}
+                data={feeTypes}
                 sorting={sorting} 
+                onRowSelect={setSelected}
               />
             )}
               </div>
@@ -101,8 +238,8 @@ const FeeTypes: FC<FeeProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -111,8 +248,8 @@ const FeeTypes: FC<FeeProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>
@@ -122,8 +259,11 @@ const FeeTypes: FC<FeeProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${
+                selected.length === 0 ? "hidden" : "border-[#36459C] "
+              }`}
+              onClick={handleDelete}
+            
             >
               Delete
             </Button>
@@ -135,4 +275,4 @@ const FeeTypes: FC<FeeProps> = () => {
 };
 
 
-export default FeeTypes;
+export default feeTypes;

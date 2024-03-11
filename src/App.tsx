@@ -176,6 +176,14 @@ function App() {
             </MainLayout>
           }
         />
+          <Route
+          path="/edit-fee-type/:feeTypeId"
+          element={
+            <MainLayout>
+              <NewFeeTypes />
+            </MainLayout>
+          }
+        />
         <Route
           path="administration/static-data/transaction-types"
           element={
@@ -354,6 +362,14 @@ function App() {
         />
         <Route
           path="customers/account-mandate-types/new-mandate-type"
+          element={
+            <MainLayout>
+              <NewCustomerMandateType />
+            </MainLayout>
+          }
+        />
+         <Route
+          path="/edit-mandate-types/:mandateTypeId"
           element={
             <MainLayout>
               <NewCustomerMandateType />
