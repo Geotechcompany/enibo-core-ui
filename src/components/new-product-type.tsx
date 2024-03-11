@@ -261,7 +261,10 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       setValue("active", active);
       setValue("interestBearing", interestBearing);
       setValue("fixedInterestRate",  (fixedInterestRate).toString());
-      setValue("effectiveDate", effectiveDate);
+      setValue(
+        "effectiveDate",
+        effectiveDate ? effectiveDate.split("T")[0] : ""
+      ); // Format the effectiveDate here
       setValue("fees", (fees).toString());
       setValue("feeTypes", feeTypes.toString());
       setValue("riskRating", riskRating);
@@ -293,7 +296,10 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       setValue("active", active);
       setValue("interestBearing", interestBearing);
       setValue("fixedInterestRate", fixedInterestRate);
-      setValue("effectiveDate", effectiveDate);
+      setValue(
+        "effectiveDate",
+        effectiveDate ? effectiveDate.split("T")[0] : ""
+      ); // Format the effectiveDate here
       setValue("fees", fees);
       setValue("feeTypes", feeTypes);
       setValue("riskRating", riskRating);
