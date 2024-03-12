@@ -67,5 +67,13 @@ export const columns: ColumnDef<MandateType>[] = [
       enableSorting: true,
       enableHiding: true,
   },
-  
+  {
+    accessorKey: "modifiedOn",
+    header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="ModifiedOn" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+},
 ];

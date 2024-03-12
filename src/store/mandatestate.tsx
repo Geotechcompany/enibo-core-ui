@@ -3,7 +3,7 @@ import { Dispatch, FunctionComponent, ReactNode, SetStateAction, createContext, 
 
 interface MandateState {
     mode?: "ADD" | "COPY" | "EDIT"; 
-    mandateTypeId: string;
+    // mandateTypeId: string;
     mandateTypeCode: string;
     mandateTypeName: string;
     mandateTypeDescription: string;
