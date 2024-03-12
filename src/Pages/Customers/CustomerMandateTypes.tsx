@@ -8,10 +8,14 @@ import { useMutation, useQuery } from "@apollo/client";
 import queryMandateList from "@/components/mandate-type-list/query";
 import { columns } from "@/components/mandate-type-list/columns";
 import { DELETE_MANDATE_TYPE } from "@/types/mutations";
+import { useMandateState } from "@/store/mandatestate";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CustomerMandateTypesProps {}
 
 const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
+  const { setState} = useMandateState();
+  const { toast } = useToast();
   const [MandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
@@ -27,8 +31,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
     loading: queryLoading,
     error: queryError, refetch
   } = useQuery(queryMandateList);
-  const [deleteMandateType] = useMutation(DELETE_MANDATE_TYPE);
-  const [selected, setSelected] = useState<number[]>([]);
+ 
 
   useEffect(() => {
     if (data) {
@@ -39,32 +42,118 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
 
+  const [deleteMandateType] = useMutation(DELETE_MANDATE_TYPE);
+  const [selected, setSelected] = useState<number[]>([]);
+
+ 
+  
+
   const handleDelete = async () => {
     if (selected.length) {
-      // Show confirmation dialog
-      if (window.confirm(`Confirm deletion of selected record/s`)) {
-        try {
-          // Extracting mandate type IDs from selected array
-          const selectedMandateTypeIds = selected.map(MandateTypeIndex => MandateTypes[MandateTypeIndex].mandateTypeId);
-  
-          // Deleting selected mandate types
-          await Promise.all(
-            selectedMandateTypeIds.map(async (mandateTypeId) => {
-              await deleteMandateType({ variables: { mandateTypeId } });
-            })
-          );
-  
-          // Filter out deleted items from UI
-          const updatedMandateTypes = MandateTypes.filter(
-            (MandateType) => !selectedMandateTypeIds.includes(MandateType.mandateTypeId)
-          );
-          setMandateTypes(updatedMandateTypes);
-          setSelected([]);
-          window.location.reload();
-        } catch (error) {
-          console.error("Error deleting mandate types:", error);
-        }
+      try {
+        toast({
+          title: "Confirm deletion",
+         description: (
+            <div className="text-black">
+              <div className="text-lg">
+                Confirm deletion of selected record/s
+              </div>
+              <div className="flex justify-end mt-4">
+              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
+                // Code to uncheck selected records
+                setSelected([]);
+                window.location.reload();
+                toast({}).dismiss();
+               
+              }}>Cancel</Button>
+              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
+            onClick={async () => {
+                try {
+                  // Extracting ledger categories IDs from selected array
+                  const selectedmandateTypeIds = selected.map(
+                    (mandateTypesIndex) =>
+                      MandateTypes[mandateTypesIndex].mandateTypeId
+                  );
+                  // Deleting selected ledger Account Categories
+                  await Promise.all(
+                    selectedmandateTypeIds.map(async (mandateTypeId) => {
+                      await deleteMandateType({ variables: { mandateTypeId  } });
+                    })
+                  );
+          
+                  // Filter out deleted items from UI
+                  const updatedmandateTypes = MandateTypes.filter(
+                    (mandateTypes) => !selectedmandateTypeIds.includes(mandateTypes.mandateTypeId)
+                  );
+                  setMandateTypes(updatedmandateTypes);
+                  setSelected([]);
+                  toast({}).dismiss();
+                  window.location.reload();
+                } catch (error) {
+                  console.error("Error deleting ledger Account Categories:", error);
+                }
+              }}
+              >Confirm</Button>
+          </div>
+            </div>
+          ),
+        });
+      } catch (error) {
+        console.error("Error showing confirmation toast:", error);
       }
+    }
+  };
+
+  const handleRedirect = (mode: string) => {
+    if (mode === "ADD") {
+      navigate(from, { replace: true })
+      setState({
+        mandateTypeId:"",
+       mandateTypeName: "",
+       mandateTypeCode:"",
+        mandateTypeDescription: "",
+        mode: "ADD",
+      });
+    } else if (mode === "EDIT") {
+      if (selected.length === 1) {
+        navigateToEditPage();
+      }
+      setState({
+        mandateTypeId:"",
+       mandateTypeName: "",
+       mandateTypeCode:"",
+        mandateTypeDescription: "",
+        mode: "EDIT",
+      });
+    } else if (mode === "COPY") {
+      if (selected.length === 1) {
+        const selectedRecord = MandateTypes[selected[0]];
+        setState({
+          mandateTypeId: selectedRecord.mandateTypeId,
+         mandateTypeName: selectedRecord.mandateTypeName,
+         mandateTypeCode: selectedRecord.mandateTypeCode,
+          mandateTypeDescription: selectedRecord.mandateTypeDescription,
+          mode: "COPY",
+        })
+        navigate("/customers/account-mandate-types/new-mandate-type", {
+          state: {
+            from: from,
+            MandateTypes: selectedRecord,
+            mandateTypes: selectedRecord.mandateTypeName,
+          },
+        });
+      }
+    }
+  }
+
+
+  const navigateToEditPage = () => {
+    if (selected.length === 1) {
+      const selectedRecord = MandateTypes[selected[0]];
+      const mandateTypeName = selectedRecord.mandateTypeName;
+      navigate(`/edit-mandate-types/${selectedRecord.mandateTypeId}`, {
+        state: { from: from, MandateTypes: selectedRecord, mandateTypeName: mandateTypeName },
+      });
     }
   };
   return (
@@ -99,7 +188,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
             <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={() => navigate(from, { replace: true })}
+              onClick={()=>handleRedirect("ADD")}
             >
               <FaPlus className="mr-1 text-white" /> Add
             </Button>
@@ -120,8 +209,9 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+           
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
+              onClick={()=>handleRedirect("EDIT")}
             >
               Edit
             </Button>
@@ -130,8 +220,8 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
             <Button
               size="sm"
               variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
+              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
+              onClick={()=>handleRedirect("COPY")}
             >
               Copy
             </Button>
