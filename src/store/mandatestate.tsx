@@ -1,46 +1,64 @@
-import { Dispatch, FunctionComponent, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
-
-
-interface MandateState {
-    mode?: "ADD" | "COPY" | "EDIT"; 
-    mandateTypeId: string;
+import {
+    Dispatch,
+    FunctionComponent,
+    ReactNode,
+    SetStateAction,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+  } from "react";
+  
+  interface MandateState {
+    mode?: "ADD" | "COPY" | "EDIT";
     mandateTypeCode: string;
     mandateTypeName: string;
     mandateTypeDescription: string;
-}
-
-interface MandateProviderProps {
-    children?: ReactNode
-}
-
-interface MandateContextType {
+  }
+  
+  interface MandateProviderProps {
+    children?: ReactNode;
+  }
+  
+  interface MandateContextType {
     state: MandateState | undefined;
     setState: Dispatch<SetStateAction<MandateState | undefined>>;
-}
- 
-export const MandateStateContext = createContext<MandateContextType | undefined>(undefined)
-
-const MandateProvider: FunctionComponent<MandateProviderProps> = ({children}: MandateProviderProps) => {
-    const [state, setState] = useState<MandateState | undefined >(undefined)
+  }
+  
+  export const MandateStateContext = createContext<MandateContextType | undefined>(undefined);
+  
+  const MandateProvider: FunctionComponent<MandateProviderProps> = ({ children }: MandateProviderProps) => {
+    const [state, setState] = useState<MandateState | undefined>(() => {
+      const storedState = localStorage.getItem("mandateState");
+      // Check if the retrieved value is "undefined"
+      return storedState && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
+    });
+  
+    useEffect(() => {
+      localStorage.setItem("mandateState", JSON.stringify(state));
+    }, [state]);
+  
     const value: MandateContextType = {
-        state,
-        setState,
-    }
-    return (  
-        <MandateStateContext.Provider value={value}>
+      state,
+      setState,
+    };
+  
+    return (
+      <MandateStateContext.Provider value={value}>
         {children}
-        </MandateStateContext.Provider>
+      </MandateStateContext.Provider>
     );
-}
- 
-export default MandateProvider;
-
-export const useMandateState = () => {
-    const context = useContext(MandateStateContext)
-
-    if(!context) {
-        throw new Error("")
+  };
+  
+  export default MandateProvider;
+  
+  export const useMandateState = () => {
+    const context = useContext(MandateStateContext);
+  
+    if (!context) {
+      throw new Error("useMandateState must be used within a MandateProvider");
     }
-
-    return context
-}
+  
+    return context;
+  };
+  
