@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -22,6 +23,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { useEffect, useState } from "react";
+import { DataTableActions } from "./data-table-actions";
 
 export interface SortingState {
   id: string;
@@ -36,6 +38,9 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   sorting?: SortingState[];
   onRowSelect?: (ids: number[]) => void;
+  handleEdit: (id: string) => void;
+  handleCopy: (selectedRows: Row<TData>[]) => void;
+  handleDelete: (selectedRows: Row<TData>[]) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +48,9 @@ export function DataTable<TData, TValue>({
   data,
   sorting,
   onRowSelect,
+  handleEdit,
+  handleCopy,
+  handleDelete,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] =
@@ -86,7 +94,11 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} colSpan={header.colSpan} className="p-0">
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="p-0"
+                  >
                     {header.isPlaceholder ? null : (
                       <div className="pl-2">
                         {flexRender(
@@ -130,6 +142,12 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <DataTableActions
+        table={table}
+        onEdit={handleEdit}
+        onCopy={handleCopy}
+        onDelete={handleDelete}
+      />
       <DataTablePagination table={table} />
     </div>
   );

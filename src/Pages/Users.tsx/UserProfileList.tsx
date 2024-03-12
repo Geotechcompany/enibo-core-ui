@@ -1,21 +1,100 @@
 import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import userProfileList from "@/components/user-profiles/userprofile.json"
-import { UserProfiles } from "@/components/user-profiles/schema";
+
+
 import { columns } from "@/components/user-profiles/columns";
+import { queryUserProfiles } from "@/types/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_USER_PROFILE } from "@/types/mutations";
+import { Row } from "@tanstack/react-table";
+import { toast } from "@/components/ui/use-toast";
+import DeleteWarning from "@/components/deleteWarning";
+
+export type UserProfile = {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  modifiedBy: string;
+  modifiedOn: string;
+}
 
 interface UsersProps {}
 
 const UserProfile: FC<UsersProps> = () => {
-
-  const users: UserProfiles[] =  userProfileList;
+ const [userProfiles, setUserProfiles] = useState([]);
+ const [loading, setLoading] = useState<boolean>(false);
+ const [error, setError] = useState<string | null>(null);
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+    refetch,
+  } = useQuery(queryUserProfiles);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/user-management/profile-list/profile-form" };
+
+  const [deleteUserProfile] = useMutation(DELETE_USER_PROFILE);
+  const deleteRows = async (selectedRows: Row<UserProfile>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      return deleteUserProfile({ variables: { deleteProfileId: row.original.id } });
+    });
+    
+    const results = await Promise.all(deletePromises);
+    
+    if (results){
+      toast({
+        title: "Profile Deleted",
+        description: `"The selected user profiles(${selectedRows.length}) have been successfully deleted."`,
+      });
+      window.location.reload()
+    }
+  }
+  const handleDelete = async (selectedRows: Row<UserProfile>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
+
+  const handleCopy = (selectedRows: Row<UserProfile>[]) => {
+    localStorage.setItem("profile", JSON.stringify(selectedRows[0].original));
+    navigate(from, { replace: true });
+  };
+  const handleEdit = (id: string) => {
+    console.log(id)
+    navigate(`/administration/user-management/profile-list/${id}`);
+  };
+
+  useEffect(() => {
+    if (data) {
+      setUserProfiles(data.profiles);
+    }
+    setLoading(queryLoading);
+    refetch();
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError, refetch]);
+  
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
   
   return (
     <div>
@@ -54,10 +133,13 @@ const UserProfile: FC<UsersProps> = () => {
             </div>
         </div>
         <div>
-        {users && (
+        {userProfiles && (
             <DataTable
               columns={columns}
-                data={users}
+              data={userProfiles}
+              handleDelete={handleDelete}
+              handleCopy={handleCopy}
+              handleEdit={handleEdit}
             />
             )}
         </div>

@@ -6,8 +6,12 @@ import { FaPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userColumns } from "@/components/user-details/columns";
 import { UserDetailsType } from "@/types/global";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryUsersList from "@/components/user-details/query";
+import { Row } from "@tanstack/react-table";
+import { DELETE_USER } from "@/types/mutations";
+import { toast } from "@/components/ui/use-toast";
+import DeleteWarning from "@/components/deleteWarning";
 
 interface UsersProps {}
 
@@ -22,6 +26,46 @@ const Users: FC<UsersProps> = () => {
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/user-details/user-details-form" };
   const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryUsersList);
+  const handleEdit = (id: string) => {
+    navigate(`/administration/user-details/${id}`);
+  };
+
+  const handleCopy = (selectedRows: Row<UserDetailsType>[]) => {
+    localStorage.setItem("copyUser", JSON.stringify(selectedRows[0].original));
+    navigate(from, { replace: true });
+  };
+
+  const [deleteUser] = useMutation(DELETE_USER)
+  const deleteRows = async (selectedRows: Row<UserDetailsType>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      return deleteUser({ variables: { deleteUserId: row.original.id } });
+    });
+    
+    const results = await Promise.all(deletePromises);
+    
+    if (results){
+      toast({
+        title: "Profile Deleted",
+        description: `"The selected user profiles(${selectedRows.length}) have been successfully deleted."`,
+      });
+      window.location.reload()
+    }
+  }
+  const handleDelete = async (selectedRows: Row<UserDetailsType>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -77,6 +121,9 @@ const Users: FC<UsersProps> = () => {
               columns={userColumns}
               data={users}
               sorting={sorting} 
+              handleEdit={handleEdit}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
             />
           )}
         </div>

@@ -132,7 +132,7 @@ function App() {
           path="/edit-branch/:branchId"
           element={
             <MainLayout>
-              <NewBranch/>
+              <NewBranch />
             </MainLayout>
           }
         />
@@ -212,7 +212,7 @@ function App() {
           path="/edit-ledger-account-category/:id"
           element={
             <MainLayout>
-              <NewLedgerAccountCategory/>
+              <NewLedgerAccountCategory />
             </MainLayout>
           }
         />
@@ -332,7 +332,7 @@ function App() {
           path="customers/kyc-types/business-form"
           element={
             <MainLayout>
-              <NewKYCBusinessForm/>
+              <NewKYCBusinessForm />
             </MainLayout>
           }
         />
@@ -344,7 +344,7 @@ function App() {
             </MainLayout>
           }
         />
-          <Route
+        <Route
           path="/edit-kyc-type/:kycTypeId"
           element={
             <MainLayout>
@@ -384,11 +384,11 @@ function App() {
             </MainLayout>
           }
         />
-         <Route
+        <Route
           path="/administration/countries-list"
           element={
             <MainLayout>
-             <CountriesList />
+              <CountriesList />
             </MainLayout>
           }
         />
@@ -396,7 +396,7 @@ function App() {
           path="/administration/countries-list/countries-details-form"
           element={
             <MainLayout>
-             <CountryDetails />
+              <CountryDetails />
             </MainLayout>
           }
         />
@@ -404,7 +404,7 @@ function App() {
           path="/administration/currencies-list"
           element={
             <MainLayout>
-             <CurrenciesList/>
+              <CurrenciesList />
             </MainLayout>
           }
         />
@@ -412,7 +412,7 @@ function App() {
           path="/administration/currencies-list/currencies-details-form"
           element={
             <MainLayout>
-            <CurrenciesDetail />
+              <CurrenciesDetail />
             </MainLayout>
           }
         />
@@ -420,7 +420,7 @@ function App() {
           path="/administration/static-data/calendar-list"
           element={
             <MainLayout>
-             <CalendarList />
+              <CalendarList />
             </MainLayout>
           }
         />
@@ -428,67 +428,90 @@ function App() {
           path="/administration/static-data/calendar-list/calendar-details-form"
           element={
             <MainLayout>
-             <CalendarDetail />
+              <CalendarDetail />
             </MainLayout>
           }
         />
         <Route
-        path="/administration/user-management/profile-list"
-        element={
-          <MainLayout>
-            <UserProfile />
-          </MainLayout>
-        }
-          />
-           <Route
-        path="/administration/user-management/profile-list/profile-form"
-        element={
-          <MainLayout>
-            <NewProfile />
-          </MainLayout>
-        }
-          />
-          <Route
-        path="/administration/user-details"
-        element={
-          <MainLayout>
-            <Users />
-          </MainLayout>
-        }
-          />
-          <Route
-        path="/administration/user-details/user-details-form"
-        element={
-          <MainLayout>
-            <NewUser />
-          </MainLayout>
-        }
-          />
-          <Route
-        path="/administration/app-settings"
-        element={
-          <MainLayout>
-           <AppSettingsList />
-          </MainLayout>
-        }
-          />
-          <Route
-        path="/administration/app-settings/app-details"
-        element={
-          <MainLayout>
-           <AppSettingsDetails />
-          </MainLayout>
-        }
-          />
+          path="/administration/user-management/profile-list"
+          element={
+            <MainLayout>
+              <UserProfile />
+            </MainLayout>
+          }
+        />
         <Route
-        path="/customers/customer-wizard/*"
-        element={
-          <MainLayout>
-           <Wizard />
-          </MainLayout>
-        }
-          />
-         
+          path="/administration/user-management/profile-list/profile-form"
+          element={
+            <MainLayout>
+              <NewProfile />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/user-management/profile-list/:id"
+          element={
+            <MainLayout>
+              <NewProfile />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/user-details"
+          element={
+            <MainLayout>
+              <Users />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/user-details/user-details-form"
+          element={
+            <MainLayout>
+              <NewUser />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/user-details/:id"
+          element={
+            <MainLayout>
+              <NewUser />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/app-settings"
+          element={
+            <MainLayout>
+              <AppSettingsList />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/app-settings/app-details"
+          element={
+            <MainLayout>
+              <AppSettingsDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/administration/app-settings/:id"
+          element={
+            <MainLayout>
+              <AppSettingsDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/customers/customer-wizard/*"
+          element={
+            <MainLayout>
+              <Wizard />
+            </MainLayout>
+          }
+        />
       </Routes>
     </ThemeProvider>
   );

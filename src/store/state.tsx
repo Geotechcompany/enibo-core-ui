@@ -21,6 +21,7 @@ interface AppState {
     ip: string;
     host: string;
     userAgent: string;
+    country_code: string;
   }
   customerType: string;
   customer: string;
@@ -91,6 +92,22 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   // Use useState with the initial state
   const [appState, setAppState] = useState<AppState>({
     // Initialize your state properties here
+   
+    session: {
+      token: "",
+      user: {
+        id: "",
+        username: "",
+        email: "",
+        employeeNumber: "",
+        branch: "",
+        profile: "",
+      },
+      ip: "",
+      host: "",
+      userAgent: "",
+      country_code: "",
+    },
     customerType: "",
     retail: "",
     customer: "",

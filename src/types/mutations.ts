@@ -408,3 +408,135 @@ export const UPDATE_MANDATE_TYPE = gql`
     }
   }
 `;
+export const CREATE_APP_SETTING = gql`
+mutation CreateSetting($name: String!, $value: String!, $description: String!, $hidden: Boolean!, $modifiedBy: String!) {
+  createSetting(name: $name, value: $value, description: $description, hidden: $hidden, modifiedBy: $modifiedBy) {
+    id
+    name
+    value
+    description
+    hidden
+    modifiedBy
+    modifiedOn
+    createdAt
+    updatedAt
+  }
+}
+`
+
+export const DELETE_APP_SETTING = gql`
+mutation DeleteSetting($deleteSettingId: String!) {
+  deleteSetting(id: $deleteSettingId) {
+    id
+    name
+    value
+    description
+    hidden
+    modifiedBy
+    modifiedOn
+    createdAt
+    updatedAt
+  }
+}
+`
+
+export const UPDATE_APP_SETTING = gql`
+mutation UpdateSetting($updateSettingId: String!, $name: String!, $value: String!, $description: String!, $hidden: Boolean!, $modifiedBy: String!) {
+  updateSetting(id: $updateSettingId, name: $name, value: $value, description: $description, hidden: $hidden, modifiedBy: $modifiedBy) {
+    id
+    name
+    value
+    description
+    hidden
+    modifiedBy
+    modifiedOn
+    createdAt
+    updatedAt
+  }
+}
+`
+
+export const CREATE_USER_PROFILE = gql`
+mutation CreateProfile($name: String!, $description: String, $permissions: [String], $modifiedBy: String) {
+  createProfile(name: $name, description: $description, permissions: $permissions, modifiedBy: $modifiedBy) {
+    id
+    name
+    description
+    permissions
+    modifiedBy
+    modifiedOn
+  }
+}
+`
+
+export const DELETE_USER_PROFILE = gql`
+mutation DeleteProfile($deleteProfileId: String!) {
+  deleteProfile(id: $deleteProfileId) {
+    id
+    name
+    description
+    permissions
+    modifiedBy
+    modifiedOn
+  }
+}
+`
+
+export const UPDATE_USER = gql`
+mutation UpdateUser($updateUserId: String!, $username: String!, $firstName: String!, $middleName: String!, $lastName: String!, $email: String!, $password: String!, $confirmPassword: String!, $phoneNumber: String!, $employeeNumber: String!, $branch: String!, $profile: String!, $documentAttachment: String!, $modifiedBy: String!, $modifiedOn: String!) {
+  updateUser(id: $updateUserId, username: $username, firstName: $firstName, middleName: $middleName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword, phoneNumber: $phoneNumber, employeeNumber: $employeeNumber, branch: $branch, profile: $profile, documentAttachment: $documentAttachment, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
+    id
+    username
+    firstName
+    middleName
+    lastName
+    email
+    password
+    confirmPassword
+    phoneNumber
+    employeeNumber
+    branch
+    profile {
+      id
+      name
+      description
+      permissions
+      modifiedBy
+      modifiedOn
+    }
+    documentAttachment
+    modifiedBy
+    modifiedOn
+  }
+}
+`
+
+export const DELETE_USER = gql`
+mutation DeleteUser($deleteUserId: String!) {
+  deleteUser(id: $deleteUserId) {
+    id
+    username
+    firstName
+    middleName
+    lastName
+    email
+    password
+    confirmPassword
+    phoneNumber
+    employeeNumber
+    branch
+    profile {
+      id
+      name
+      description
+      permissions
+      modifiedBy
+      modifiedOn
+    }
+    documentAttachment
+    modifiedBy
+    modifiedOn
+  }
+}
+`
+

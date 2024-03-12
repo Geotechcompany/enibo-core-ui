@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 type urlItem = {
   name: string;
@@ -20,9 +21,9 @@ const AdminNavigationCard: FC<AdminNavigationCardProps> = ({
         <h3 className="text-base uppercase">{title}</h3>
       </div>
       <div className="flex flex-col gap-1 mb-2">
-        {urlItems.map((item, index) => (
+        {urlItems.map((item) => (
           <>
-            <Link key={index} to={item.url} className="py-1 hover:bg-gray-300">
+            <Link key={uuidv4()} to={item.url} className="py-1 hover:bg-gray-300">
               {item.name}
             </Link>
           </>

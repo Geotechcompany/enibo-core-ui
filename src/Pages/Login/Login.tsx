@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,26 +17,33 @@ import Logo from "@/components/logo";
 import { useAppState } from "@/store/state";
 
 const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    authenticate(email: $email, password: $password) {
-      token
-      user {
+mutation Authenticate($email: String!, $password: String!) {
+  authenticate(email: $email, password: $password) {
+    token
+    user {
+      id
+      username
+      firstName
+      middleName
+      lastName
+      email
+      phoneNumber
+      employeeNumber
+      branch
+      profile {
         id
-        username
-        firstName
-        middleName
-        lastName
-        email
-        phoneNumber
-        employeeNumber
-        branch
-        profile
-        documentAttachment
+        name
+        description
+        permissions
         modifiedBy
         modifiedOn
       }
+      documentAttachment
+      modifiedBy
+      modifiedOn
     }
   }
+}
 `;
 
 export const LoginSchema = z.object({
@@ -64,6 +71,29 @@ const Login: FC<LoginProps> = () => {
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
   });
+
+  const getUserData = async () => {
+    //cors headers
+    const userData = await fetch("https://ifconfig.io/all.json",{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        return data;
+      }); 
+    return userData;
+  }
+
+  useEffect(() => {
+    console.log(getUserData())
+  }, []);
+
+  
 
   const [loginMutation] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
