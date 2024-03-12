@@ -30,7 +30,7 @@ import {
     const [state, setState] = useState<BranchState | undefined>(() => {
       const storedState = localStorage.getItem("branchTypeState");
       // Check if the retrieved value is "undefined"
-      return storedState && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
+      return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
     });
   
     useEffect(() => {

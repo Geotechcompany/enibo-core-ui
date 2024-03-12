@@ -34,7 +34,7 @@ const LedgerProvider: FunctionComponent<LedgerProviderProps> = ({
 }: LedgerProviderProps) => {
   const [state, setState] = useState<LedgerState | undefined>(() => {
     const storedState = localStorage.getItem("ledgerState");
-    return storedState ? JSON.parse(storedState) : undefined;
+    return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
   });
 
   useEffect(() => {

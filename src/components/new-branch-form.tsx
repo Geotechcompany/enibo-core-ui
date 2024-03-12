@@ -22,6 +22,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { useBranchState } from "@/store/branchstate";
 import queryBranchList from "./branch-list/query";
+import CountrySelector from "./countries/country-selector";
 // import queryBranchList from "@/components/branch-list/query";
 
 export const newBranchSchema = z.object({
@@ -480,11 +481,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
             </div>
             <div>
               <Label htmlFor="country">Country</Label>
-              <Input
-                id="country"
-                type="text"
-                {...register("country", { required: true })}
-              />
+              <CountrySelector control={control} name="country" />
               {errors.country && (
                 <span className="text-red-500">{errors.country.message}</span>
               )}
