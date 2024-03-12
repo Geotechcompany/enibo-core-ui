@@ -35,7 +35,7 @@ import {
     const [state, setState] = useState<TransactionState | undefined>(() => {
       const storedState = localStorage.getItem("transactionState");
       // Check if the retrieved value is "undefined"
-      return storedState && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
+      return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
     });
   
     useEffect(() => {
