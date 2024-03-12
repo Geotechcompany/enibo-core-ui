@@ -53,7 +53,7 @@ const CurrenciesList: FC<CurrenciesProps> = () => {
           <div className="">
           <Button
             size="sm"
-            
+            disabled
             className="bg-[#36459C] text-white py-5 px-8"
             onClick={() => navigate(from, { replace: true })}
           >
