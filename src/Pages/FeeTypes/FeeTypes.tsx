@@ -186,7 +186,7 @@ const feeTypes: FC<FeeProps> = () => {
                 </svg>
               </li>
               <li className="flex items-center m-0">
-                <Link to="#">Static Data</Link>
+                <Link to="/administration">Static Data</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
