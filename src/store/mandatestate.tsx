@@ -31,7 +31,7 @@ import {
     const [state, setState] = useState<MandateState | undefined>(() => {
       const storedState = localStorage.getItem("mandateState");
       // Check if the retrieved value is "undefined"
-      return storedState && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
+      return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
     });
   
     useEffect(() => {

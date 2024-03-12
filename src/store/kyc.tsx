@@ -31,7 +31,7 @@ import {
   const KycProvider: FunctionComponent<KycProviderProps> = ({ children }: KycProviderProps) => {
     const [state, setState] = useState<KycState | undefined>(() => {
       const storedState = localStorage.getItem("kycState");
-      return storedState ? JSON.parse(storedState) : undefined;
+      return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
     });
   
     useEffect(() => {

@@ -40,7 +40,7 @@ import {
   const ProductTypeProvider: FunctionComponent<ProductProviderProps> = ({ children }: ProductProviderProps) => {
     const [state, setState] = useState<ProductState | undefined>(() => {
       const storedState = localStorage.getItem("productState");
-      return storedState ? JSON.parse(storedState) : undefined;
+      return storedState !== null && storedState !== "undefined" ? JSON.parse(storedState) : undefined;
     });
   
     useEffect(() => {
