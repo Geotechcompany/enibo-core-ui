@@ -15,7 +15,7 @@ import queryMandateList from "./mandate-type-list/query";
 
 
 const mandateTypeSchema = z.object({
-  mandateTypeId: z.string().min(1, { message: "MANDATE Type ID is required" }),
+  // mandateTypeId: z.string().min(1, { message: "MANDATE Type ID is required" }),
   mandateTypeCode: z.string().min(3, { message: "MANDATE Type Code is required" }),
   mandateTypeName: z.string().min(3, { message: "MANDATE Type Name is required" }),
   mandateTypeDescription: z.string().min(3, { message: "Description is required" }),
@@ -54,7 +54,9 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   } = useQuery(queryMandateList, {
     variables: {  mandateTypeId }, //
   });
-  
+  useEffect(() => {
+    setDefaultModifiedOn(new Date().toISOString());
+  }, []);
   // const onSubmit = (data: MandateTypeInput) => {
   //   console.log(data);
   //   const formInput = {
@@ -72,11 +74,15 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   //     mandateTypeDescription: "Mandate Type has been created successfully",
   //   });
   // };
+  const [defaultModifiedOn, setDefaultModifiedOn] = useState(
+    new Date().toISOString()
+  );
+ 
   const handleEdit = async (data:MandateTypeInput) => {
     try {
       console.log(data, "Checking");
       const input = {
-        mandateTypeId: data.mandateTypeId,
+        // mandateTypeId: data.mandateTypeId,
         mandateTypeDescription: data.mandateTypeDescription,
         mandateTypeCode: data.mandateTypeCode,
         mandateTypeName: data.mandateTypeName,
@@ -89,12 +95,12 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
       const response = await updateMandateType({
         variables: input,
       });
-      console.log("Updated Ledger Data", response);
+      console.log("Updated Mandate Data", response);
       reset();
       navigate(`/customers/account-mandate-types`);
 
       toast({
-        title: "Ledger Category Updated",
+        title: "Mandate Type Updated",
         description: (
           <div className="text-black">
             <div className="text-lg">
@@ -156,7 +162,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
         description: (
           <div className="text-black">
             <div className="text-lg">
-              ledger Category{" "}
+              mandate Type{" "}
               <Link
                 to={`/customers/account-mandate-types`}
                 className="text-blue-500 underline"
@@ -206,8 +212,8 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
 
   useEffect(() => {
     if (formMode === "COPY" && state) {
-      const { mandateTypeId, mandateTypeDescription, mandateTypeCode,mandateTypeName } = state;
-      setValue("mandateTypeId", mandateTypeId);
+      const {  mandateTypeDescription, mandateTypeCode,mandateTypeName } = state;
+      // setValue("mandateTypeId", mandateTypeId);
       setValue("mandateTypeCode", mandateTypeCode);
       setValue("mandateTypeName", mandateTypeName);
       setValue("mandateTypeDescription", mandateTypeDescription);
@@ -215,7 +221,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
       if (!MandateTypesLoading && MandateTypes) {
         const {
         
-          mandateTypeId,
+          // mandateTypeId,
           mandateTypeDescription,
           mandateTypeName,
           mandateTypeCode,
@@ -223,7 +229,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
           modifiedOn,
         } = MandateTypes;
    
-        setValue("mandateTypeId", mandateTypeId || "");
+        // setValue("mandateTypeId", mandateTypeId || "");
         setValue("mandateTypeDescription", mandateTypeDescription || "");
         setValue("mandateTypeName", mandateTypeName || "");
         setValue("mandateTypeCode", mandateTypeCode || "");
@@ -243,7 +249,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
 
   const cancelForm = () => {
     setState({
-      mandateTypeId:"",
+      // mandateTypeId:"",
       mandateTypeName: "",
       mandateTypeCode: "",
       mandateTypeDescription: "",
@@ -266,6 +272,38 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
             />
             {errors.mandateTypeCode && (
               <div className="text-red-500">{errors.mandateTypeCode.message}</div>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedBy" className="text-[#36459C] text-base">
+              Modified By
+            </Label>
+            <Input
+              {...register("modifiedBy")}
+              placeholder="Modified By"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={"modifiedBy"}
+            />
+            {errors.modifiedBy && (
+              <span className="text-red-500">{errors.modifiedBy.message}</span>
+            )}
+          </div>
+          <div className="hidden">
+            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
+              Modified On
+            </Label>
+            <Input
+              {...register("modifiedOn")}
+              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              type="text"
+              className="h-12 text-base bg-blue-50"
+              autoComplete="false"
+              defaultValue={defaultModifiedOn}
+            />
+            {errors.modifiedOn && (
+              <span className="text-red-500">{errors.modifiedOn.message}</span>
             )}
           </div>
           <div>
@@ -297,7 +335,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
         <div className="flex gap-2 pt-4">
           <Button type="submit">Submit</Button>
           <Link to={`/customers/account-mandate-types`}>
-          <Button size="lg" onClick={cancelForm}>
+          <Button  onClick={cancelForm}>
             Cancel
           </Button>
           </Link>
