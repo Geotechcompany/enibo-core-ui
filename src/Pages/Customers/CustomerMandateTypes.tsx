@@ -108,7 +108,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
     if (mode === "ADD") {
       navigate(from, { replace: true })
       setState({
-        mandateTypeId:"",
+        // mandateTypeId:"",
        mandateTypeName: "",
        mandateTypeCode:"",
         mandateTypeDescription: "",
@@ -119,7 +119,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
         navigateToEditPage();
       }
       setState({
-        mandateTypeId:"",
+        // mandateTypeId:"",
        mandateTypeName: "",
        mandateTypeCode:"",
         mandateTypeDescription: "",
@@ -129,7 +129,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
       if (selected.length === 1) {
         const selectedRecord = MandateTypes[selected[0]];
         setState({
-          mandateTypeId: selectedRecord.mandateTypeId,
+          // mandateTypeId: selectedRecord.mandateTypeId,
          mandateTypeName: selectedRecord.mandateTypeName,
          mandateTypeCode: selectedRecord.mandateTypeCode,
           mandateTypeDescription: selectedRecord.mandateTypeDescription,
