@@ -23,7 +23,6 @@ import queryBranchTypesList from "@/components/branch-types/query";
 import { useBranchState } from "@/store/branchstate";
 import queryBranchList from "./branch-list/query";
 import CountrySelector from "./countries/country-selector";
-// import queryBranchList from "@/components/branch-list/query";
 
 export const newBranchSchema = z.object({
   branchId: z.string().optional(),
@@ -31,7 +30,9 @@ export const newBranchSchema = z.object({
   branchType: z.string().min(3, { message: "Branch type is required" }),
   description: z.string(),
   branchCode: z.string(),
-  SWIFTCode: z.string().max(10, { message: "SWIFTCode should be less than 10" }),
+  SWIFTCode: z
+    .string()
+    .max(10, { message: "SWIFTCode should be less than 10" }),
   localBankCode: z.string(),
   country: z.string().min(3, { message: "Country is required" }),
   countrySubdivision: z
@@ -96,7 +97,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
   const [branchTypes, setBranchTypes] = useState<any[]>([]);
-  // const [branches, setBranches] = useState<any[]>([]);
+  const [branches, setBranches] = useState<any[]>([]);
 
   const handleEdit = async (data: newBranchInput) => {
     try {
@@ -148,7 +149,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         ),
       });
     } catch (error: any) {
-        const errorMessage =
+      const errorMessage =
         (error.graphQLErrors &&
           error.graphQLErrors[0] &&
           error.graphQLErrors[0].extensions &&
@@ -156,7 +157,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
           error.graphQLErrors[0].extensions.response.body &&
           error.graphQLErrors[0].extensions.response.body.branchName) ||
         "Unknown error";
-      
+
       toast({
         title: "Error",
         description: `"Failed ${errorMessage}. Please try again."`,
@@ -216,16 +217,15 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
     } catch (error: any) {
       const errorMessage =
-      (error.graphQLErrors &&
-        error.graphQLErrors[0] &&
-        error.graphQLErrors[0].extensions &&
-        error.graphQLErrors[0].extensions.response &&
-        error.graphQLErrors[0].extensions.response.body &&
-        error.graphQLErrors[0].extensions.response.body.branchName) ||
-      "Unknown error";
-    
-    
-    console.log(errorMessage, "ERR CHECK");
+        (error.graphQLErrors &&
+          error.graphQLErrors[0] &&
+          error.graphQLErrors[0].extensions &&
+          error.graphQLErrors[0].extensions.response &&
+          error.graphQLErrors[0].extensions.response.body &&
+          error.graphQLErrors[0].extensions.response.body.branchName) ||
+        "Unknown error";
+
+      console.log(errorMessage, "ERR CHECK");
       toast({
         title: "Error",
         description: `"Failed, ${errorMessage} Please try again."`,
@@ -373,6 +373,17 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       title: "Branch Form Cancelled",
     });
   };
+  // const {
+  //   data: branchNameData,
+  //   loading: branchqueryLoading,
+  //   error: branchqueryError,
+  // } = useQuery(queryBranchList);
+
+  useEffect(() => {
+    if (branchData) {
+      setBranches(branchData.branches);
+    }
+  }, [branchData, branchLoading]);
 
   return (
     <>
@@ -628,32 +639,29 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               {watchHeadOfficeCheck === "no" ? (
                 <>
                   <Label htmlFor="headOfficeBranch">Head Office Branch</Label>
-                  <Input
-                    id="headOfficeBranch"
-                    type="text"
-                    {...register("headOfficeBranch", { required: true })}
+                  <Controller
+                    control={control}
+                    name="headOfficeBranch"
+                    render={({ field: { onChange, value } }) => (
+                      <Select onValueChange={onChange} value={value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Branch" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {branches
+                            .filter((branch) => !branch.isHeadOfficeBranch) // Filter out branches where isHeadOfficeBranch is false
+                            .map((branch) => (
+                              <SelectItem
+                                key={branch.branchName}
+                                value={branch.branchName}
+                              >
+                                {branch.branchName}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
-                  {/* <Controller
-                control={control}
-                name="headOfficeBranch"
-                render={({ field: { onChange, value } }) => (
-                  <Select onValueChange={onChange} value={value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Branch" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {branches.map((type) => (
-                        <SelectItem
-                          key={type.branchId}
-                          value={type.branchId}
-                        >
-                          {type.branchName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              /> */}
                   {errors.headOfficeBranch && (
                     <span className="text-red-500">
                       {errors.headOfficeBranch.message}
