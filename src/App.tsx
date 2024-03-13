@@ -241,6 +241,14 @@ function App() {
           }
         />
         <Route
+          path="administration/ledger-management/ledger-rules/:id"
+          element={
+            <MainLayout>
+              <NewLedgerRule />
+            </MainLayout>
+          }
+        />
+        <Route
           path="administration/ledger-management/ledger-accounts/:accountId"
           element={
             <MainLayout>
@@ -250,6 +258,14 @@ function App() {
         />
         <Route
           path="administration/ledger-management/ledger-accounts/new-ledger-account"
+          element={
+            <MainLayout>
+              <NewLedgerAccount />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="administration/ledger-management/ledger-accounts/ledger-account/:id"
           element={
             <MainLayout>
               <NewLedgerAccount />

@@ -70,7 +70,6 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
   // if there is id, it means we are in create mode
   const isEditMode = id ? true : false;
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [userProfiles, setUserProfiles] = useState<OptionType[]>([]);
 
@@ -141,6 +140,7 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
       reset();
       localStorage.removeItem("copyUser");  
       navigate("/administration/user-details");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage = error.graphQLErrors?.[0]?.extensions?.response?.body?.message || "Unknown error";
       toast({
@@ -532,7 +532,6 @@ const UserDetailsForm: FC<UserDetailsFormProps> = ({ user }) => {
             type="submit"
             size="lg"
             className="bg-[#36459C] hover:bg-[#253285]"
-            disabled={isLoading}
           >
             Submit
           </Button>

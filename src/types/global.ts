@@ -65,14 +65,15 @@ export type ProductType = {
 };
 
 export type LedgerAccount = {
-  ledgerAccountNumber: string;
-  exportLedgerAccountNumber: string;
-  description: string;
-  ledgerAccountType: "Customer" | "Internal";
-  customerAccountNumber: string;
-  branchCode: string;
-  ledgerAccountCategory: string;
-  chartString: string;
+    id: string;
+    account_number: string;
+    export_account_number: string;
+    description: string;
+    customer_account_number: string;
+    ledger_account_number: string;
+    branch_id: string;
+    chart_string: string;
+    accountCategoryId: string;
 };
 
 export type TransactionType = {
@@ -122,6 +123,7 @@ export type FeeType = {
 };
 
 export type LedgerRule = {
+  id: string,
   priority: string;
   ruleName: string;
   description: string;

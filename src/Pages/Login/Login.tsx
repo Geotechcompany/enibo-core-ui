@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,36 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/logo";
 import { useAppState } from "@/store/state";
-
-const LOGIN_MUTATION = gql`
-mutation Authenticate($email: String!, $password: String!) {
-  authenticate(email: $email, password: $password) {
-    token
-    user {
-      id
-      username
-      firstName
-      middleName
-      lastName
-      email
-      phoneNumber
-      employeeNumber
-      branch
-      profile {
-        id
-        name
-        description
-        permissions
-        modifiedBy
-        modifiedOn
-      }
-      documentAttachment
-      modifiedBy
-      modifiedOn
-    }
-  }
-}
-`;
+import { LOGIN_MUTATION } from "@/types/mutations";
 
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
@@ -58,7 +29,7 @@ interface LoginProps {}
 const Login: FC<LoginProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null); // State to hold the error message
-  const {appState,  setAppState } = useAppState();
+  const { appState, setAppState } = useAppState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,7 +45,7 @@ const Login: FC<LoginProps> = () => {
 
   const getUserData = async () => {
     //cors headers
-    const userData = await fetch("https://ifconfig.io/all.json",{
+    const userData = await fetch("https://ifconfig.io/all.json", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -85,15 +56,13 @@ const Login: FC<LoginProps> = () => {
       .then((data) => {
         console.log(data);
         return data;
-      }); 
+      });
     return userData;
-  }
+  };
 
   useEffect(() => {
-    console.log(getUserData())
+    console.log(getUserData());
   }, []);
-
-  
 
   const [loginMutation] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
@@ -103,8 +72,8 @@ const Login: FC<LoginProps> = () => {
         setAppState({
           ...appState,
           user: {
-            ...data.authenticate.user
-          }
+            ...data.authenticate.user,
+          },
         });
         setIsLoading(false);
         navigate(from, { replace: true });
@@ -127,7 +96,7 @@ const Login: FC<LoginProps> = () => {
   };
 
   return (
-    <section className="flex items-center justify-center h-screen align-middle">
+    <section className="flex h-screen items-center justify-center align-middle">
       <Card className="w-[30%]">
         <CardHeader></CardHeader>
         <CardContent>
@@ -145,7 +114,7 @@ const Login: FC<LoginProps> = () => {
               <div>
                 <Label
                   htmlFor="email"
-                  className="text-[#36459C] text-base space-y-2"
+                  className="space-y-2 text-base text-[#36459C]"
                 >
                   Email
                 </Label>
@@ -153,7 +122,7 @@ const Login: FC<LoginProps> = () => {
                   {...register("email")}
                   placeholder="Your email"
                   type="email"
-                  className="h-12 text-base bg-blue-50"
+                  className="h-12 bg-blue-50 text-base"
                   autoComplete="false"
                 />
                 {errors.email && (
@@ -161,14 +130,14 @@ const Login: FC<LoginProps> = () => {
                 )}
               </div>
               <div>
-                <Label htmlFor="password" className="text-[#36459C] text-base">
+                <Label htmlFor="password" className="text-base text-[#36459C]">
                   Password
                 </Label>
                 <Input
                   {...register("password")}
                   type="password"
                   placeholder="Password"
-                  className="h-12 text-base bg-blue-50"
+                  className="h-12 bg-blue-50 text-base"
                   autoComplete="false"
                 />
                 {errors.password && (
@@ -180,7 +149,7 @@ const Login: FC<LoginProps> = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
               <Button
-                className="w-full uppercase text-base bg-[#36459C] hover:bg-[#253285] h-12"
+                className="h-12 w-full bg-[#36459C] text-base uppercase hover:bg-[#253285]"
                 type="submit"
                 disabled={isLoading}
               >
