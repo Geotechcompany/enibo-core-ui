@@ -54,6 +54,7 @@ const CountriesList: FC<CountriesProps> = () => {
             size="sm"           
             className="bg-[#36459C] text-white py-5 px-8"
             onClick={() => navigate(from, { replace: true })}
+            disabled
           >
             <FaPlus className="mr-1 text-white" /> New Country
           </Button></div>
