@@ -16,7 +16,7 @@ import {
     description: string;
     active: boolean;
     interestBearing: boolean;
-    fixedInterestRate: number;
+    fixedInterestRate: string;
     effectiveDate: string;
     fees: boolean;
     feeTypes: string[];

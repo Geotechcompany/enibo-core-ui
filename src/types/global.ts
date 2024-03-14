@@ -114,7 +114,7 @@ export type FeeType = {
   feeTypeId: string;
   feeTypeName: string;
   description: string;
-  transactionTypes: string[];
+  transactionTypes: TransactionType[];
   paymentFrequency: string;
   effectiveDate: string;
   fixedRate: number;

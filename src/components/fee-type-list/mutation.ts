@@ -40,7 +40,7 @@ export const UPDATE_FEE_TYPE_MUTATION = gql`
     $transactionTypes: [String]!
     $paymentFrequency: String!
     $effectiveDate: String!
-    $fixedRate: Float!
+    $fixedRate: String!
     $modifiedBy: String!
     $modifiedOn: String!
   ) {
@@ -56,7 +56,15 @@ export const UPDATE_FEE_TYPE_MUTATION = gql`
     ) {
       feeTypeName
       description
-      transactionTypes
+      transactionTypes {
+        transactionTypeId
+        transactionTypeName
+        transactionTypeCode
+        description
+        currency
+        modifiedBy
+        modifiedOn
+      }
       paymentFrequency
       effectiveDate
       fixedRate

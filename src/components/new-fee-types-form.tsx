@@ -35,7 +35,7 @@ const feeTypeSchema = z.object({
     .min(3, { message: "Payment Frequency is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
   // fixedRate: z.string().min(3, { message: "Fixed Rate is required" }),
-  fixedRate: z.string().min(1, { message: "Fixed Rate is required" }),
+  fixedRate: z.coerce.number().min(0, { message: "Fixed Rate is required" }),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
   modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
@@ -87,7 +87,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         paymentFrequency: data.paymentFrequency,
         transactionTypes: data.transactionTypes,
         effectiveDate: data.effectiveDate,
-        fixedRate: parseFloat(data.fixedRate),
+        fixedRate: data.fixedRate.toFixed(2),
         modifiedBy: data.modifiedBy,
         modifiedOn: data.modifiedOn,
       };
@@ -145,7 +145,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         transactionTypes: data.transactionTypes,
         paymentFrequency: data.paymentFrequency,
         effectiveDate: data.effectiveDate,
-        fixedRate: parseFloat(data.fixedRate),
+        fixedRate: data.fixedRate.toFixed(2),
         modifiedBy: data.modifiedBy,
         modifiedOn: data.modifiedOn,
       };
@@ -223,7 +223,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         transactionTypes,
       } = state;
       // setValue("feeTypeId", feeTypeId);
-      setValue("fixedRate", fixedRate.toString());
+      setValue("fixedRate", fixedRate);
       setValue("feeTypeName", feeTypeName);
       setValue("transactionTypes", transactionTypes.toString());
       setValue("paymentFrequency", paymentFrequency);
@@ -340,8 +340,8 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
                   <SelectContent>
                     {transactionTypes.map((type) => (
                       <SelectItem
-                        key={type.transactionTypeName}
-                        value={type.transactionTypeName}
+                        key={type.transactionTypeId}
+                        value={type.transactionTypeId}
                       >
                         {type.transactionTypeName}
                       </SelectItem>

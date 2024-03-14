@@ -6,7 +6,6 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-// import { MultiSelect } from "./multi-select";
 import {
   Select,
   SelectContent,
@@ -15,7 +14,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
-
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_BRANCH, UPDATE_BRANCH } from "./branch-list/mutation";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -23,8 +21,10 @@ import queryBranchTypesList from "@/components/branch-types/query";
 import { useBranchState } from "@/store/branchstate";
 import queryBranchList from "./branch-list/query";
 import CountrySelector from "./countries/country-selector";
+import { MultiSelect, OptionType } from "./multi-select";
+import queryProductList from "./product-type-list/query";
 
-export const newBranchSchema = z.object({
+const newBranchSchema = z.object({
   branchId: z.string().optional(),
   branchName: z.string().min(3, { message: "Branch name is required" }),
   branchType: z.string().min(3, { message: "Branch type is required" }),
@@ -42,15 +42,14 @@ export const newBranchSchema = z.object({
   buildingNumber: z.string(),
   buildingName: z.string().min(3, { message: "Building name is required" }),
   postalAddress: z.string().min(3, { message: "Postal address is required" }),
-  // AllowedProductTypes: z
-  //   .array(z.object({ value: z.string(), label: z.string() }))
-  //   .min(1, { message: "At least one product type is required" }).optional(),
   email: z.string().email({ message: "Email is required" }),
   phoneNumber: z.string().min(3, { message: "Phone Number is required" }),
   isHeadOfficeBranch: z.enum(["yes", "no"], {
     required_error: "You need to select a branch type.",
   }),
-
+  allowedProductTypes: z
+    .array(z.object({ value: z.string(), label: z.string() }))
+    .min(1, { message: "To is required" }),
   headOfficeBranch: z
     .string()
     .min(3, { message: "Head office branch is required" })
@@ -64,6 +63,7 @@ interface NewBranchFormProps {}
 const NewBranchForm: FC<NewBranchFormProps> = () => {
   const { branchId } = useParams<{ branchId: string }>();
   const { state, setState } = useBranchState();
+  const [productTypes, setProductTypes] = useState<OptionType[]>([]);
   const isCopyMode = !state;
   const formMode = state?.mode;
   console.log(state, formMode, "Form");
@@ -94,6 +94,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       variables: { branchId }, // Pass branchId as a variable to the query
     }
   );
+  const { data: productTypesData } = useQuery(queryProductList);
 
   const watchHeadOfficeCheck = watch("isHeadOfficeBranch");
   const [branchTypes, setBranchTypes] = useState<any[]>([]);
@@ -101,7 +102,11 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
   const handleEdit = async (data: newBranchInput) => {
     try {
-      console.log(data, "Checking");
+      const newProductType = data.allowedProductTypes.map(
+        (productType: OptionType) => {
+          return productType.value;
+        }
+      );
       const input = {
         branchId: data.branchId,
         branchName: data.branchName,
@@ -117,17 +122,15 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         buildingNumber: data.buildingNumber,
         buildingName: data.buildingName,
         postalAddress: data.postalAddress,
-        // AllowedProductTypes: newProductType,
+        allowedProductTypes: newProductType,
         email: data.email,
         isHeadOfficeBranch: data.isHeadOfficeBranch === "yes" ? true : false,
         headOfficeBranch: data.headOfficeBranch ? data.headOfficeBranch : "N/A",
       };
-      console.log(input);
       const response = await updateBranchMutation({
         variables: input,
       });
 
-      console.log("Updated Branch Data:", response);
       reset();
       navigate("/administration/branches");
 
@@ -139,9 +142,9 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               Branch{" "}
               <Link
                 to={`/administration/branches`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
-                {data.branchName}
+                {response.data.updateBranch.branchName}
               </Link>
               , has been successfully updated
             </div>
@@ -168,7 +171,11 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
 
   const handleCreate = async (data: newBranchInput) => {
     try {
-      console.log(data, "Checking");
+      const newProductType = data.allowedProductTypes.map(
+        (productType: OptionType) => {
+          return productType.value;
+        }
+      );
       const input = {
         branchId: data.branchId,
         branchName: data.branchName,
@@ -184,17 +191,15 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         buildingNumber: data.buildingNumber,
         buildingName: data.buildingName,
         postalAddress: data.postalAddress,
-        // AllowedProductTypes: newProductType,
+        allowedProductTypes: newProductType,
         email: data.email,
         isHeadOfficeBranch: data.isHeadOfficeBranch === "yes" ? true : false,
         headOfficeBranch: data.headOfficeBranch ? data.headOfficeBranch : "N/A",
       };
-      console.log(input);
+
       const response = await createBranchMutation({
         variables: input,
       });
-
-      console.log("Created Branch Data:", response);
       reset();
       navigate("/administration/branches");
 
@@ -206,9 +211,9 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               New Branch{" "}
               <Link
                 to={`/administration/branches`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
-                {data.branchName}
+                {response.data.createBranch.branchName}
               </Link>
               , has been successfully created
             </div>
@@ -233,6 +238,22 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (productTypesData) {
+      setProductTypes(
+        productTypesData.productTypes.map(
+          (productType: {
+            productTypeId: string;
+            productTypeName: string;
+          }) => ({
+            value: productType.productTypeId,
+            label: productType.productTypeName,
+          })
+        )
+      );
+    }
+  }, [productTypesData]);
 
   useEffect(() => {
     if (watchHeadOfficeCheck === "yes") {
@@ -373,11 +394,6 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       title: "Branch Form Cancelled",
     });
   };
-  // const {
-  //   data: branchNameData,
-  //   loading: branchqueryLoading,
-  //   error: branchqueryError,
-  // } = useQuery(queryBranchList);
 
   useEffect(() => {
     if (branchData) {
@@ -491,6 +507,27 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
               )}
             </div>
             <div>
+              <Label>Allowed Product Types</Label>
+              <Controller
+                name="allowedProductTypes"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <MultiSelect
+                    options={productTypes}
+                    onChange={onChange}
+                    selected={value}
+                    placeholder="Select..."
+                    className="w-full"
+                  />
+                )}
+              />
+              {errors.allowedProductTypes && (
+                <span className="text-red-500">
+                  {errors.allowedProductTypes.message}
+                </span>
+              )}
+            </div>
+            <div>
               <Label htmlFor="country">Country</Label>
               <CountrySelector control={control} name="country" />
               {errors.country && (
@@ -562,30 +599,6 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                 </span>
               )}
             </div>
-            {/* <div>
-            <Label htmlFor="AllowedProductTypes">Allowed Product Types</Label>
-            <Controller
-              control={control}
-              name="AllowedProductTypes"
-              render={({ field: { onChange, value } }) => (
-                <MultiSelect
-                  options={[
-                    { value: "CREDIT", label: "CREDIT" },
-                    { value: "DEBIT", label: "DEBIT" },
-                    { value: "ASSETS", label: "ASSETS" },
-                    { value: "LIABILITIES", label: "LIABILITIES" },
-                  ]}
-                  className="sm:w-[474px]"
-                  placeholder="Select allowed product types"
-                  selected={value}
-                  onChange={onChange} />
-              )} />
-            {errors.AllowedProductTypes && (
-              <span className="text-red-500">
-                {errors.AllowedProductTypes.message}
-              </span>
-            )}
-          </div> */}
 
             <div>
               <Label htmlFor="email">Email</Label>
