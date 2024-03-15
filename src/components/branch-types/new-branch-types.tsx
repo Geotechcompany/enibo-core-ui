@@ -14,15 +14,12 @@ import { UPDATE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { useBranchTypeState } from "@/store/branchType";
 
 const newBranchTypeSchema = z.object({
   branchTypeId: z.string().optional(),
   branchTypeName: z.string().min(3, { message: "Branch name is required" }),
   description: z.string(),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
-
-  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type newBranchInput = z.infer<typeof newBranchTypeSchema>;
@@ -31,14 +28,12 @@ interface NewBranchTypesProps {}
 
 const NewBranchTypes: FC<NewBranchTypesProps> = () => {
   const { branchTypeId } = useParams<{ branchTypeId: string }>();
-  const { state, setState } = useBranchTypeState();
-  const isCopyMode = !state;
-  const formMode = state?.mode
-  console.log(state, formMode, "Form")
+  const isEditMode = branchTypeId ? true : false;
+  const storedBranchType = localStorage.getItem("branchTypes");
+  const isCopyMode = storedBranchType ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
-    
-  console.log(isCopyMode, "Copy Mode");
+
   const {
     register,
     handleSubmit,
@@ -55,16 +50,13 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
     }
   );
   const [updateBranchTypeMutation] = useMutation(UPDATE_BRANCH_TYPE);
-  const [defaultModifiedOn, setDefaultModifiedOn] = useState(
-    new Date().toISOString()
-  );
 
   const [isFormModified, setIsFormModified] = useState(false);
 
   const [createBranchTypeMutation] = useMutation(
     CREATE_NEW_BRANCH_TYPE_MUTATION
   );
-  const handleEdit =  async (data: newBranchInput) => {
+  const handleEdit = async (data: newBranchInput) => {
     try {
       await updateBranchTypeMutation({
         variables: {
@@ -72,7 +64,7 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
           branchTypeName: data.branchTypeName,
           description: data.description,
           modifiedBy: data.modifiedBy,
-          modifiedOn: data.modifiedOn,
+          modifiedOn: new Date().toISOString(),
         },
       });
       toast({
@@ -80,39 +72,42 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         description: (
           <div className="text-black">
             <div className="text-lg">
-              Branch Type{" "} 
+              Branch Type{" "}
               <Link
                 to={`/administration/branches/branch-types`}
                 className="text-blue-500 underline"
               >
                 {data.branchTypeName}
-              </Link>, has been successfully updated
+              </Link>
+              , has been successfully updated
             </div>
           </div>
         ),
       });
       reset();
       navigate("/administration/branches/branch-types");
-    } catch (error:any) {
-      const errorMessage = error.graphQLErrors?.[0]?.extensions?.response?.body?.message || 'Unknown error';
+    } catch (error: any) {
+      const errorMessage =
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        "Unknown error";
       toast({
         title: "Error",
         description: `"Failed ${errorMessage}. Please try again."`,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
   };
 
   const handleCreate = async (data: newBranchInput) => {
     try {
-      const { branchTypeName, description, modifiedBy, modifiedOn } = data;
+      const { branchTypeName, description, modifiedBy } = data;
 
       await createBranchTypeMutation({
         variables: {
           branchTypeName: branchTypeName,
           description: description || "N/A",
           modifiedBy,
-          modifiedOn,
+          modifiedOn: new Date().toISOString(),
         },
       });
       toast({
@@ -133,67 +128,67 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
         ),
       });
       reset();
-      setState({
-        branchTypeName: "",
-        description: "",
-     })
+      localStorage.removeItem("branchTypes");
       navigate("/administration/branches/branch-types");
     } catch (error: any) {
-      const errorMessage = error.graphQLErrors?.[0]?.extensions?.response?.body?.message || 'Unknown error';
-  
+      const errorMessage =
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        "Unknown error";
+
       toast({
-        title: 'Error',
+        title: "Error",
         description: `Failed ${errorMessage}. Please try again.`,
-        variant: 'destructive',
+        variant: "destructive",
       });
     }
-  }
+  };
   const onSubmit = async (data: newBranchInput) => {
-     if(formMode  === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-     } else if(formMode === "EDIT") {
-      console.log('edit mode')
+    if (isEditMode) {
       handleEdit(data);
-     }
+    } else {
+      handleCreate(data);
+    }
   };
 
-  useEffect(() => {
-    setDefaultModifiedOn(new Date().toISOString());
-  }, []);
-
-
-  const cancelForm = () =>{
-    setState({
-      branchTypeName: "",
-      description: "",
-   });
+  const cancelForm = () => {
+    localStorage.removeItem("branchTypes");
     toast({
       title: "Form Cancelled",
-    })
-  }
+    });
+    navigate("/administration/branches/branch-types");
+  };
   const branchType = branchTypeData?.branchTypes.find(
     (branchType: { branchTypeId: string | undefined }) =>
       branchType.branchTypeId === branchTypeId
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
-      const { branchTypeName, description } = state;
+    if (isCopyMode && storedBranchType !== null) {
+      const { branchTypeName, description } = JSON.parse(storedBranchType);
 
       setValue("branchTypeName", branchTypeName);
       setValue("description", description);
-    } else if (formMode === "EDIT") {
+    }
+    if (isEditMode) {
       if (!branchTypeLoading && branchType) {
-        const { branchTypeId, branchTypeName, description, modifiedBy, modifiedOn } =
+        const { branchTypeId, branchTypeName, description, modifiedBy } =
           branchType;
         setValue("branchTypeId", branchTypeId);
         setValue("branchTypeName", branchTypeName || "");
         setValue("description", description || "");
         setValue("modifiedBy", modifiedBy || "");
-        setValue("modifiedOn", modifiedOn || new Date().toISOString());
       }
     }
-  }, [formMode, reset, setValue, state, setState, branchType, branchTypeLoading]);
+  }, [
+    reset,
+    setValue,
+    branchType,
+    branchTypeLoading,
+    storedBranchType,
+    isEditMode,
+    isCopyMode,
+    branchTypeId,
+  ]);
 
   useEffect(() => {
     const handleFormChange = () => {
@@ -253,40 +248,18 @@ const NewBranchTypes: FC<NewBranchTypesProps> = () => {
             <span className="text-red-500">{errors.modifiedBy.message}</span>
           )}
         </div>
-        <div className="hidden">
-          <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
-            Modified On
-          </Label>
-          <Input
-            {...register("modifiedOn")}
-            placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
-            type="text"
-            className="h-12 text-base bg-blue-50"
-            autoComplete="false"
-            defaultValue={defaultModifiedOn}
-          />
-          {errors.modifiedOn && (
-            <span className="text-red-500">{errors.modifiedOn.message}</span>
-          )}
-        </div>
         <div className="flex gap-2">
-        <Button
+          <Button
             type="submit"
             size="lg"
             className="bg-[#36459C] hover:bg-[#253285]"
             disabled={!isFormModified}
           >
-            {formMode === "EDIT" ? "Update" : "Submit"}
+            Submit
           </Button>
-
-          <Link to={`/administration/branches/branch-types`}>
-            <Button
-              size="lg"
-              onClick={cancelForm}
-            >
-              Cancel
-            </Button>
-          </Link> 
+          <Button size="lg" onClick={() => cancelForm()}>
+            Cancel
+          </Button>
         </div>
       </form>
     </section>

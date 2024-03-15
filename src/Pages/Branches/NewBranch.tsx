@@ -1,4 +1,4 @@
-import NewBranchForm from "@/components/new-branch-form";
+import NewBranchForm from "@/components/branch-list/new-branch-form";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -39,8 +39,10 @@ const NewBranch: FC<NewBranchProps> = () => {
         </nav>
       </div>
       <div className="flex items-center justify-between my-4">
-          <div className=""><h1 className="text-4xl text-[#36459C]">Branch Details</h1></div>
+        <div className="">
+          <h1 className="text-4xl text-[#36459C]">Branch Details</h1>
         </div>
+      </div>
       <div>
         <NewBranchForm />
       </div>

@@ -10,12 +10,11 @@ import { Textarea } from "./ui/textarea";
 import { CREATE_MANDATE_TYPE, UPDATE_MANDATE_TYPE } from "@/types/mutations";
 import { useMutation, useQuery } from "@apollo/client";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useMandateState } from "@/store/mandatestate";
+
 import queryMandateList from "./mandate-type-list/query";
 
 
 const mandateTypeSchema = z.object({
-  // mandateTypeId: z.string().min(1, { message: "MANDATE Type ID is required" }),
   mandateTypeCode: z.string().min(3, { message: "MANDATE Type Code is required" }),
   mandateTypeName: z.string().min(3, { message: "MANDATE Type Name is required" }),
   mandateTypeDescription: z.string().min(3, { message: "Description is required" }),
@@ -30,12 +29,10 @@ interface NewMandateTypeFormProps {}
 const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   const { toast } = useToast();
   const { mandateTypeId } = useParams<{ mandateTypeId: string }>();
-  const { state, setState } = useMandateState();
+  const isEditMode = mandateTypeId ? true : false;
+  const storedMandateType = localStorage.getItem("mandateType");
+  const isCopyMode = storedMandateType ? true : false;
   const navigate = useNavigate();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(isCopyMode, "Copy Mode");
-  console.log(state, formMode, "Form")
   const [createMandateType] = useMutation(CREATE_MANDATE_TYPE);
   const [updateMandateType] = useMutation(UPDATE_MANDATE_TYPE);
   const {
@@ -57,32 +54,15 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   useEffect(() => {
     setDefaultModifiedOn(new Date().toISOString());
   }, []);
-  // const onSubmit = (data: MandateTypeInput) => {
-  //   console.log(data);
-  //   const formInput = {
-  //     mandateTypeCode: data.mandateTypeCode,
-  //     mandateTypeName: data.mandateTypeName,
-  //     mandateTypeDescription: data.mandateTypeDescription,
-  //     modifiedBy: "e170f3b7-c9bc-421a-9c9f-a15fd17e6f3d",
-  //     modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
-  //       .toISOString()
-  //       .split(".")[0],
-  //   };
-  //   createMandateType({ variables: formInput });
-  //   toast({
-  //     title: "Mandate Type Created",
-  //     mandateTypeDescription: "Mandate Type has been created successfully",
-  //   });
-  // };
+  
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
   );
  
   const handleEdit = async (data:MandateTypeInput) => {
     try {
-      console.log(data, "Checking");
       const input = {
-        // mandateTypeId: data.mandateTypeId,
+        mandateTypeId: mandateTypeId,
         mandateTypeDescription: data.mandateTypeDescription,
         mandateTypeCode: data.mandateTypeCode,
         mandateTypeName: data.mandateTypeName,
@@ -91,11 +71,9 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
            .toISOString()
         .split(".")[0],
       };
-      console.log(input);
-      const response = await updateMandateType({
+      await updateMandateType({
         variables: input,
       });
-      console.log("Updated Mandate Data", response);
       reset();
       navigate(`/customers/account-mandate-types`);
 
@@ -118,6 +96,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
       });
       reset();
       navigate("/customers/account-mandate-types");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
         (error.graphQLErrors &&
@@ -137,9 +116,8 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
   };
   const handleCreate = async (data: MandateTypeInput) => {
     try {
-      console.log(data, "Checking");
+   
       const input = {
-        // mandateTypeId: data.mandateTypeId,
         mandateTypeName: data.mandateTypeName,
         mandateTypeDescription: data.mandateTypeDescription,
         mandateTypeCode: data.mandateTypeCode,
@@ -148,12 +126,12 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
               .toISOString()
             .split(".")[0],
       };
-      console.log(input);
-      const response = await createMandateType({
+      await createMandateType({
         variables: input,
       });
-      console.log("Created Ledger Data:", response);
+   
       reset();
+      localStorage.removeItem("mandateType");
       navigate(`/customers/account-mandate-types`);
     
      
@@ -174,6 +152,7 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
           </div>
         ),
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
         (error.graphQLErrors &&
@@ -193,14 +172,11 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
     }
   };
 
-
-
   const onSubmit = async (data: MandateTypeInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else  {
+      handleCreate(data);
     }
   };
 
@@ -211,25 +187,21 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
     );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
-      const {  mandateTypeDescription, mandateTypeCode,mandateTypeName } = state;
-      // setValue("mandateTypeId", mandateTypeId);
+    if (isCopyMode && storedMandateType !== null) {
+      const {  mandateTypeDescription, mandateTypeCode,mandateTypeName } = JSON.parse(storedMandateType);
       setValue("mandateTypeCode", mandateTypeCode);
       setValue("mandateTypeName", mandateTypeName);
       setValue("mandateTypeDescription", mandateTypeDescription);
-    } else if (formMode === "EDIT") {
+    }
+     if (isEditMode) {
       if (!MandateTypesLoading && MandateTypes) {
         const {
-        
-          // mandateTypeId,
           mandateTypeDescription,
           mandateTypeName,
           mandateTypeCode,
           modifiedBy,
           modifiedOn,
         } = MandateTypes;
-   
-        // setValue("mandateTypeId", mandateTypeId || "");
         setValue("mandateTypeDescription", mandateTypeDescription || "");
         setValue("mandateTypeName", mandateTypeName || "");
         setValue("mandateTypeCode", mandateTypeCode || "");
@@ -238,22 +210,17 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
       }
     }
   }, [
-    formMode,
     reset,
     setValue,
-    state,
-    setState,
     MandateTypes,
     MandateTypesLoading,
+    isEditMode,
+    isCopyMode,
+    storedMandateType,
   ]);
 
   const cancelForm = () => {
-    setState({
-      // mandateTypeId:"",
-      mandateTypeName: "",
-      mandateTypeCode: "",
-      mandateTypeDescription: "",
-    });
+    localStorage.removeItem("mandateType");
     toast({
       title: "MandateType Form Cancelled",
     });
@@ -333,12 +300,10 @@ const NewMandateTypeForm: FC<NewMandateTypeFormProps> = () => {
           </div>
         </div>
         <div className="flex gap-2 pt-4">
-          <Button type="submit">Submit</Button>
-          <Link to={`/customers/account-mandate-types`}>
+          <Button type="submit">Submit</Button>   
           <Button  onClick={cancelForm}>
             Cancel
           </Button>
-          </Link>
         </div>
       </form>
    </section>

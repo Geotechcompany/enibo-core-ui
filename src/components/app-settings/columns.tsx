@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { AppSettingsFields } from "./schema";
 import { Checkbox } from "../ui/checkbox";
 import { DataTableColumnHeader } from "../datatable/datatable-column-header";
+import { Setting } from "@/Pages/AppSettings/AppSettingsList";
 
-export const columns: ColumnDef<AppSettingsFields>[] = [
+export const columns: ColumnDef<Setting>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -30,29 +30,29 @@ export const columns: ColumnDef<AppSettingsFields>[] = [
         enableHiding: true,
       },
       {
-        accessorKey: "appId",
+        accessorKey: "id",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="App ID" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("appId")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
         enableSorting: true,
         enableHiding: true,
       },
       {
-        accessorKey: "appValue",
+        accessorKey: "value",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="App Value" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("appValue")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("value")}</div>,
         enableSorting: true,
         enableHiding: true,
       },
       {
-        accessorKey: "moduleName",
+        accessorKey: "name",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Module Name" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("moduleName")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
         enableSorting: true,
         enableHiding: true,
       },
@@ -72,7 +72,7 @@ export const columns: ColumnDef<AppSettingsFields>[] = [
         ),
         cell: ({ row }) => (
           <div className="">
-            {row.original.view ? "Enabled" : "Disabled"}
+            {row.getValue("hidden") ? "No" : "Yes"}
           </div>
         ),
         enableSorting: true,

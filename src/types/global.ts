@@ -1,3 +1,5 @@
+import { UserProfile } from "@/Pages/Users.tsx/UserProfileList";
+
 export type CustomerType = "Retail" | "Business";
 
 enum RetailType {
@@ -36,6 +38,7 @@ type Business = {
 };
 
 export type Customer = {
+  customerId: string;
   customerType: CustomerType;
   retail?: Retail;
   business?: Business;
@@ -55,7 +58,7 @@ export type ProductType = {
   fixedInterestRate: number;
   effectiveDate: string;
   fees: boolean;
-  feeTypes: string[];
+  feeTypes: FeeType[];
   riskRating: string;
   prefix: string;
   numberSchema: string;
@@ -65,14 +68,15 @@ export type ProductType = {
 };
 
 export type LedgerAccount = {
-  ledgerAccountNumber: string;
-  exportLedgerAccountNumber: string;
-  description: string;
-  ledgerAccountType: "Customer" | "Internal";
-  customerAccountNumber: string;
-  branchCode: string;
-  ledgerAccountCategory: string;
-  chartString: string;
+    id: string;
+    account_number: string;
+    export_account_number: string;
+    description: string;
+    customer_account_number: string;
+    ledger_account_number: string;
+    branch_id: string;
+    chart_string: string;
+    accountCategoryId: string;
 };
 
 export type TransactionType = {
@@ -113,7 +117,7 @@ export type FeeType = {
   feeTypeId: string;
   feeTypeName: string;
   description: string;
-  transactionTypes: string[];
+  transactionTypes: TransactionType[];
   paymentFrequency: string;
   effectiveDate: string;
   fixedRate: number;
@@ -122,6 +126,7 @@ export type FeeType = {
 };
 
 export type LedgerRule = {
+  id: string,
   priority: string;
   ruleName: string;
   description: string;
@@ -266,19 +271,17 @@ export interface UserDetailsType {
   phoneNumber: string;
   employeeNumber: string;
   branch: string;
-  profile: string;
+  profile: UserProfile;
   documentAttachment: string;
   modifiedOn: string;
   modifiedBy: string;
 }
 
 export interface BranchForm {
-  AllowedProductTypes: [string];
-  SWIFTCode: string;
-  branchCode: string;
   branchId: string;
+  branchCode: string;
   branchName: string;
-  branchType: string;
+  branchType: BranchTypes;
   buildingName: string;
   buildingNumber: string;
   country: string;
@@ -291,6 +294,8 @@ export interface BranchForm {
   localBankCode: string;
   postalAddress: string;
   streetName: string;
+  allowedProductTypes: ProductType[];
+  SWIFTCode: string;
 }
 
 

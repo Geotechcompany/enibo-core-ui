@@ -19,9 +19,9 @@ import { ValueIcon } from "@radix-ui/react-icons";
 interface CustomerKYCProps {}
 
 const CustomerKYC: FC<CustomerKYCProps> = () => {
-  const { state, setState } = useAppState();
-  const individuals = state.individuals;
-  const businesses = state.businesses;
+  const { appState, setAppState } = useAppState();
+  const individuals = appState.individuals;
+  const businesses = appState.businesses;
 
   const [selectedRows, setSelectedRows] = useState<object[]>([]);
   const isAllRowsSelected = selectedRows.length === individuals?.length;
@@ -41,43 +41,18 @@ const CustomerKYC: FC<CustomerKYCProps> = () => {
       setSelectedRows([]);
     }
   };
-  // const retail = {
-  //   retailType: "individual",
-  //   individualKYC: "individualKYC",
-  //   productTypes: "productTypes",
-  //   accountCurrency: "accountCurrency",
-  //   riskRating: "riskRating",
-  //   accountMandates: "accountMandates",
-  //   modifiedBy: "modifiedBy",
-  //   modifiedOn: "modifiedOn",
-  // }
-  // const business = {
-  //   businessKYC: "businessKYC",
-  //   directorsKYC: "directorsKYC",
-  //   productTypes: "productTypes",
-  //   accountCurrency: "accountCurrency",
-  //   riskRating: "riskRating",
-  //   accountMandates: "accountMandates",
-  //   modifiedBy: "modifiedBy",
-  //   modifiedOn: "modifiedOn",
-  // }
-  // const customer = {
-  //   customerType: "individual",
-  //   business: "business",
-  //   retail: "retail",
-  //   accountMandates: "accountMandates",
-  // }
+
   const navigate = useNavigate();
   const saveData = (customer: string) => {
-    setState({
-      ...state,
+    setAppState({
+      ...appState,
       customerType: customer,
     });
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {state.customerType === "" && (
+      {appState.customerType === "" && (
         <div className="flex flex-col">
           <div className="flex flex-col gap-4">
             <h3>
@@ -144,14 +119,14 @@ const CustomerKYC: FC<CustomerKYCProps> = () => {
           </div>
         </div>
       )}
-      {state.customerType !== "" && (
+      {appState.customerType !== "" && (
         <>
           <div>
             <div className="flex items-center justify-between pb-2 items">
               <h3>Account Holder KYC</h3>
               <div className="flex gap-4">
                 <KYCSelector listType="retail" />
-                {state.customerType === "retail" ? (
+                {appState.customerType === "retail" ? (
                   <NewKYC listType="retail" />
                 ) : (
                   <>
@@ -199,7 +174,7 @@ const CustomerKYC: FC<CustomerKYCProps> = () => {
           </div>
         </>
       )}
-      {state.customerType === "business" && (
+      {appState.customerType === "business" && (
         <>
           <div>
             <div className="flex items-center justify-between pb-2 items">
@@ -250,7 +225,7 @@ const CustomerKYC: FC<CustomerKYCProps> = () => {
           </div>
         </>
       )}
-      {state.customerType !== "" && (<div className="flex gap-2">
+      {appState.customerType !== "" && (<div className="flex gap-2">
         <Button>Save</Button>
         <Button onClick={() => navigate("/customers/customer-wizard/products")}>
           Next

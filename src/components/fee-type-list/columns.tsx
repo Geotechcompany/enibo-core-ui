@@ -51,6 +51,7 @@ export const columns: ColumnDef<FeeType>[] = [
     },
     {
         accessorKey: "transactionTypes",
+        accessorFn: (row) => row.transactionTypes.map((t) => t.transactionTypeName).join(", "),
         header: "Corresponding Transaction Type",
         cell: ({ row }) => <div className="">{row.getValue("transactionTypes")}</div>,
         enableSorting: true,

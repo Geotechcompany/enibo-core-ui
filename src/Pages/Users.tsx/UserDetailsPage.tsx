@@ -6,8 +6,12 @@ import { FaPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userColumns } from "@/components/user-details/columns";
 import { UserDetailsType } from "@/types/global";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import queryUsersList from "@/components/user-details/query";
+import { Row } from "@tanstack/react-table";
+import { DELETE_USER } from "@/types/mutations";
+import { toast } from "@/components/ui/use-toast";
+import DeleteWarning from "@/components/deleteWarning";
 
 interface UsersProps {}
 
@@ -15,13 +19,59 @@ const Users: FC<UsersProps> = () => {
   const [users, setUsers] = useState<UserDetailsType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [sorting] = useState([{ id: "modifiedOn", desc: true }])
-
+  const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
 
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/user-details/user-details-form" };
-  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryUsersList);
+  const from = location.state?.from || {
+    pathname: "/administration/user-details/user-details-form",
+  };
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+    refetch,
+  } = useQuery(queryUsersList);
+  const handleEdit = (selectedRows: Row<UserDetailsType>[]) => {
+    navigate(`/administration/user-details/${selectedRows[0].id}`);
+  };
+
+  const handleCopy = (selectedRows: Row<UserDetailsType>[]) => {
+    localStorage.setItem("copyUser", JSON.stringify(selectedRows[0].original));
+    navigate(from, { replace: true });
+  };
+
+  const [deleteUser] = useMutation(DELETE_USER);
+  const deleteRows = async (selectedRows: Row<UserDetailsType>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      return deleteUser({ variables: { deleteUserId: row.original.id } });
+    });
+
+    const results = await Promise.all(deletePromises);
+
+    if (results) {
+      toast({
+        title: "Profile Deleted",
+        description: `"The selected user profiles(${selectedRows.length}) have been successfully deleted."`,
+      });
+      window.location.reload();
+    }
+  };
+  const handleDelete = async (selectedRows: Row<UserDetailsType>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -30,7 +80,7 @@ const Users: FC<UsersProps> = () => {
     refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError, refetch]);  
+  }, [data, queryLoading, queryError, refetch]);
 
   return (
     <div>
@@ -56,16 +106,19 @@ const Users: FC<UsersProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">Users</h1></div>
+        <div className="flex items-center justify-between my-4">
           <div className="">
-          <Button
-            size="sm"
-            className="bg-[#36459C] text-white py-5 px-8"
-            onClick={() => navigate(from, { replace: true })}
-          >
-            <FaPlus className="mr-1 text-white" /> New User
-          </Button></div>
+            <h1 className="text-4xl text-[#36459C]">Users</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm"
+              className="bg-[#36459C] text-white py-5 px-8"
+              onClick={() => navigate(from, { replace: true })}
+            >
+              <FaPlus className="mr-1 text-white" /> New User
+            </Button>
+          </div>
         </div>
         <div>
           {loading ? (
@@ -76,7 +129,10 @@ const Users: FC<UsersProps> = () => {
             <DataTable
               columns={userColumns}
               data={users}
-              sorting={sorting} 
+              sorting={sorting}
+              handleEdit={handleEdit}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
             />
           )}
         </div>

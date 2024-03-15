@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "../ui/use-toast";
 import { userProfileSchema } from "./schema";
 import { Link, useNavigate } from "react-router-dom";
+import { Textarea } from "../ui/textarea";
 
 
 type UserProfileInput = z.infer<typeof userProfileSchema>;
@@ -37,7 +38,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
         description: <div className="text-black">
         <div className="text-lg">
           New User Profile {" "}
-          <Link to={`/administration/user-management/profile-list`} className="underline text-blue-500">
+          <Link to={`/administration/user-management/profile-list`} className="text-blue-500 underline">
             {data.profileName}
           </Link>
            , has been successfully created
@@ -56,7 +57,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
   };
 
   return (
-    <section className="w-full flex justify-between">
+    <section className="flex justify-between w-full">
       <form
         className="grid grid-cols-3 gap-8 w-[70%]"
         onSubmit={handleSubmit(onSubmit)}
@@ -77,11 +78,10 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
 
          <div className="mt-4">
           <Label htmlFor="description">Description</Label>
-          <Input
+          <Textarea
             id="description"
-            type="text"
             {...register("description")}
-            className="mt-2 w-full h-40"
+            className="w-full mt-2"
             placeholder="Description text goes here"
            />
           {errors.description && (
@@ -91,7 +91,7 @@ const UserProfileForm: FC<UserProfileFormProps> = ({ user }) => {
           )}
         </div>
         </div>
-        <div className="col-span-3 flex gap-2">
+        <div className="flex col-span-3 gap-2">
           <Button
             type="submit"
             size="lg"

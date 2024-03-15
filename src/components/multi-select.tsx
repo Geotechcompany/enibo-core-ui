@@ -33,6 +33,7 @@ interface MultiSelectProps {
   selected: OptionType[] | [];
   placeholder: string;
   className: string;
+  selectLimit?: number;
   onChange: (selected: OptionType[]) => void;
 }
 
@@ -41,6 +42,7 @@ function MultiSelect({
   selected,
   placeholder,
   className,
+  selectLimit = Infinity,
   onChange,
   ...props
 }: MultiSelectProps) {
@@ -90,12 +92,13 @@ function MultiSelect({
           <span className="sr-only">Toggle theme</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
-        <Command className={className}>
+      <PopoverContent className="w-full p-0" align="start" asChild>
+       <div className="w-[100%]">
+       <Command className={className} >
           <CommandInput placeholder="Search..." />
-          <CommandList>
+          <CommandList >
             <CommandEmpty>No results found</CommandEmpty>
-            <CommandGroup className="overflow-auto max-h-64">
+            <CommandGroup className="w-full overflow-auto max-h-64">
               {options.map((option) => {
                 const isSelected = selected?.some(
                   (item) => item.value === option.value
@@ -118,10 +121,14 @@ function MultiSelect({
                             (item) => item.value !== option.value
                           ) // Unselect
                         : [...updatedSelected, option]; // Select
-
-                      onChange(updatedSelection);
+                      const isWithinLimit = updatedSelection.length <= selectLimit;
+                      if (isWithinLimit) {
+                        onChange(updatedSelection);
+                      }
                       setOpen(true);
                     }}
+                    className="w-full"
+                    
                   >
                     <div
                       className={cn(
@@ -141,7 +148,7 @@ function MultiSelect({
             {selected && selected?.length > 0 && (
               <>
                 <CommandSeparator />
-                <CommandGroup>
+                <CommandGroup className="w-full">
                   <CommandItem
                     onSelect={() => selected.length > 0 && onChange([])}
                     className="justify-center text-center"
@@ -153,6 +160,7 @@ function MultiSelect({
             )}
           </CommandList>
         </Command>
+       </div>
       </PopoverContent>
     </Popover>
   );

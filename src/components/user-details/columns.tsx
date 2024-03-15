@@ -34,7 +34,7 @@ export const userColumns: ColumnDef<UserDetailsType>[] = [
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="User Id" />
       ),
-      cell: ({ row }) => <div className="">{row.getValue("id")}</div>,
+      cell: ({ row }) => <div className="w-[230px]">{row.getValue("id")}</div>,
       enableSorting: true,
       enableHiding: true,
     },
@@ -112,6 +112,7 @@ export const userColumns: ColumnDef<UserDetailsType>[] = [
       },
       {
         accessorKey: "profile",
+        accessorFn: (row) => row.profile.name,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="User Profile" />
         ),

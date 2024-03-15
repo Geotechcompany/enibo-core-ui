@@ -3,8 +3,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
 import { KYCType } from "@/types/global";
 
- 
-
 export const columns: ColumnDef<KYCType>[] = [
   {
     id: "select",
@@ -40,32 +38,33 @@ export const columns: ColumnDef<KYCType>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-    {
-        accessorKey: "KycTypeName",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="KycTypeName" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("KycTypeName")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-        accessorKey: "KycTypeDescription",
-        header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Kyc Description" />
-        ),
-        cell: ({ row }) => <div className="">{row.getValue("KycTypeDescription")}</div>,
-        enableSorting: true,
-        enableHiding: true,
-    },
-    {
-      accessorKey: "KycTypeCode",
-      header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="KycTypeCode" />
-      ),
-      cell: ({ row }) => <div className="">{row.getValue("KycTypeCode")}</div>,
-      enableSorting: true,
-      enableHiding: true,
+  {
+    accessorKey: "KycTypeName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="KycTypeName" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("KycTypeName")}</div>,
+    enableSorting: true,
+    enableHiding: true,
   },
-  
+  {
+    accessorKey: "KycTypeDescription",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Kyc Description" />
+    ),
+    cell: ({ row }) => (
+      <div className="">{row.getValue("KycTypeDescription")}</div>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "KycTypeCode",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="KycTypeCode" />
+    ),
+    cell: ({ row }) => <div className="">{row.getValue("KycTypeCode")}</div>,
+    enableSorting: true,
+    enableHiding: true,
+  },
 ];

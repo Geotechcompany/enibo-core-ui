@@ -9,13 +9,22 @@ query FeeTypes {
     feeTypeId
     feeTypeName
     description
-    transactionTypes
+    transactionTypes {
+      transactionTypeId
+      transactionTypeName
+      transactionTypeCode
+      description
+      currency
+      modifiedBy
+      modifiedOn
+    }
     paymentFrequency
     effectiveDate
     fixedRate
     modifiedBy
     modifiedOn
   }
-}`
+}
+`
 
   export default queryFeeTypesList;

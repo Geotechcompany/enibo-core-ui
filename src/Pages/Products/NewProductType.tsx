@@ -1,5 +1,5 @@
 
-import NewProductTypeForm from "@/components/new-product-type";
+import NewProductTypeForm from "@/components/product-type-list/new-product-type";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 

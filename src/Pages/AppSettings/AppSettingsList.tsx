@@ -1,39 +1,128 @@
-import { AppSettingsFields } from "@/components/app-settings/schema";
 import { Button } from "@/components/ui/button";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import appSettingsList from "@/components/app-settings/settings-records.json";
 import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/app-settings/columns";
+import { querySettingsList } from "@/types/queries";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_APP_SETTING } from "@/types/mutations";
+import { toast } from "@/components/ui/use-toast";
+import DeleteWarning from "@/components/deleteWarning";
+import { Row } from "@tanstack/react-table";
+
+export type Setting = {
+  id: string;
+  name: string;
+  description: string;
+  value: string;
+  hidden: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
 
 interface AppSettingsProps {}
 
-
-
 const AppSettingsList: FC<AppSettingsProps> = () => {
-    const appSettings: AppSettingsFields[] = appSettingsList;
-    const location = useLocation();
-    const navigate = useNavigate();
-    const from = location.state?.from || { pathname: "/administration/app-settings/app-details"};
+  const [appSettings, setAppSettings] = useState([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+    refetch,
+  } = useQuery(querySettingsList);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || {
+    pathname: "/administration/app-settings/app-details",
+  };
 
-    return (
-        <div>
-        <div className="mx-4">
-          <div className="pt-2">
-            <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
-              <ol className="inline-flex p-0 m-0 list-none">
-                <li className="flex items-center m-0">
-                  <Link to="/administration">Administration</Link>
-                  <svg
-                    className="w-3 h-3 mx-3 fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 320 512"
-                  >
-                    <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
-                  </svg>
-                </li>
-                <li className="flex items-center m-0">
+  useEffect(() => {
+    if (data) {
+      setAppSettings(data.settings);
+    }
+    setLoading(queryLoading);
+    refetch();
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError, refetch]);
+
+  const handleEdit = (selectedRows: Row<Setting>[]) => {
+    navigate(`/administration/app-settings/${selectedRows[0].original.id}`);
+  };
+
+  const handleCopy = (selectedRows: Row<Setting>[]) => {
+    localStorage.setItem("settings", JSON.stringify(selectedRows[0].original));
+    navigate(from, { replace: true });
+  };
+  const [deleteAppSetting] = useMutation(DELETE_APP_SETTING);
+
+  const deleteRows = async (selectedRows: Row<Setting>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      //this is the mutation function
+      return deleteAppSetting({
+        variables: {
+          deleteSettingId: row.original.id,
+        },
+      });
+    });
+
+    const result = await Promise.all(deletePromises);
+
+    if (result) {
+      window.location.reload();
+      toast({
+        title: "Record deleted successfully",
+        description: `${selectedRows.length} record(s) deleted successfully`,
+      });
+    }
+  };
+
+  const handleDelete = async (selectedRows: Row<Setting>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  if (!appSettings) {
+    return <p>No data</p>;
+  }
+
+  return (
+    <div>
+      <div className="mx-4">
+        <div className="pt-2">
+          <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
+            <ol className="inline-flex p-0 m-0 list-none">
+              <li className="flex items-center m-0">
+                <Link to="/administration">Administration</Link>
+                <svg
+                  className="w-3 h-3 mx-3 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 320 512"
+                >
+                  <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                </svg>
+              </li>
+              <li className="flex items-center m-0">
                 <Link to="#">App Settings</Link>
                 <svg
                   className="w-3 h-3 mx-3 fill-current"
@@ -43,36 +132,42 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
                   <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
                 </svg>
               </li>
-                <li className="m-0">
-                  <Link to="#" className="text-gray-500" aria-current="page">
-                    App Settings List
-                  </Link>
-                </li>
-              </ol>
-            </nav>
+              <li className="m-0">
+                <Link to="#" className="text-gray-500" aria-current="page">
+                  App Settings List
+                </Link>
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div className="flex items-center justify-between my-4">
+          <div className="">
+            <h1 className="text-4xl text-[#36459C]">App Settings List</h1>
           </div>
-          <div className="flex items-center justify-between my-4" >
-            <div className=""><h1 className="text-4xl text-[#36459C]">App Settings List</h1></div>
-            <div className="">
+          <div className="">
             <Button
-              size="sm"          
+              size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
               <FaPlus className="mr-1 text-white" /> New App Setting
-            </Button></div>
+            </Button>
           </div>
-          <div>
+        </div>
+        <div>
           {appSettings && (
             <DataTable
               columns={columns}
-                data={appSettings}
+              data={appSettings}
+              handleEdit={handleEdit}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
             />
-            )}
-          </div>
+          )}
         </div>
       </div>
-    );
-}
- 
+    </div>
+  );
+};
+
 export default AppSettingsList;

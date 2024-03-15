@@ -1,56 +1,60 @@
-import { DataTable } from "@/components/datatable/data-table";
-
-import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import { useMutation, useQuery } from "@apollo/client";
-import queryKycTypesList from "@/components/kyc-type-list/query";
-import { columns } from "@/components/kyc-type-list/columns";
-import { KYCType } from "@/types/global";
-import { DELETE_KYCType } from "@/components/kyc-type-list/mutation";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/datatable/data-table";
+import { columns } from "@/components/branch-types/columns";
+import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
+import queryBranchTypesList from "@/components/branch-types/query";
+import { BranchTypes } from "@/types/global";
 import { toast } from "@/components/ui/use-toast";
-import { Row } from "@tanstack/react-table";
 import DeleteWarning from "@/components/deleteWarning";
+import { Row } from "@tanstack/react-table";
 
-interface KYCTypesProps {}
+interface BranchesProps {}
 
-const KYCTypes: FC<KYCTypesProps> = () => {
-  const [kycTypes, setKycTypes] = useState<KYCType[]>([]);
+const BranchType: FC<BranchesProps> = () => {
+  const [branchTypes, setBranchTypes] = useState<BranchTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sorting] = useState([{ id: "modifiedOn", desc: true }]);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
-    pathname: "/customers/kyc-types/new-kyc-type",
+    pathname: "/administration/branches/new-branch-type",
   };
+
   const {
     data,
     loading: queryLoading,
     error: queryError,
     refetch,
-  } = useQuery(queryKycTypesList);
-  const [DeleteKYCType] = useMutation(DELETE_KYCType);
+  } = useQuery(queryBranchTypesList);
+  const [deleteBranchType] = useMutation(DELETE_BRANCH_TYPE);
+
   useEffect(() => {
     if (data) {
-      setKycTypes(data.kycTypes);
+      setBranchTypes(data.branchTypes);
     }
     refetch();
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
 
-  const handleCopy = (selectedRows: Row<KYCType>[]) => {
-    localStorage.setItem("kycTypes", JSON.stringify(selectedRows[0].original));
-    navigate("/customers/kyc-types/new-kyc-type");
+  const handleCopy = (selectedRows: Row<BranchTypes>[]) => {
+    localStorage.setItem(
+      "branchTypes",
+      JSON.stringify(selectedRows[0].original)
+    );
+    navigate("/administration/branches/new-branch-type");
   };
 
-  const deleteRows = async (selectedRows: Row<KYCType>[]) => {
+  const deleteRows = async (selectedRows: Row<BranchTypes>[]) => {
     const deletePromises = selectedRows.map((row) => {
       //this is the mutation function
-      return DeleteKYCType({
-        variables: { kycTypeId: row.original.kycTypeId },
+      return deleteBranchType({
+        variables: { branchTypeId: row.original.branchTypeId },
       });
     });
 
@@ -65,7 +69,7 @@ const KYCTypes: FC<KYCTypesProps> = () => {
     }
   };
 
-  const handleDelete = async (selectedRows: Row<KYCType>[]) => {
+  const handleDelete = async (selectedRows: Row<BranchTypes>[]) => {
     try {
       toast({
         title: "Are you sure? The operation is irreversible",
@@ -81,8 +85,8 @@ const KYCTypes: FC<KYCTypesProps> = () => {
     }
   };
 
-  const handleEdit = (selectedRows: Row<KYCType>[]) => {
-    navigate(`/edit-kyc-type/${selectedRows[0].original.kycTypeId}`);
+  const handleEdit = (selectedRows: Row<BranchTypes>[]) => {
+    navigate(`/edit-branch-type/${selectedRows[0].original.branchTypeId}`);
   };
 
   return (
@@ -103,7 +107,7 @@ const KYCTypes: FC<KYCTypesProps> = () => {
               </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  KYC Types
+                  Branch Types List
                 </Link>
               </li>
             </ol>
@@ -111,7 +115,7 @@ const KYCTypes: FC<KYCTypesProps> = () => {
         </div>
         <div className="flex items-center justify-between my-4">
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">KYC Types</h1>
+            <h1 className="text-4xl text-[#36459C]">Branch Types</h1>
           </div>
           <div className="">
             <Button
@@ -131,7 +135,7 @@ const KYCTypes: FC<KYCTypesProps> = () => {
           ) : (
             <DataTable
               columns={columns}
-              data={kycTypes}
+              data={branchTypes}
               sorting={sorting}
               handleCopy={handleCopy}
               handleDelete={handleDelete}
@@ -143,4 +147,5 @@ const KYCTypes: FC<KYCTypesProps> = () => {
     </div>
   );
 };
-export default KYCTypes;
+
+export default BranchType;

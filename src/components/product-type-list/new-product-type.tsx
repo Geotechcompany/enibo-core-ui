@@ -6,17 +6,22 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PRODUCT_TYPE_MUTATION,
   UPDATE_PRODUCT_TYPE_MUTATION,
 } from "@/Pages/Products/ProductMutation";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import queryFeeTypesList from "./fee-type-list/query";
-import { useProductTypeState } from "@/store/productTypeState";
-import queryProductList from "./product-type-list/query";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import queryFeeTypesList from "../fee-type-list/query";
+import queryProductList from "./query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const productTypeSchema = z.object({
   productTypeId: z.string().optional(),
@@ -32,7 +37,7 @@ const productTypeSchema = z.object({
     .string()
     .min(1, { message: "Fixed Interest Rate is required" }),
   effectiveDate: z.string().min(3, { message: "Effective Date is required" }),
-  fees: z.string(),
+  fees: z.boolean().optional(),
   feeTypes: z.string().min(3, { message: "Fee Types is required" }),
   riskRating: z.string().min(1, { message: "Risk Rating is required" }),
   prefix: z.string().min(1, { message: "Prefix is required" }),
@@ -50,10 +55,9 @@ interface NewProductTypeFormProps {}
 
 const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const { productTypeId } = useParams<{ productTypeId: string }>();
-  const { state, setState } = useProductTypeState();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  const isEditMode = productTypeId ? true : false;
+  const storedProductType = localStorage.getItem("productTypes");
+  const isCopyMode = storedProductType ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,18 +78,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const [updateProductTypeMutation] = useMutation(UPDATE_PRODUCT_TYPE_MUTATION);
 
   const [feeTypes, setfeeTypes] = useState<any[]>([]);
-  const [interestBearing, setInterestBearing] = useState(false);
-  const [active, setActive] = useState(false);
-
-  const handleInterestBearingChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInterestBearing(e.target.checked);
-  };
-
-  const handleActiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setActive(e.target.checked);
-  };
 
   const { data: productTypeData, loading: productTypeLoading } = useQuery(
     queryProductList,
@@ -95,7 +87,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   );
 
   const handleCreate = async (data: ProductTypeInput) => {
-    console.log(data);
     try {
       await createProductTypeMutation({
         variables: {
@@ -103,7 +94,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           description: data.description,
           active: data.active || true,
           interestBearing: data.interestBearing || true,
-          fixedInterestRate: parseFloat(data.fixedInterestRate),
+          fixedInterestRate: data.fixedInterestRate,
           effectiveDate: data.effectiveDate,
           fees: data.fees,
           feeTypes: data.feeTypes,
@@ -123,7 +114,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               New Product Type{" "}
               <Link
                 to={`/administration/products/product-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.productTypeName}
               </Link>
@@ -136,23 +127,22 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       navigate("/administration/products/product-types");
     } catch (error: any) {
       const errorMessage =
-      (error.graphQLErrors &&
-        error.graphQLErrors[0] &&
-        error.graphQLErrors[0].extensions &&
-        error.graphQLErrors[0].extensions.response &&
-        error.graphQLErrors[0].extensions.response.body &&
-        error.graphQLErrors[0].extensions.response.body.startingValue) ||
-      "Unknown error";
-    
-    toast({
-      title: "Error",
-      description: `"Failed, ${errorMessage} Please try again."`,
-      variant: "destructive",
-    });
-  }
-};
+        (error.graphQLErrors &&
+          error.graphQLErrors[0] &&
+          error.graphQLErrors[0].extensions &&
+          error.graphQLErrors[0].extensions.response &&
+          error.graphQLErrors[0].extensions.response.body &&
+          error.graphQLErrors[0].extensions.response.body.startingValue) ||
+        "Unknown error";
+
+      toast({
+        title: "Error",
+        description: `"Failed, ${errorMessage} Please try again."`,
+        variant: "destructive",
+      });
+    }
+  };
   const handleEdit = async (data: ProductTypeInput) => {
-    console.log(data);
     try {
       await updateProductTypeMutation({
         variables: {
@@ -161,7 +151,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           description: data.description,
           active: data.active,
           interestBearing: data.interestBearing,
-          fixedInterestRate: parseFloat(data.fixedInterestRate),
+          fixedInterestRate: data.fixedInterestRate,
           effectiveDate: data.effectiveDate,
           fees: data.fees,
           feeTypes: data.feeTypes,
@@ -181,7 +171,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               Product Type{" "}
               <Link
                 to={`/administration/products/product-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.productTypeName}
               </Link>
@@ -194,28 +184,27 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       navigate("/administration/products/product-types");
     } catch (error: any) {
       const errorMessage =
-      (error.graphQLErrors &&
-        error.graphQLErrors[0] &&
-        error.graphQLErrors[0].extensions &&
-        error.graphQLErrors[0].extensions.response &&
-        error.graphQLErrors[0].extensions.response.body &&
-        error.graphQLErrors[0].extensions.response.body.startingValue) ||
-      "Unknown error";
-    
-    toast({
-      title: "Error",
-      description: `"Failed, ${errorMessage} Please try again."`,
-      variant: "destructive",
-    });
-  }
-};
+        (error.graphQLErrors &&
+          error.graphQLErrors[0] &&
+          error.graphQLErrors[0].extensions &&
+          error.graphQLErrors[0].extensions.response &&
+          error.graphQLErrors[0].extensions.response.body &&
+          error.graphQLErrors[0].extensions.response.body.startingValue) ||
+        "Unknown error";
+
+      toast({
+        title: "Error",
+        description: `"Failed, ${errorMessage} Please try again."`,
+        variant: "destructive",
+      });
+    }
+  };
 
   const onSubmit = async (data: ProductTypeInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -239,42 +228,13 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   }, [data, queryLoading, queryError]);
 
   const productType = productTypeData?.productTypes.find(
-    (productType: {productTypeId: string | undefined}) => productType.productTypeId === productTypeId
+    (productType: { productTypeId: string | undefined }) =>
+      productType.productTypeId === productTypeId
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
-      const { productTypeName,
-      description,
-      active,
-      interestBearing,
-      fixedInterestRate,
-      effectiveDate,
-      fees,
-      feeTypes,
-      riskRating,
-      prefix,
-      numberSchema,
-      startingValue, } = state;
-      setValue("productTypeName", productTypeName);
-      setValue("description", description);
-      setValue("active", active);
-      setValue("interestBearing", interestBearing);
-      setValue("fixedInterestRate",  (fixedInterestRate).toString());
-      setValue(
-        "effectiveDate",
-        effectiveDate ? effectiveDate.split("T")[0] : ""
-      ); // Format the effectiveDate here
-      setValue("fees", (fees).toString());
-      setValue("feeTypes", feeTypes.toString());
-      setValue("riskRating", riskRating);
-      setValue("prefix", prefix);
-      setValue("numberSchema", numberSchema);
-      setValue("startingValue", (startingValue).toString());
-    } else if (formMode === "EDIT") {
-      if (!productTypeLoading && productType && state) {
-        const {
-        productTypeId,
+    if (isCopyMode && storedProductType !== null) {
+      const {
         productTypeName,
         description,
         active,
@@ -287,10 +247,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         prefix,
         numberSchema,
         startingValue,
-        modifiedBy,
-        modifiedOn
-      } = productType;
-      setValue("productTypeId", productTypeId);
+      } = JSON.parse(storedProductType);
       setValue("productTypeName", productTypeName);
       setValue("description", description);
       setValue("active", active);
@@ -301,39 +258,67 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         effectiveDate ? effectiveDate.split("T")[0] : ""
       ); // Format the effectiveDate here
       setValue("fees", fees);
-      setValue("feeTypes", feeTypes);
+      setValue("feeTypes", feeTypes.toString());
       setValue("riskRating", riskRating);
       setValue("prefix", prefix);
       setValue("numberSchema", numberSchema);
-      setValue("startingValue", startingValue);
-      setValue("modifiedBy", modifiedBy ||"tester");
-      setValue("modifiedOn", modifiedOn || "");
+      setValue("startingValue", startingValue.toString());
+    }
+    if (isEditMode) {
+      if (!productTypeLoading && productType) {
+        const {
+          productTypeId,
+          productTypeName,
+          description,
+          active,
+          interestBearing,
+          fixedInterestRate,
+          effectiveDate,
+          fees,
+          feeTypes,
+          riskRating,
+          prefix,
+          numberSchema,
+          startingValue,
+          modifiedBy,
+          modifiedOn,
+        } = productType;
+        setValue("productTypeId", productTypeId);
+        setValue("productTypeName", productTypeName);
+        setValue("description", description);
+        setValue("active", active);
+        setValue("interestBearing", interestBearing);
+        setValue("fixedInterestRate", fixedInterestRate);
+        setValue(
+          "effectiveDate",
+          effectiveDate ? effectiveDate.split("T")[0] : ""
+        ); // Format the effectiveDate here
+        setValue("fees", fees);
+        setValue("feeTypes", feeTypes);
+        setValue("riskRating", riskRating);
+        setValue("prefix", prefix);
+        setValue("numberSchema", numberSchema);
+        setValue("startingValue", startingValue);
+        setValue("modifiedBy", modifiedBy || "tester");
+        setValue("modifiedOn", modifiedOn || "");
       }
     }
-
-  }, [formMode, productType, productTypeLoading, setValue, setState, state]);
+  }, [
+    productType,
+    productTypeLoading,
+    setValue,
+    isEditMode,
+    isCopyMode,
+    storedProductType,
+  ]);
 
   const cancelForm = () => {
-    setState({
-      productTypeId: "",
-      productTypeName: "",
-      description:"",
-      active: false,
-      interestBearing: false,
-      fixedInterestRate: 0,
-      effectiveDate: "",
-      fees: false,
-      feeTypes: [""],
-      riskRating: "",
-      prefix: "",
-      numberSchema: "",
-      startingValue: 0,
-    });
+    localStorage.removeItem("productTypes");
     toast({
       title: "Product Type Form Cancelled",
     });
+    navigate("/administration/products/product-types");
   };
-
 
   return (
     <section>
@@ -344,9 +329,8 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <input
                 type="checkbox"
                 placeholder="active"
-                checked={active}
-                onChange={handleActiveChange}
                 className="flex w-4 h-4"
+                {...register("active")}
               />
               <label>Active</label>
             </div>
@@ -387,11 +371,10 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <input
                 type="checkbox"
                 placeholder="interestBearing"
-                checked={interestBearing}
-                onChange={handleInterestBearingChange} // Handle interestBearing checkbox change
                 className="flex w-4 h-4"
+                {...register("interestBearing")}
               />
-              <label>interestBearing?</label>
+              <label>Interest Bearing?</label>
             </div>
             {errors.interestBearing && (
               <span className="text-sm text-red-500">
@@ -428,8 +411,16 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             </div>
           </div>
           <div>
-            <Label>Fees</Label>
-            <Input type="text" placeholder="fees" {...register("fees")} />
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                placeholder="fees"
+                {...register("fees")}
+                className="flex w-4 h-4"
+              />
+              <label>Fees?</label>
+            </div>
+
             {errors.fees && (
               <span className="text-sm text-red-500">
                 {errors.fees.message}
@@ -448,10 +439,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {feeTypes.map((type) => (
-                      <SelectItem
-                        key={type.feeTypeName}
-                        value={type.feeTypeName}
-                      >
+                      <SelectItem key={type.feeTypeId} value={type.feeTypeId}>
                         {type.feeTypeName}
                       </SelectItem>
                     ))}
@@ -548,7 +536,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             </Label>
             <Input
               {...register("modifiedOn")}
-              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              placeholder="Modified On (YYYY-MM-DD-HH:MM:SSZ)"
               type="text"
               className="h-12 text-base bg-blue-50"
               autoComplete="false"
@@ -563,11 +551,9 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           <Button type="submit" size="lg" className="">
             Submit
           </Button>
-          <Link to={`/administration/products/product-types`}>
-              <Button size="lg" onClick={cancelForm}>
-                Cancel
-              </Button>
-            </Link>
+          <Button size="lg" onClick={() => cancelForm()}>
+            Cancel
+          </Button>
         </div>
       </form>
     </section>

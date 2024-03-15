@@ -40,7 +40,6 @@ const AccountSelect: FC<AccountSelectProps> = ({
   selected,
   onChange,
 }) => {
-  //   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("");
   return (
     <div>
