@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { manageUserInput, manageUserSchema } from "./schema";
 import data from "./manage-profiles.json";
-import { DataTableColumnHeader } from "../datatable/datatable-column-header";
+import { DataTableColumnHeader } from "../dataTable/datatable-column-header";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";

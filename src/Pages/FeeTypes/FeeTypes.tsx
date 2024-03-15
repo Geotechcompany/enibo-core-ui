@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { columns } from "@/components/fee-type-list/columns";
@@ -41,7 +41,7 @@ const FeeTypes: FC<FeeProps> = () => {
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
   const [deleteFeeType] = useMutation(DELETE_FEE_TYPE_LIST);
-  
+
   const handleCopy = (selectedRows: Row<FeeType>[]) => {
     localStorage.setItem("feeTypes", JSON.stringify(selectedRows[0].original));
     navigate("/administration/static-data/fee-types/new-fee-type");

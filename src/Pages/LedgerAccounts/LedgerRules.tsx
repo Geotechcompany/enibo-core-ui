@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { columns } from "@/components/ledger-rules-list/columns";
 import { Button } from "@/components/ui/button";
 import { LedgerRule } from "@/types/global";
@@ -29,8 +29,8 @@ const LedgerRules: FC<LedgerRulesProps> = () => {
     }
   }, [data]);
 
-  const handleEdit = (id: string) => {
-    navigate(`/administration/ledger-management/ledger-rules/${id}`);
+  const handleEdit = (selectedRows: Row<LedgerRule>[]) => {
+    navigate(`/administration/ledger-management/ledger-rules/${selectedRows[0].original.id}`);
   };
 
   const handleCopy = (selectedRows: Row<LedgerRule>[]) => {

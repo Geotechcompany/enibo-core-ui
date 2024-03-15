@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { Button } from "@/components/ui/button";
 import { MandateType } from "@/types/global";
 import { FC, useEffect, useState } from "react";
@@ -90,9 +90,7 @@ const CustomerMandateTypes: FC<CustomerMandateTypesProps> = () => {
       "mandateType",
       JSON.stringify(selectedRows[0].original)
     );
-    navigate(
-      "/customers/account-mandate-types/new-mandate-type"
-    );
+    navigate("/customers/account-mandate-types/new-mandate-type");
   };
   return (
     <div>

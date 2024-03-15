@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "@/components/datatable/datatable-column-header";
+import { DataTableColumnHeader } from "@/components/dataTable/datatable-column-header";
 import { ProductType } from "@/types/global";
 import { Badge } from "../ui/badge";
 
@@ -108,7 +108,7 @@ export const columns: ColumnDef<ProductType>[] = [
     },
     {
         accessorKey: "feeTypes",
-        accessorFn: (row) => row.feeTypes?.map((feeType:string) => feeType.feeTypeName).join(", "),
+        accessorFn: (row) => row.feeTypes?.map((feeType) => feeType.feeTypeName).join(", "),
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Fee Types" />
         ),

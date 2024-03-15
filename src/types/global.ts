@@ -1,3 +1,5 @@
+import { UserProfile } from "@/Pages/Users.tsx/UserProfileList";
+
 export type CustomerType = "Retail" | "Business";
 
 enum RetailType {
@@ -36,6 +38,7 @@ type Business = {
 };
 
 export type Customer = {
+  customerId: string;
   customerType: CustomerType;
   retail?: Retail;
   business?: Business;
@@ -55,7 +58,7 @@ export type ProductType = {
   fixedInterestRate: number;
   effectiveDate: string;
   fees: boolean;
-  feeTypes: string[];
+  feeTypes: FeeType[];
   riskRating: string;
   prefix: string;
   numberSchema: string;
@@ -268,7 +271,7 @@ export interface UserDetailsType {
   phoneNumber: string;
   employeeNumber: string;
   branch: string;
-  profile: string;
+  profile: UserProfile;
   documentAttachment: string;
   modifiedOn: string;
   modifiedBy: string;

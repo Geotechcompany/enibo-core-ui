@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { columns } from "@/components/product-type-list/columns";
 import { FaPlus } from "react-icons/fa";
 import { ProductType } from "@/types/global";

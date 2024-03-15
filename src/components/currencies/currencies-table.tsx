@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { DataTable } from "../datatable/data-table";
+import { DataTable } from "../dataTable/data-table";
 import { currenciesColumns } from "./columns";
 
 

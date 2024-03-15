@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { columns } from "@/components/app-settings/columns";
 import { querySettingsList } from "@/types/queries";
 import { useMutation, useQuery } from "@apollo/client";
@@ -20,7 +20,6 @@ export type Setting = {
   createdAt: string;
   updatedAt: string;
 };
-
 
 interface AppSettingsProps {}
 
@@ -48,9 +47,9 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
     refetch();
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
-  
-  const handleEdit = (id: string) => {
-    navigate(`/administration/app-settings/${id}`);
+
+  const handleEdit = (selectedRows: Row<Setting>[]) => {
+    navigate(`/administration/app-settings/${selectedRows[0].original.id}`);
   };
 
   const handleCopy = (selectedRows: Row<Setting>[]) => {
@@ -68,9 +67,9 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
         },
       });
     });
-    
+
     const result = await Promise.all(deletePromises);
-    
+
     if (result) {
       window.location.reload();
       toast({
@@ -102,7 +101,7 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  
+
   if (!appSettings) {
     return <p>No data</p>;
   }

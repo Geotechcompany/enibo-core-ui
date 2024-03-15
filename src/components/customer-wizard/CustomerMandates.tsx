@@ -74,7 +74,7 @@ const CustomerMandates: FC<CustomerMandatesProps> = () => {
   const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const [individualKYCs, setIndividualKYCs] = useState<KYCIndividual[]>([]);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const {state, setState} = useAppState();
+  const {appState, setAppState} = useAppState();
   const [accountMandates, setAccountMandates] = useState([
     {
       signatory: [],
@@ -130,19 +130,19 @@ const CustomerMandates: FC<CustomerMandatesProps> = () => {
     );
     
     if(mandates && mandates.length > 0){
-      setState({
-        ...state,
+      setAppState({
+        ...appState,
         mandates: mandates,
       })
     }
 
     const retail = await createRetail({
       variables: {
-        retailType: state.customerType,
-        individualKyc: state.individuals[0].kycId,
-        productTypes: state.product.productTypes,
-        accountCurrency: state.product.accountCurrency,
-        riskRating: state.product.riskRating,
+        retailType: appState.customerType,
+        individualKyc: appState.individuals[0].kycId,
+        productTypes: appState.product.productTypes,
+        accountCurrency: appState.product.accountCurrency,
+        riskRating: appState.product.riskRating,
         accountMandates: mandates.map((mandate) => mandate.mandateId),
         modifiedBy: user.id,
         modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
@@ -151,15 +151,15 @@ const CustomerMandates: FC<CustomerMandatesProps> = () => {
       },
     })
     console.log(retail.data.createRetail)
-    setState({
-      ...state,
+    setAppState({
+      ...appState,
       retail: retail.data.createRetail.retailId,
     })
     const customer = await createCustomer({
       variables: {
-        customerType: state.customerType,
+        customerType: appState.customerType,
         retail: retail.data.createRetail.retailId,
-        accountMandates: state.mandates,
+        accountMandates: appState.mandates,
         modifiedBy: user.id,
         modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
           .toISOString()
@@ -167,8 +167,8 @@ const CustomerMandates: FC<CustomerMandatesProps> = () => {
       },
     })
     console.log(customer)
-    setState({
-      ...state,
+    setAppState({
+      ...appState,
       customer: customer.data.createCustomer.customerId,
     })
   };

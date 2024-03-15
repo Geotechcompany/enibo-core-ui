@@ -1,16 +1,16 @@
-import { columns } from "@/components/approval-list/columns";
-import { DataTable } from "@/components/datatable/data-table";
+// import { columns } from "@/components/approval-list/columns";
+// import { DataTable } from "@/components/datatable/data-table";
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import approvalsList from "@/components/approval-list/approvals.json";
+// import approvalsList from "@/components/approval-list/approvals.json";
 import { Button } from "@/components/ui/button";
-import { ApprovalRule } from "@/types/global";
+// import { ApprovalRule } from "@/types/global";
 import { FaPlus } from "react-icons/fa";
 
 interface ApprovalsProps {}
 
 const Approvals: FC<ApprovalsProps> = () => {
-  const approvals: ApprovalRule[] = approvalsList;
+  // const approvals: ApprovalRule[] = approvalsList;
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
@@ -56,7 +56,7 @@ const Approvals: FC<ApprovalsProps> = () => {
           </div>
         </div>
         <div>
-          {approvals && <DataTable columns={columns} data={approvals} />}
+          {/* {approvals && <DataTable columns={columns} data={approvals} />} */}
         </div>
       </div>
     </div>

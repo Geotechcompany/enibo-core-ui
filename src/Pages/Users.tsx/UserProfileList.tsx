@@ -1,10 +1,9 @@
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 
 import { columns } from "@/components/user-profiles/columns";
 import { queryUserProfiles } from "@/types/queries";
@@ -21,14 +20,14 @@ export type UserProfile = {
   permissions: string[];
   modifiedBy: string;
   modifiedOn: string;
-}
+};
 
 interface UsersProps {}
 
 const UserProfile: FC<UsersProps> = () => {
- const [userProfiles, setUserProfiles] = useState([]);
- const [loading, setLoading] = useState<boolean>(false);
- const [error, setError] = useState<string | null>(null);
+  const [userProfiles, setUserProfiles] = useState([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const {
     data,
     loading: queryLoading,
@@ -37,24 +36,28 @@ const UserProfile: FC<UsersProps> = () => {
   } = useQuery(queryUserProfiles);
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from || { pathname: "/administration/user-management/profile-list/profile-form" };
+  const from = location.state?.from || {
+    pathname: "/administration/user-management/profile-list/profile-form",
+  };
 
   const [deleteUserProfile] = useMutation(DELETE_USER_PROFILE);
   const deleteRows = async (selectedRows: Row<UserProfile>[]) => {
     const deletePromises = selectedRows.map((row) => {
-      return deleteUserProfile({ variables: { deleteProfileId: row.original.id } });
+      return deleteUserProfile({
+        variables: { deleteProfileId: row.original.id },
+      });
     });
-    
+
     const results = await Promise.all(deletePromises);
-    
-    if (results){
+
+    if (results) {
       toast({
         title: "Profile Deleted",
         description: `"The selected user profiles(${selectedRows.length}) have been successfully deleted."`,
       });
-      window.location.reload()
+      window.location.reload();
     }
-  }
+  };
   const handleDelete = async (selectedRows: Row<UserProfile>[]) => {
     try {
       toast({
@@ -75,9 +78,8 @@ const UserProfile: FC<UsersProps> = () => {
     localStorage.setItem("profile", JSON.stringify(selectedRows[0].original));
     navigate(from, { replace: true });
   };
-  const handleEdit = (id: string) => {
-    console.log(id)
-    navigate(`/administration/user-management/profile-list/${id}`);
+  const handleEdit = (selectedRows: Row<UserProfile>[]) => {
+    navigate(`/administration/user-management/profile-list/${selectedRows[0].id}`);
   };
 
   useEffect(() => {
@@ -88,14 +90,14 @@ const UserProfile: FC<UsersProps> = () => {
     refetch();
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError, refetch]);
-  
+
   if (loading) {
     return <p>Loading...</p>;
   }
   if (error) {
     return <p>Error: {error}</p>;
   }
-  
+
   return (
     <div>
       <div className="mx-4">
@@ -120,20 +122,22 @@ const UserProfile: FC<UsersProps> = () => {
             </ol>
           </nav>
         </div>
-        <div className="flex items-center justify-between my-4" >
-          <div className=""><h1 className="text-4xl text-[#36459C]">User Profiles</h1></div>
+        <div className="flex items-center justify-between my-4">
           <div className="">
-          <Button
-              size="sm"    
+            <h1 className="text-4xl text-[#36459C]">User Profiles</h1>
+          </div>
+          <div className="">
+            <Button
+              size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
-            </div>
+          </div>
         </div>
         <div>
-        {userProfiles && (
+          {userProfiles && (
             <DataTable
               columns={columns}
               data={userProfiles}
@@ -141,7 +145,7 @@ const UserProfile: FC<UsersProps> = () => {
               handleCopy={handleCopy}
               handleEdit={handleEdit}
             />
-            )}
+          )}
         </div>
       </div>
     </div>

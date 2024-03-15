@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../ui/checkbox";
 import { Country } from "./schema";
-import { DataTableColumnHeader } from "../datatable/datatable-column-header";
+import { DataTableColumnHeader } from "../dataTable/datatable-column-header";
 
 export const columns: ColumnDef<Country>[] = [
     {

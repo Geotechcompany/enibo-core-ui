@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/datatable/data-table";
+import { DataTable } from "@/components/dataTable/data-table";
 import { columns } from "@/components/ledger-categories-list/columns";
 import { Button } from "@/components/ui/button";
 import { LedgerCategory } from "@/types/global";
@@ -42,15 +42,19 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
-  
 
   const handleEdit = (selectedRows: Row<LedgerCategory>[]) => {
     navigate(`/edit-ledger-account-category/${selectedRows[0].original.id}`);
   };
 
   const handleCopy = (selectedRows: Row<LedgerCategory>[]) => {
-    localStorage.setItem("transactionType", JSON.stringify(selectedRows[0].original));
-    navigate("/administration/ledger-management/ledger-account-categories/new-ledger-account-category");
+    localStorage.setItem(
+      "transactionType",
+      JSON.stringify(selectedRows[0].original)
+    );
+    navigate(
+      "/administration/ledger-management/ledger-account-categories/new-ledger-account-category"
+    );
   };
 
   const deleteRows = async (selectedRows: Row<LedgerCategory>[]) => {
@@ -73,7 +77,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
       });
     }
   };
-  
+
   const handleDelete = async (selectedRows: Row<LedgerCategory>[]) => {
     try {
       toast({
@@ -134,7 +138,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
             <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={()=>navigate(from, { replace: true })}
+              onClick={() => navigate(from, { replace: true })}
             >
               <FaPlus className="mr-1 text-white" /> Add
             </Button>

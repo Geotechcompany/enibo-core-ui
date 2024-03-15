@@ -39,7 +39,7 @@ interface ProductsProps {}
 
 const Products: FC<ProductsProps> = () => {
   const [ProductTypes, setProductTypes] = useState<ProductType[]>([]);
-  const {state, setState} = useAppState();
+  const {appState, setAppState} = useAppState();
 
   const {
     control,
@@ -50,8 +50,8 @@ const Products: FC<ProductsProps> = () => {
   });
 
   const saveData = (data: BusinessRetailInput) => { 
-    setState({
-      ...state,
+    setAppState({
+      ...appState,
       product: {
         productTypes: data.productTypes,
         accountCurrency: data.accountCurrency,
