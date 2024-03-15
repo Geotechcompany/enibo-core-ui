@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { useQuery } from "@apollo/client";
-import queryKycList from "../kyc-list/query";
+import {queryKycList} from "../kyc-list/query";
 import {
   Dialog,
   DialogContent,
