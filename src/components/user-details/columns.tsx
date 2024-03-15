@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "../dataTable/datatable-column-header";
+import { DataTableColumnHeader } from "../datatable/datatable-column-header";
 import { Checkbox } from "../ui/checkbox";
 import { UserDetailsType } from "@/types/global";
 

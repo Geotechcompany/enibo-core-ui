@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios"; // Assuming you have axios installed
-import { DataTable } from "../dataTable/data-table";
+import { DataTable } from "../datatable/data-table";
 import  { columns } from "@/components/countries/colums"
 import { Row } from "@tanstack/react-table";
 interface Country {

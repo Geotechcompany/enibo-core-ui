@@ -8,7 +8,7 @@ import queryKycTypesList from "@/components/kyc-type-list/query";
 import { useQuery } from "@apollo/client";
 import { columns } from "@/components/kyc-list/columns";
 import { KYCType } from "@/types/global";
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { Row } from "@tanstack/react-table";
 
 interface CustomerKYCSProps {}

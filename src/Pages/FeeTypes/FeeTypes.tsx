@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { columns } from "@/components/fee-type-list/columns";

@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/branch-types/columns";
 import { DELETE_BRANCH_TYPE } from "@/components/branch-types/mutation";
 import queryBranchTypesList from "@/components/branch-types/query";

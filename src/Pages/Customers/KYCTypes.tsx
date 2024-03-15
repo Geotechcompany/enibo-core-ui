@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 
 import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";

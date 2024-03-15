@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -79,7 +79,9 @@ const UserProfile: FC<UsersProps> = () => {
     navigate(from, { replace: true });
   };
   const handleEdit = (selectedRows: Row<UserProfile>[]) => {
-    navigate(`/administration/user-management/profile-list/${selectedRows[0].id}`);
+    navigate(
+      `/administration/user-management/profile-list/${selectedRows[0].id}`
+    );
   };
 
   useEffect(() => {

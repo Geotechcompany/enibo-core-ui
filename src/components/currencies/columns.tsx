@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../ui/checkbox";
 import { CurrencyInput } from "./currencies-schema";
-import { DataTableColumnHeader } from "../dataTable/datatable-column-header";
+import { DataTableColumnHeader } from "../datatable/datatable-column-header";
 
 export const currenciesColumns: ColumnDef<CurrencyInput>[] = [
     {

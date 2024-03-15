@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/app-settings/columns";
 import { querySettingsList } from "@/types/queries";
 import { useMutation, useQuery } from "@apollo/client";

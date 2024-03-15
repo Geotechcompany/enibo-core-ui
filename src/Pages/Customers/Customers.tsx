@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -92,7 +92,13 @@ const Customers: FC<CustomersProps> = () => {
           ) : error ? (
             <p>Error: {error}</p>
           ) : (
-            <DataTable columns={columns} data={Customers} handleCopy={handleCopy} handleDelete={handleDelete} handleEdit={handleEdit} />
+            <DataTable
+              columns={columns}
+              data={Customers}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            />
           )}
         </div>
       </div>

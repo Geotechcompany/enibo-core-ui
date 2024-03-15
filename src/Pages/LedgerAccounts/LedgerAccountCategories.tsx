@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/dataTable/data-table";
+import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/ledger-categories-list/columns";
 import { Button } from "@/components/ui/button";
 import { LedgerCategory } from "@/types/global";
