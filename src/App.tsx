@@ -46,7 +46,7 @@ import AppSettingsDetails from "./Pages/AppSettings/AppSettingsDetails";
 import NewKYCIndividualForm from "./components/new-KYC-individual-form";
 import NewKYCBusinessForm from "./components/new-KYC-business-form";
 import Signup from "./Pages/SignUp/SignUp";
-import BranchType from "./Pages/Branches/BranchTypesPage";
+import BranchType from "./Pages/Branches/BranchTypes";
 import NewTransfer from "./Pages/Transfer/NewTransfer";
 import Wizard from "./components/customer-wizard";
 
@@ -105,6 +105,14 @@ function App() {
           }
         />
         <Route
+          path="administration/branches/:branchId"
+          element={
+            <MainLayout>
+              <NewBranch />
+            </MainLayout>
+          }
+        />
+        <Route
           path="/administration/branches/branch-types"
           element={
             <MainLayout>
@@ -128,14 +136,7 @@ function App() {
             </MainLayout>
           }
         />
-        <Route
-          path="/edit-branch/:branchId"
-          element={
-            <MainLayout>
-              <NewBranch />
-            </MainLayout>
-          }
-        />
+        
         <Route
           path="administration/products/product-types"
           element={

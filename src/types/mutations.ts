@@ -374,6 +374,7 @@ export const CREATE_MANDATE_RULE = gql`
 
 export const UPDATE_MANDATE_TYPE = gql`
   mutation UpdateMandateType(
+    $mandateTypeId: String!
     $mandateTypeName: String!
     $mandateTypeDescription: String!
     $mandateTypeCode: String!
@@ -381,12 +382,14 @@ export const UPDATE_MANDATE_TYPE = gql`
     $modifiedOn: String!
   ) {
     updateMandateType(
+      mandateTypeId: $mandateTypeId
       mandateTypeName: $mandateTypeName
       mandateTypeDescription: $mandateTypeDescription
       mandateTypeCode: $mandateTypeCode
       modifiedBy: $modifiedBy
       modifiedOn: $modifiedOn
     ) {
+      mandateTypeId
       mandateTypeName
       mandateTypeDescription
       mandateTypeCode

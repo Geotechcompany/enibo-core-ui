@@ -275,12 +275,10 @@ export interface UserDetailsType {
 }
 
 export interface BranchForm {
-  AllowedProductTypes: [string];
-  SWIFTCode: string;
-  branchCode: string;
   branchId: string;
+  branchCode: string;
   branchName: string;
-  branchType: string;
+  branchType: BranchTypes;
   buildingName: string;
   buildingNumber: string;
   country: string;
@@ -293,6 +291,8 @@ export interface BranchForm {
   localBankCode: string;
   postalAddress: string;
   streetName: string;
+  allowedProductTypes: ProductType[];
+  SWIFTCode: string;
 }
 
 

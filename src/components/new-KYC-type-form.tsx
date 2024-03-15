@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,7 +12,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import {  CREATE_KYC_TYPE } from "@/types/mutations";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UPDATE_KYCType } from "./kyc-type-list/mutation";
-import { useKycState } from "@/store/kyc";
 import queryKycTypesList from "./kyc-type-list/query";
 
 const kycTypeSchema = z.object({
@@ -22,7 +21,6 @@ const kycTypeSchema = z.object({
   kycTypeName: z.string().min(3, { message: "KYC Type Name is required" }),
   kycTypeDescription: z.string().min(3, { message: "Description is required" }),
   modifiedBy: z.string().min(3, { message: "Modified By is required" }),
-  modifiedOn: z.string().min(3, { message: "Modified On is required" }),
 });
 
 type KYCTypeInput = z.infer<typeof kycTypeSchema>;
@@ -31,13 +29,12 @@ interface NewKYCTypeFormProps {}
 
 const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
   const { kycTypeId } = useParams<{ kycTypeId: string }>();
-  const { state, setState } = useKycState();
+  const isEditMode = kycTypeId ? true : false;
+  const storedKycType = localStorage.getItem("kycTypes");
+  const isCopyMode = storedKycType ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
-  console.log(isCopyMode, "Copy Mode");
+
   const [createKYCType] = useMutation(CREATE_KYC_TYPE);
   const [updateKycTypeMutation] = useMutation(UPDATE_KYCType);
   const { data: kycTypeData, loading: kycLoading } = useQuery(
@@ -57,17 +54,15 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
     resolver: zodResolver(kycTypeSchema),
   });
   const onSubmit = async (data: KYCTypeInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
   const handleEdit = async (data: KYCTypeInput) => {
     try {
-      console.log(data, "Checking");
       const input = {
         kycTypeId : data.kycTypeId,
         kycTypeCode: data.kycTypeCode,
@@ -78,17 +73,11 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
        .toISOString()
          .split(".")[0],
      };
-          
-           
-      console.log(input);
-      const response = await updateKycTypeMutation({
+     await updateKycTypeMutation({
         variables: input,
       });
-
-      console.log("Updated kYC Type Data:", response);
       reset();
       navigate("/customers/kyc-types");
-
       toast({
         title: "Kyc Type Updated",
         description: (
@@ -97,7 +86,7 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
              Kyc Type{" "}
               <Link
                 to={`/customers/kyc-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.kycTypeName}
               </Link>
@@ -106,6 +95,7 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
           </div>
         ),
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
         (error.graphQLErrors &&
@@ -123,9 +113,7 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
       });
     }
   };
-  const [defaultModifiedOn,] = useState(
-    new Date().toISOString()
-  );
+ 
  
   const handleCreate = async (data: KYCTypeInput) => {
     try {
@@ -141,14 +129,13 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
          .split(".")[0],
       };
       console.log(input);
-      const response = await createKYCType({
+      await createKYCType({
         variables: input,
       });
 
-      console.log("Created Kyc Types Data:", response);
       reset();
+      localStorage.removeItem("kycTypes");
       navigate("/customers/kyc-types");
-
       toast({
         title: "KycType Created",
         description: (
@@ -157,7 +144,7 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
               New Kyc Type{" "}
               <Link
                 to={`/customers/kyc-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.kycTypeCode}
               </Link>
@@ -166,6 +153,7 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
           </div>
         ),
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage =
       (error.graphQLErrors &&
@@ -185,66 +173,30 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
       });
     }
   };
-  // const onSubmit = (data: KYCTypeInput) => {
-  //   console.log(data);
-  //   const formInput = {
-  //     kycTypeCode: data.kycTypeCode,
-  //     kycTypeName: data.kycTypeName,
-  //     kycTypeDescription: data.kycTypeDescription,
-  //     modifiedBy: "e170f3b7-c9bc-421a-9c9f-a15fd17e6f3d", //TODO: get user id from context
-  //     modifiedOn: new Date(new Date().toString().split("GMT")[0] + " UTC")
-  //       .toISOString()
-  //       .split(".")[0],
-  //   };
-  //   createKYCType({ variables: formInput });
-  //   reset();
-  //   navigate("/customers/kyc-types");
-  //   toast({
-  //     title: "New KycType Created",
-  //     description: (
-  //       <div className="text-black">
-  //         <div className="text-lg">
-  //           New kycType{" "}
-  //           <Link
-  //             to={`/administration/branches`}
-  //             className="underline text-blue-500"
-  //           >
-  //             {data.kycTypeName}
-  //           </Link>
-  //           , has been successfully created
-  //         </div>
-  //       </div>
-  //     ),
-  //   });
-  // };
+
   const kycTypes = kycTypeData?.kycTypes.find(
     (kycType: { kycTypeId: string | undefined }) => kycType.kycTypeId === kycTypeId
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
+    if (isCopyMode && storedKycType !== null) {
       const {
-        // kycType,
-        // kycTypeId,
        kycTypeCode,
        kycTypeName,
        kycTypeDescription,
-      } = state;
-    //  setValue("kycType", kycType);	
-    //   setValue("kycTypeId", kycTypeId);
+      } = JSON.parse(storedKycType);
       setValue("kycTypeCode", kycTypeCode);
       setValue("kycTypeName", kycTypeName);
       setValue("kycTypeDescription", kycTypeDescription);
   
-    } else if (formMode === "EDIT") {
+    } 
+    if (isEditMode) {
       if (!kycLoading && kycTypes) {
         const {
-        
           kycTypeId,
           kycTypeCode,
           kycTypeName,
           kycTypeDescription,
-       
         } = kycTypes;
        
         setValue("kycTypeId", kycTypeId);
@@ -254,16 +206,10 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
   
       }
     } else return;
-  }, [formMode, reset, setValue, state, setState, kycLoading, kycTypes]);
+  }, [reset, setValue, kycLoading, kycTypes, isEditMode, storedKycType, isCopyMode]);
 
   const cancelForm = () => {
-    setState({
-      kycTypeId: "",
-      kycTypeName: "",
-      kycTypeCode: "",
-      kycTypeDescription: "",
-    
-    });
+    localStorage.removeItem("kycTypes");
     toast({
       title: "KycType Form Cancelled",
     });
@@ -312,22 +258,6 @@ const NewKYCTypeForm: FC<NewKYCTypeFormProps> = () => {
             />
             {errors.modifiedBy && (
               <span className="text-red-500">{errors.modifiedBy.message}</span>
-            )}
-          </div>
-          <div className="hidden">
-            <Label htmlFor="modifiedOn" className="text-[#36459C] text-base">
-              Modified On
-            </Label>
-            <Input
-              {...register("modifiedOn")}
-              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
-              type="text"
-              className="h-12 text-base bg-blue-50"
-              autoComplete="false"
-              defaultValue={defaultModifiedOn}
-            />
-            {errors.modifiedOn && (
-              <span className="text-red-500">{errors.modifiedOn.message}</span>
             )}
           </div>
           <div>

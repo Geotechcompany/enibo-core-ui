@@ -61,6 +61,7 @@ const AppSettingsList: FC<AppSettingsProps> = () => {
 
   const deleteRows = async (selectedRows: Row<Setting>[]) => {
     const deletePromises = selectedRows.map((row) => {
+      //this is the mutation function
       return deleteAppSetting({
         variables: {
           deleteSettingId: row.original.id,

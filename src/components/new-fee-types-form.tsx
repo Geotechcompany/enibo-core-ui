@@ -19,7 +19,6 @@ import CREATE_FEE_TYPE_MUTATION from "@/Pages/FeeTypes/FeeTypesMutation";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UPDATE_FEE_TYPE_MUTATION } from "./fee-type-list/mutation";
 import queryFeeTypesList from "./fee-type-list/query";
-import { useFeeState } from "@/store/feestate";
 import { z } from "zod";
 import queryTransactionTypesList from "./transaction-type-list/query";
 
@@ -47,11 +46,9 @@ interface NewFeeTypesFormProps {}
 const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
   const { toast } = useToast();
   const { feeTypeId } = useParams<{ feeTypeId: string }>();
-  const { state, setState } = useFeeState();
-  const isCopyMode = !state;
-  console.log(isCopyMode, "Copy Mode");
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  const isEditMode = feeTypeId ? true : false;
+  const storedFeeType = localStorage.getItem("feeTypes");
+  const isCopyMode = storedFeeType ? true : false;
   const navigate = useNavigate();
   const {
     register,
@@ -63,13 +60,13 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
   } = useForm<FeeTypeInput>({
     resolver: zodResolver(feeTypeSchema),
   });
-  const [createfeetypeMutation] = useMutation(CREATE_FEE_TYPE_MUTATION);
-  const [updatefeetypeMutation] = useMutation(UPDATE_FEE_TYPE_MUTATION);
+  const [createFeeTypeMutation] = useMutation(CREATE_FEE_TYPE_MUTATION);
+  const [updateFeeTypeMutation] = useMutation(UPDATE_FEE_TYPE_MUTATION);
 
   const { data: FeeTypesData, loading: FeeTypesLoading } = useQuery(
     queryFeeTypesList,
     {
-      variables: { feeTypeId }, //
+      variables: { feeTypeId },
     }
   );
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
@@ -80,8 +77,8 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
 
   const handleEdit = async (data: FeeTypeInput) => {
     try {
-      console.log(data, "Checking");
       const input = {
+        feeTypeId: feeTypeId,
         feeTypeName: data.feeTypeName,
         description: data.description,
         paymentFrequency: data.paymentFrequency,
@@ -91,11 +88,9 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         modifiedBy: data.modifiedBy,
         modifiedOn: data.modifiedOn,
       };
-      console.log(input);
-      const response = await updatefeetypeMutation({
+      await updateFeeTypeMutation({
         variables: input,
       });
-      console.log("Updated feeType Data", response);
       reset();
       navigate(`/administration/static-data/fee-types`);
 
@@ -150,7 +145,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         modifiedOn: data.modifiedOn,
       };
       console.log(input);
-      const response = await createfeetypeMutation({
+      const response = await createFeeTypeMutation({
         variables: input,
       });
       console.log("Created FeeType Data:", response);
@@ -194,11 +189,10 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
   };
 
   const onSubmit = async (data: FeeTypeInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -212,27 +206,26 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
+    if (isCopyMode && storedFeeType !== null) {
       const {
-        // feeTypeId,
         fixedRate,
         feeTypeName,
         effectiveDate,
         description,
         paymentFrequency,
         transactionTypes,
-      } = state;
-      // setValue("feeTypeId", feeTypeId);
+      } = JSON.parse(storedFeeType);
+
       setValue("fixedRate", fixedRate);
       setValue("feeTypeName", feeTypeName);
       setValue("transactionTypes", transactionTypes.toString());
       setValue("paymentFrequency", paymentFrequency);
       setValue("effectiveDate", effectiveDate || "");
       setValue("description", description);
-    } else if (formMode === "EDIT") {
+    }
+    if (isEditMode) {
       if (!FeeTypesLoading && FeeTypes) {
         const {
-          // feeTypeId,
           feeTypeName,
           description,
           transactionTypes,
@@ -242,7 +235,6 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
           modifiedBy,
           modifiedOn,
         } = FeeTypes;
-        // setValue("feeTypeId", feeTypeId);
         setValue("feeTypeName", feeTypeName || "");
         setValue("description", description || "");
         setValue("transactionTypes", transactionTypes || "");
@@ -256,21 +248,23 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         setValue("modifiedOn", modifiedOn || new Date().toISOString());
       }
     }
-  }, [formMode, reset, setValue, state, setState, FeeTypes, FeeTypesLoading]);
+  }, [
+    reset,
+    setValue,
+    FeeTypes,
+    FeeTypesLoading,
+    storedFeeType,
+    isEditMode,
+    isCopyMode,
+    feeTypeId,
+  ]);
 
   const cancelForm = () => {
-    setState({
-      feeTypeId: "",
-      feeTypeName: "",
-      description: "",
-      transactionTypes: [""],
-      paymentFrequency: "",
-      effectiveDate: "",
-      fixedRate: 0.0,
-    });
+    localStorage.removeItem("feeTypes");
     toast({
       title: "FeeTypes Form Cancelled",
     });
+    navigate("/administration/static-data/fee-types");
   };
 
   const {
@@ -284,7 +278,6 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
       setTransactionTypes(data.transactionTypes);
     }
   }, [data, queryLoading, queryError]);
-
 
   return (
     <section>
@@ -442,9 +435,7 @@ const NewFeeTypesForm: FC<NewFeeTypesFormProps> = () => {
         </div>
         <div className="flex gap-2 mt-4">
           <Button type="submit">Submit</Button>
-          <Link to={`/administration/static-data/fee-types`}>
-            <Button onClick={cancelForm}>Cancel</Button>
-          </Link>
+          <Button onClick={cancelForm}>Cancel</Button>
         </div>
       </form>
     </section>

@@ -6,23 +6,22 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   CREATE_PRODUCT_TYPE_MUTATION,
   UPDATE_PRODUCT_TYPE_MUTATION,
 } from "@/Pages/Products/ProductMutation";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import queryFeeTypesList from "./fee-type-list/query";
-import { useProductTypeState } from "@/store/productTypeState";
-import queryProductList from "./product-type-list/query";
+import queryFeeTypesList from "../fee-type-list/query";
+import queryProductList from "./query";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 
 const productTypeSchema = z.object({
   productTypeId: z.string().optional(),
@@ -56,10 +55,9 @@ interface NewProductTypeFormProps {}
 
 const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const { productTypeId } = useParams<{ productTypeId: string }>();
-  const { state, setState } = useProductTypeState();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  const isEditMode = productTypeId ? true : false;
+  const storedProductType = localStorage.getItem("productTypes");
+  const isCopyMode = storedProductType ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -80,18 +78,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   const [updateProductTypeMutation] = useMutation(UPDATE_PRODUCT_TYPE_MUTATION);
 
   const [feeTypes, setfeeTypes] = useState<any[]>([]);
-  const [interestBearing, setInterestBearing] = useState(false);
-  const [active, setActive] = useState(false);
-
-  const handleInterestBearingChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInterestBearing(e.target.checked);
-  };
-
-  const handleActiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setActive(e.target.checked);
-  };
 
   const { data: productTypeData, loading: productTypeLoading } = useQuery(
     queryProductList,
@@ -101,7 +87,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   );
 
   const handleCreate = async (data: ProductTypeInput) => {
-    console.log(data);
     try {
       await createProductTypeMutation({
         variables: {
@@ -158,7 +143,6 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
     }
   };
   const handleEdit = async (data: ProductTypeInput) => {
-    console.log(data);
     try {
       await updateProductTypeMutation({
         variables: {
@@ -217,11 +201,10 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   };
 
   const onSubmit = async (data: ProductTypeInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -250,7 +233,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
+    if (isCopyMode && storedProductType !== null) {
       const {
         productTypeName,
         description,
@@ -264,7 +247,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         prefix,
         numberSchema,
         startingValue,
-      } = state;
+      } = JSON.parse(storedProductType);
       setValue("productTypeName", productTypeName);
       setValue("description", description);
       setValue("active", active);
@@ -280,8 +263,9 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
       setValue("prefix", prefix);
       setValue("numberSchema", numberSchema);
       setValue("startingValue", startingValue.toString());
-    } else if (formMode === "EDIT") {
-      if (!productTypeLoading && productType && state) {
+    }
+    if (isEditMode) {
+      if (!productTypeLoading && productType) {
         const {
           productTypeId,
           productTypeName,
@@ -319,27 +303,21 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
         setValue("modifiedOn", modifiedOn || "");
       }
     }
-  }, [formMode, productType, productTypeLoading, setValue, setState, state]);
+  }, [
+    productType,
+    productTypeLoading,
+    setValue,
+    isEditMode,
+    isCopyMode,
+    storedProductType,
+  ]);
 
   const cancelForm = () => {
-    setState({
-      productTypeId: "",
-      productTypeName: "",
-      description: "",
-      active: false,
-      interestBearing: false,
-      fixedInterestRate: "",
-      effectiveDate: "",
-      fees: false,
-      feeTypes: [""],
-      riskRating: "",
-      prefix: "",
-      numberSchema: "",
-      startingValue: 0,
-    });
+    localStorage.removeItem("productTypes");
     toast({
       title: "Product Type Form Cancelled",
     });
+    navigate("/administration/products/product-types");
   };
 
   return (
@@ -351,9 +329,8 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <input
                 type="checkbox"
                 placeholder="active"
-                checked={active}
-                onChange={handleActiveChange}
                 className="flex w-4 h-4"
+                {...register("active")}
               />
               <label>Active</label>
             </div>
@@ -394,9 +371,8 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
               <input
                 type="checkbox"
                 placeholder="interestBearing"
-                checked={interestBearing}
-                onChange={handleInterestBearingChange} // Handle interestBearing checkbox change
                 className="flex w-4 h-4"
+                {...register("interestBearing")}
               />
               <label>Interest Bearing?</label>
             </div>
@@ -436,13 +412,13 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              placeholder="fees"
-              {...register("fees")}
-              className="flex w-4 h-4"
-            />
-            <label>Fees?</label>
+              <input
+                type="checkbox"
+                placeholder="fees"
+                {...register("fees")}
+                className="flex w-4 h-4"
+              />
+              <label>Fees?</label>
             </div>
 
             {errors.fees && (
@@ -463,10 +439,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {feeTypes.map((type) => (
-                      <SelectItem
-                        key={type.feeTypeId}
-                        value={type.feeTypeId}
-                      >
+                      <SelectItem key={type.feeTypeId} value={type.feeTypeId}>
                         {type.feeTypeName}
                       </SelectItem>
                     ))}
@@ -563,7 +536,7 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
             </Label>
             <Input
               {...register("modifiedOn")}
-              placeholder="Modified On (YYYY-MM-DDTHH:MM:SSZ)"
+              placeholder="Modified On (YYYY-MM-DD-HH:MM:SSZ)"
               type="text"
               className="h-12 text-base bg-blue-50"
               autoComplete="false"
@@ -578,11 +551,9 @@ const NewProductTypeForm: FC<NewProductTypeFormProps> = () => {
           <Button type="submit" size="lg" className="">
             Submit
           </Button>
-          <Link to={`/administration/products/product-types`}>
-            <Button size="lg" onClick={cancelForm}>
-              Cancel
-            </Button>
-          </Link>
+          <Button size="lg" onClick={() => cancelForm()}>
+            Cancel
+          </Button>
         </div>
       </form>
     </section>

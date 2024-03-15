@@ -4,12 +4,13 @@ import { Button } from "../ui/button";
 
 interface DataTableActionsProps<TData> {
     table: Table<TData>;
-    onEdit: (id: string) => void;
+    onEdit: (selectedRows: Row<TData>[]) => void;
     onCopy: (selectedRows: Row<TData>[]) => void;
     onDelete: (selectedRows: Row<TData>[]) => void;
+    children?: React.ReactNode;
 }
 
-export function DataTableActions<TData> ({table, onEdit, onCopy, onDelete}: DataTableActionsProps<TData>) {
+export function DataTableActions<TData> ({table, onEdit, onCopy, onDelete, children}: DataTableActionsProps<TData>) {
     console.log(table.getSelectedRowModel().flatRows);
     const selectedRows = table.getFilteredSelectedRowModel().rows;
   return (<div>
@@ -19,7 +20,7 @@ export function DataTableActions<TData> ({table, onEdit, onCopy, onDelete}: Data
               size="sm"
               variant="outline"
               className={`${table.getFilteredSelectedRowModel().rows.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={()=> onEdit(table.getSelectedRowModel().flatRows[0].original.id)}
+              onClick={()=> onEdit(selectedRows)}
             >
               Edit
             </Button>
@@ -44,6 +45,7 @@ export function DataTableActions<TData> ({table, onEdit, onCopy, onDelete}: Data
               Delete
             </Button>
           </div>
+          {children}
         </div>
   </div>)
 }

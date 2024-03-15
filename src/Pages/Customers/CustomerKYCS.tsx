@@ -6,7 +6,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { IoCloseOutline } from "react-icons/io5";
 import queryKycTypesList from "@/components/kyc-type-list/query";
 import { useQuery } from "@apollo/client";
-import { columns } from "@/components/KYC-list/columns";
+import { columns } from "@/components/kyc-list/columns";
 import { KYCType } from "@/types/global";
 import { DataTable } from "@/components/datatable/data-table";
 

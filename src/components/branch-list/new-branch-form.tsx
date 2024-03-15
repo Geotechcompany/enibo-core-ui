@@ -12,17 +12,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { useToast } from "./ui/use-toast";
+} from "../ui/select";
+import { useToast } from "../ui/use-toast";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_BRANCH, UPDATE_BRANCH } from "./branch-list/mutation";
+import { CREATE_BRANCH, UPDATE_BRANCH } from "./mutation";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import queryBranchTypesList from "@/components/branch-types/query";
-import { useBranchState } from "@/store/branchstate";
-import queryBranchList from "./branch-list/query";
-import CountrySelector from "./countries/country-selector";
-import { MultiSelect, OptionType } from "./multi-select";
-import queryProductList from "./product-type-list/query";
+import queryBranchList from "./query";
+import CountrySelector from "../countries/country-selector";
+import { MultiSelect, OptionType } from "../multi-select";
+import queryProductList from "../product-type-list/query";
 
 const newBranchSchema = z.object({
   branchId: z.string().optional(),
@@ -62,11 +61,10 @@ interface NewBranchFormProps {}
 
 const NewBranchForm: FC<NewBranchFormProps> = () => {
   const { branchId } = useParams<{ branchId: string }>();
-  const { state, setState } = useBranchState();
+  const isEditMode = branchId ? true : false;
   const [productTypes, setProductTypes] = useState<OptionType[]>([]);
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  const storedBranch = localStorage.getItem("branches");
+  const isCopyMode = storedBranch ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -127,7 +125,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         isHeadOfficeBranch: data.isHeadOfficeBranch === "yes" ? true : false,
         headOfficeBranch: data.headOfficeBranch ? data.headOfficeBranch : "N/A",
       };
-      const response = await updateBranchMutation({
+      await updateBranchMutation({
         variables: input,
       });
 
@@ -144,7 +142,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
                 to={`/administration/branches`}
                 className="text-blue-500 underline"
               >
-                {response.data.updateBranch.branchName}
+                {data.branchId}
               </Link>
               , has been successfully updated
             </div>
@@ -153,12 +151,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
     } catch (error: any) {
       const errorMessage =
-        (error.graphQLErrors &&
-          error.graphQLErrors[0] &&
-          error.graphQLErrors[0].extensions &&
-          error.graphQLErrors[0].extensions.response &&
-          error.graphQLErrors[0].extensions.response.body &&
-          error.graphQLErrors[0].extensions.response.body.branchName) ||
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
         "Unknown error";
 
       toast({
@@ -201,8 +194,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         variables: input,
       });
       reset();
+      localStorage.removeItem("branches");
       navigate("/administration/branches");
-
       toast({
         title: "Branch Created",
         description: (
@@ -222,15 +215,9 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       });
     } catch (error: any) {
       const errorMessage =
-        (error.graphQLErrors &&
-          error.graphQLErrors[0] &&
-          error.graphQLErrors[0].extensions &&
-          error.graphQLErrors[0].extensions.response &&
-          error.graphQLErrors[0].extensions.response.body &&
-          error.graphQLErrors[0].extensions.response.body.branchName) ||
-        "Unknown error";
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.branchName[0];
 
-      console.log(errorMessage, "ERR CHECK");
       toast({
         title: "Error",
         description: `"Failed, ${errorMessage} Please try again."`,
@@ -277,11 +264,10 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
   }, [data, queryLoading, queryError]);
 
   const onSubmit = async (data: newBranchInput) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -290,7 +276,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
+    if (isCopyMode && storedBranch !== null) {
       const {
         branchName,
         branchType,
@@ -308,7 +294,7 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         email,
         isHeadOfficeBranch,
         headOfficeBranch,
-      } = state;
+      } = JSON.parse(storedBranch);
       setValue("branchName", branchName);
       setValue("branchType", branchType);
       setValue("description", description);
@@ -325,7 +311,8 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
       setValue("email", email);
       setValue("isHeadOfficeBranch", isHeadOfficeBranch ? "yes" : "no");
       setValue("headOfficeBranch", headOfficeBranch || "");
-    } else if (formMode === "EDIT") {
+    }
+    if (isEditMode) {
       if (!branchLoading && branch) {
         const {
           branchId,
@@ -368,28 +355,18 @@ const NewBranchForm: FC<NewBranchFormProps> = () => {
         );
       }
     } else return;
-  }, [formMode, reset, setValue, state, setState, branchLoading, branch]);
+  }, [
+    reset,
+    setValue,
+    branchLoading,
+    branch,
+    isEditMode,
+    isCopyMode,
+    storedBranch,
+  ]);
 
   const cancelForm = () => {
-    setState({
-      branchId: "",
-      branchName: "",
-      branchType: "",
-      description: "",
-      phoneNumber: "",
-      branchCode: "",
-      SWIFTCode: "",
-      localBankCode: "",
-      country: "",
-      countrySubdivision: "",
-      streetName: "",
-      buildingNumber: "",
-      buildingName: "",
-      postalAddress: "",
-      email: "",
-      isHeadOfficeBranch: false,
-      headOfficeBranch: "",
-    });
+    localStorage.removeItem("branches");
     toast({
       title: "Branch Form Cancelled",
     });

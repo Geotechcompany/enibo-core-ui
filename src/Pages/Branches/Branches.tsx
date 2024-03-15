@@ -8,14 +8,13 @@ import queryBranchList from "@/components/branch-list/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { BranchForm } from "@/types/global";
 import { DELETE_BRANCH } from "@/components/branch-list/mutation";
-import { useBranchState } from "@/store/branchstate";
 import { toast } from "@/components/ui/use-toast";
-
+import { Row } from "@tanstack/react-table";
+import DeleteWarning from "@/components/deleteWarning";
 
 interface BranchesProps {}
 
 const Branches: FC<BranchesProps> = () => {
-  const { setState } = useBranchState();
   const [branches, setBranches] = useState<BranchForm[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,11 +27,15 @@ const Branches: FC<BranchesProps> = () => {
   const to = location.state?.to || {
     pathname: "/administration/branch-details",
   };
-  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(queryBranchList);
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+    refetch,
+  } = useQuery(queryBranchList);
 
   const [deleteBranch] = useMutation(DELETE_BRANCH);
   const [selected, setSelected] = useState<number[]>([]);
-
 
   useEffect(() => {
     if (data) {
@@ -44,163 +47,51 @@ const Branches: FC<BranchesProps> = () => {
   }, [data, queryLoading, queryError, refetch]);
 
 
+  const handleCopy = (selectedRows: Row<BranchForm>[]) => {
+    localStorage.setItem("branches", JSON.stringify(selectedRows[0].original));
+    navigate("/administration/branches/new-branch");
+  };
 
-  const handleDelete = async () => {
-    if (selected.length) {
-      try {
-        toast({
-          title: "Confirm deletion",
-          description: (
-            <div className="text-black">
-              <div className="text-lg">
-                Confirm deletion of selected record/s
-              </div>
-              <div className="flex justify-end mt-4">
-              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
-                // Code to uncheck selected records
-                setSelected([]);
-                window.location.reload();
-                toast({}).dismiss();
-               
-              }}>Cancel</Button>
-              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
-            onClick={async () => {
-        try {
-          const selectedBranchesIds = selected.map(branchesIndex => branches[branchesIndex].branchId);
-  
-          await Promise.all(
-            selectedBranchesIds.map(async (branchId) => {
-              await deleteBranch({ variables: { branchId} });
-            })
-          );
-  
-          const updatedBranches = branches.filter(
-            (branches) => !selectedBranchesIds.includes(branches.branchId)
-          );
-          setBranches(updatedBranches);
-          setSelected([]);
-          window.location.reload();
-        } catch (error) {
-          console.error("Error deleting branch types:", error);
-        }
-      }}
-      >Confirm</Button>
-  </div>
-    </div>
-  ),
-});
-} catch (error) {
-console.error("Error showing confirmation toast:", error);
-}
-}
-};
-  const handleRedirect = (mode: string) => {
-    if (mode === "ADD") {
-      navigate(from, { replace: true })
-      setState({
-        branchId: "",
-        branchName: "",
-        branchType: "",
-        description: "",
-        phoneNumber: "",
-        branchCode: "",
-        SWIFTCode: "",
-        localBankCode: "",
-        country: "",
-        countrySubdivision: "",
-        streetName: "",
-        buildingNumber: "",
-        buildingName: "",
-        postalAddress: "",
-        email: "",
-        isHeadOfficeBranch: false,
-        headOfficeBranch: "",
-        mode: "ADD",
-      });
-    } else if (mode === "EDIT") {
-      if (selected.length === 1) {
-        navigateToEditPage();
-      }
-      setState({
-        branchId: "",
-        branchName: "",
-        branchType: "",
-        description: "",
-        phoneNumber: "",
-        branchCode: "",
-        SWIFTCode: "",
-        localBankCode: "",
-        country: "",
-        countrySubdivision: "",
-        streetName: "",
-        buildingNumber: "",
-        buildingName: "",
-        postalAddress: "",
-        email: "",
-        isHeadOfficeBranch: false,
-        headOfficeBranch: "",
-        mode: "EDIT",
-      });
-    } else if (mode === "COPY") {
-      if (selected.length === 1) {
-        const selectedRecord = branches[selected[0]];
-        setState({
-          branchId: selectedRecord.branchId,
-            branchName: selectedRecord.branchName,
-            branchType: selectedRecord.branchType,
-            description: selectedRecord.description,
-            phoneNumber: selectedRecord.phoneNumber,
-            branchCode: selectedRecord.branchCode,
-            SWIFTCode: selectedRecord.SWIFTCode,
-            localBankCode: selectedRecord.localBankCode,
-            country: selectedRecord.country,
-            countrySubdivision: selectedRecord.countrySubdivision,
-            streetName: selectedRecord.streetName,
-            buildingNumber: selectedRecord.buildingNumber,
-            buildingName: selectedRecord.buildingName,
-            postalAddress: selectedRecord.postalAddress,
-            email: selectedRecord.email,
-            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
-            headOfficeBranch: selectedRecord.headOfficeBranch,
-            mode: "COPY",
-        })
-        navigate("/administration/branches/new-branch", {
-          state: {
-            from: from,
-            branchId: selectedRecord.branchId,
-            branchName: selectedRecord.branchName,
-            branchType: selectedRecord.branchType,
-            description: selectedRecord.description,
-            phoneNumber: selectedRecord.phoneNumber,
-            branchCode: selectedRecord.branchCode,
-            localBankCode: selectedRecord.localBankCode,
-            country: selectedRecord.country,
-            countrySubdivision: selectedRecord.countrySubdivision,
-            streetName: selectedRecord.streetName,
-            buildingNumber: selectedRecord.buildingNumber,
-            buildingName: selectedRecord.buildingName,
-            postalAddress: selectedRecord.postalAddress,
-            email: selectedRecord.email,
-            isHeadOfficeBranch: selectedRecord.isHeadOfficeBranch,
-            headOfficeBranch: selectedRecord.headOfficeBranch
-          },
-        });
-      }
-    }
-  }
-
-  const navigateToEditPage = () => {
-    if (selected.length === 1) {
-      const selectedRecord = branches[selected[0]];
-      navigate(`/edit-branch/${selectedRecord.branchId}`, {
-        state: { from: from,
-          ...selectedRecord,
+  const deleteRows = async (selectedRows: Row<BranchForm>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      //this is the mutation function
+      return deleteBranch({
+        variables: {
+          branchId: row.original.branchId,
         },
+      });
+    });
+
+    const result = await Promise.all(deletePromises);
+
+    if (result) {
+      window.location.reload();
+      toast({
+        title: "Record deleted successfully",
+        description: `${selectedRows.length} record(s) deleted successfully`,
       });
     }
   };
 
+  const handleDelete = async (selectedRows: Row<BranchForm>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
 
+  const handleEdit = (selectedRows: Row<BranchForm>[]) => {
+    navigate(`/administration/branches/${selectedRows[0].original.branchId}`);
+  };
 
   return (
     <div>
@@ -232,12 +123,12 @@ console.error("Error showing confirmation toast:", error);
           </div>
           <div className="">
             <Button
-              size="sm" 
-              variant="outline" 
+              size="sm"
+              variant="outline"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={()=>handleRedirect("ADD")}
+              onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
           </div>
         </div>
@@ -250,52 +141,23 @@ console.error("Error showing confirmation toast:", error);
             <DataTable
               columns={columns}
               data={branches}
-              onRowSelect={setSelected} 
-            />
+              onRowSelect={setSelected}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            >
+              <div className="mr-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className={`border-[#36459C] ${selected.length !== 1 ? "hidden" : ""}`}
+                  onClick={() => navigate(to, { replace: true })}
+                >
+                  View branch details
+                </Button>
+              </div>
+            </DataTable>
           )}
-        </div>
-        <div className="flex items-center my-4">
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={()=>handleRedirect("EDIT")}
-            >
-              Edit
-            </Button>
-          </div>
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={()=>handleRedirect("COPY")}
-            >
-              Copy
-            </Button>
-          </div>
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => navigate(to, { replace: true })}
-              disabled={selected.length !== 1}
-            >
-              View branch details
-            </Button>
-          </div>
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className={`${selected.length  === 0 ? "hidden" : "border-[#36459C] "}`}
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </div>
         </div>
       </div>
     </div>

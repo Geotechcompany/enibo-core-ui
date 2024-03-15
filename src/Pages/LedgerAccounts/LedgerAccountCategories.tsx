@@ -9,12 +9,12 @@ import { FaPlus } from "react-icons/fa";
 import queryaccountcategoriesList from "@/components/ledger-categories-list/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_ACCOUNT_CATEGORY_TYPE } from "@/types/mutations";
-import {  useLedgerState } from "@/store/ledger";
 import { toast } from "@/components/ui/use-toast";
+import { Row } from "@tanstack/react-table";
+import DeleteWarning from "@/components/deleteWarning";
 interface LedgerAccountCategoriesProps {}
 
 const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
-  const { setState} = useLedgerState();
   const [ledgerAccountCategory, setledgerAccountCategories] = useState<
     LedgerCategory[]
   >([]);
@@ -34,7 +34,6 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
   } = useQuery(queryaccountcategoriesList);
   console.log(data);
   const [deleteAccountCategory] = useMutation(DELETE_ACCOUNT_CATEGORY_TYPE);
-  const [selected, setSelected] = useState<number[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -43,113 +42,54 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
     setLoading(queryLoading);
     setError(queryError ? queryError.message : null);
   }, [data, queryLoading, queryError]);
-
   
-  const handleDelete = async () => {
-    if (selected.length) {
-      try {
-        toast({
-          title: "Confirm deletion",
-          description: (
-            <div className="text-black">
-              <div className="text-lg">
-                Confirm deletion of selected record/s
-              </div>
-              <div className="flex justify-end mt-4">
-              <Button size={"sm"} variant={"outline"} className="text-[#253285] border-[#253285] font-bold py-1 px-4 rounder mr-2" onClick={() => {
-                // Code to uncheck selected records
-                setSelected([]);
-                window.location.reload();
-                toast({}).dismiss();
-               
-              }}>Cancel</Button>
-              <Button size={"sm"} className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 rounded"
-            onClick={async () => {
-                try {
-                  // Extracting ledger categories IDs from selected array
-                  const selectedledgerAccountCategoriesIds = selected.map(
-                    (accountCategoriesIndex) =>
-                      ledgerAccountCategory[accountCategoriesIndex].id
-                  );
-                  // Deleting selected ledger Account Categories
-                  await Promise.all(
-                    selectedledgerAccountCategoriesIds.map(async (id) => {
-                      await deleteAccountCategory({ variables: { deleteAccountCategoryId: id  } });
-                    })
-                  );
-          
-                  // Filter out deleted items from UI
-                  const updatedaccountCategories = ledgerAccountCategory.filter(
-                    (accountCategories) => !selectedledgerAccountCategoriesIds.includes(accountCategories.id)
-                  );
-                  setledgerAccountCategories(updatedaccountCategories);
-                  setSelected([]);
-                  toast({}).dismiss();
-                  window.location.reload();
-                } catch (error) {
-                  console.error("Error deleting ledger Account Categories:", error);
-                }
-              }}
-              >Confirm</Button>
-          </div>
-            </div>
-          ),
-        });
-      } catch (error) {
-        console.error("Error showing confirmation toast:", error);
-      }
-    }
+
+  const handleEdit = (selectedRows: Row<LedgerCategory>[]) => {
+    navigate(`/edit-ledger-account-category/${selectedRows[0].original.id}`);
   };
 
-  const handleRedirect = (mode: string) => {
-    if (mode === "ADD") {
-      navigate(from, { replace: true })
-      setState({
-       ledgerCategory: "",
-       categoryNumber:"",
-        description: "",
-        mode: "ADD",
-      });
-    } else if (mode === "EDIT") {
-      if (selected.length === 1) {
-        navigateToEditPage();
-      }
-      setState({
-       ledgerCategory: "",
-       categoryNumber:"",
-        description: "",
-        mode: "EDIT",
-      });
-    } else if (mode === "COPY") {
-      if (selected.length === 1) {
-        const selectedRecord = ledgerAccountCategory[selected[0]];
-        setState({
-         ledgerCategory: selectedRecord.ledgerCategory,
-         categoryNumber: selectedRecord.categoryNumber,
-          description: selectedRecord.description,
-          mode: "COPY",
-        })
-        navigate("/administration/ledger-management/ledger-account-categories/new-ledger-account-category/", {
-          state: {
-            from: from,
-            LedgerAccountCategories: selectedRecord,
-            ledgerAccountCategory: selectedRecord.ledgerCategory,
-          },
-        });
-      }
-    }
-  }
+  const handleCopy = (selectedRows: Row<LedgerCategory>[]) => {
+    localStorage.setItem("transactionType", JSON.stringify(selectedRows[0].original));
+    navigate("/administration/ledger-management/ledger-account-categories/new-ledger-account-category");
+  };
 
+  const deleteRows = async (selectedRows: Row<LedgerCategory>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      //this is the mutation function
+      return deleteAccountCategory({
+        variables: {
+          deleteAccountCategoryId: row.original.id,
+        },
+      });
+    });
 
-  const navigateToEditPage = () => {
-    if (selected.length === 1) {
-      const selectedRecord = ledgerAccountCategory[selected[0]];
-      const ledgerCategory = selectedRecord.ledgerCategory;
-      navigate(`/edit-ledger-account-category/${selectedRecord.id}`, {
-        state: { from: from, LedgerAccountCategories: selectedRecord, ledgerCategory: ledgerCategory },
+    const result = await Promise.all(deletePromises);
+
+    if (result) {
+      window.location.reload();
+      toast({
+        title: "Record deleted successfully",
+        description: `${selectedRows.length} record(s) deleted successfully`,
       });
     }
   };
+  
+  const handleDelete = async (selectedRows: Row<LedgerCategory>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
+  };
+
   return (
     <div>
       <div className="mx-4">
@@ -194,7 +134,7 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
             <Button
               size="sm"
               className="bg-[#36459C] text-white py-5 px-8"
-              onClick={()=>handleRedirect("ADD")}
+              onClick={()=>navigate(from, { replace: true })}
             >
               <FaPlus className="mr-1 text-white" /> Add
             </Button>
@@ -211,45 +151,11 @@ const LedgerAccountCategories: FC<LedgerAccountCategoriesProps> = () => {
               columns={columns}
               data={ledgerAccountCategory}
               sorting={sorting}
-              onRowSelect={setSelected}
+              handleEdit={handleEdit}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
             />
           )}
-        </div>
-        <div className="flex items-center my-4">
-          <div className="mr-2">
-          <Button
-              size="sm"
-              variant="outline"
-              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={()=>handleRedirect("EDIT")}
-            >
-              Edit
-            </Button>
-          </div>
-
-          <div className="mr-2">
-          <Button
-              size="sm"
-              variant="outline"
-              className={`${selected.length !== 1 ? "hidden" : "border-[#36459C] "}`}
-              onClick={()=>handleRedirect("COPY")}
-            >
-              Copy
-            </Button>
-          </div>
-
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className={`${
-                selected.length === 0 ? "hidden" : "border-[#36459C] "
-              }`}
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </div>
         </div>
       </div>
     </div>

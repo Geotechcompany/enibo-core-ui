@@ -38,9 +38,10 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   sorting?: SortingState[];
   onRowSelect?: (ids: number[]) => void;
-  handleEdit: (id: string) => void;
+  handleEdit: (selectedRows: Row<TData>[]) => void;
   handleCopy: (selectedRows: Row<TData>[]) => void;
   handleDelete: (selectedRows: Row<TData>[]) => void;
+  children?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,6 +52,7 @@ export function DataTable<TData, TValue>({
   handleEdit,
   handleCopy,
   handleDelete,
+  children,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] =
@@ -147,7 +149,9 @@ export function DataTable<TData, TValue>({
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}
-      />
+      > 
+        {children}
+      </DataTableActions>
       <DataTablePagination table={table} />
     </div>
   );
