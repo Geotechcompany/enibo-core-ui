@@ -30,8 +30,8 @@ const LedgerAccounts: FC<LedgerAccountsProps> = () => {
     }
   }, [data]);
 
-  const handleEdit = (id: string) => {
-    navigate(`/administration/ledger-management/ledger-accounts/ledger-account/${id}`);
+  const handleEdit = (selectedRows: Row<LedgerAccount>[]) => {
+    navigate(`/administration/ledger-management/ledger-accounts/ledger-account/${selectedRows[0].original.id}`);
   };
 
   const handleCopy = (selectedRows: Row<LedgerAccount>[]) => {

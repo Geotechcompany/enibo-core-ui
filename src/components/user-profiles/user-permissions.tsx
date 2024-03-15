@@ -84,9 +84,14 @@ const UserPermissions: FC<UserPermissionsProps> = () => {
     if (isEditMode) {
       if (data) {
         const { name, description, permissions } = data.profile;
+        const newPermissions = permissions.forEach((permission: string) => {
+          const permissionsArray: string[] =
+            stringToPermissionsArray(permission);
+          return permissionsArray;
+        });
         setValue("name", name);
         setValue("description", description);
-        setValue("permissions", stringToPermissionsArray(permissions.toString()));
+        setValue("permissions", newPermissions);
       }
     }
     if (isCopyMode) {
@@ -94,12 +99,17 @@ const UserPermissions: FC<UserPermissionsProps> = () => {
       if (storedProfileString !== null) {
         const { name, description, permissions } =
           JSON.parse(storedProfileString);
+        const newPermissions = permissions.forEach((permission: string) => {
+          const permissionsArray: string[] =
+            stringToPermissionsArray(permission);
+          return permissionsArray;
+        });
         setValue("name", name);
         setValue("description", description);
-        setValue("permissions", stringToPermissionsArray(permissions.toString()));
+        setValue("permissions", newPermissions);
       }
     }
-  }, [setValue, isCopyMode, storedProfile]);
+  }, [setValue, isCopyMode, storedProfile, data, isEditMode]);
   const [createUserProfile] = useMutation(CREATE_USER_PROFILE);
 
   const onSubmit: SubmitHandler<UserPermissionsInput> = async (data) => {
