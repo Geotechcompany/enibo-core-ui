@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, concat } from "@apollo/client";
 
-// const httpLink = new HttpLink({ uri: 'https://enibotest.loca.lt/' });
-const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
+const httpLink = new HttpLink({ uri: 'https://enibotest.loca.lt/' });
+// const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
 
 
 const authMiddleware = new ApolloLink((operation, forward) => {
