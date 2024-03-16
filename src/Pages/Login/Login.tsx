@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -43,26 +43,26 @@ const Login: FC<LoginProps> = () => {
     resolver: zodResolver(LoginSchema),
   });
 
-  const getUserData = async () => {
-    //cors headers
-    const userData = await fetch("http://ip-api.com/json/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        return data;
-      });
-    return userData;
-  };
+  // const getUserData = async () => {
+  //   //cors headers
+  //   const userData = await fetch("http://ip-api.com/json/", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       return data;
+  //     });
+  //   return userData;
+  // };
 
-  useEffect(() => {
-    console.log(getUserData());
-  }, []);
+  // useEffect(() => {
+  //   console.log(getUserData());
+  // }, []);
 
   const [loginMutation] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
