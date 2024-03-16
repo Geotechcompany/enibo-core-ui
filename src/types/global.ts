@@ -184,7 +184,7 @@ export type KYCIndividual = {
   taxNumber: string;
   idType: string;
   idNumber: string;
-  sex: "Male" | "Female" | "Other";
+  sex: string;
   nationality: string;
   riskRating: string;
   attachDocumentsField: string[];
@@ -197,19 +197,12 @@ export type KYCBusiness = {
   businessKYCId: string;
   kycType: "Business";
   legalEntityName: string;
-  legalStatus:
-    | "Sole Proprietor"
-    | "Partnership"
-    | "Limited Company"
-    | "Government Entity"
-    | "Society/Association/Club/Trust"
-    | "NGO/International Charity"
-    | "Other (specify)";
+  legalStatus: string;
   dateOfIncorporation: string;
   registrationNumber: string;
   natureOfBusiness: string;
   entityNationality: string;
-  entityPINNumber: string;
+  entityPinNumber: string;
   entityTaxNumber: string;
   telephoneNumber: string;
   emailAddress: string;

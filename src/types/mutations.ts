@@ -149,63 +149,28 @@ export const CREATE_INDIVIDUAL_KYC = gql`
 `;
 
 export const CREATE_BUSINESS_KYC = gql`
-  mutation CreateBusinessKYC(
-    $kycType: String!
-    $legalEntityName: String!
-    $legalStatus: String!
-    $dateOfIncorporation: String!
-    $registrationNumber: String!
-    $natureOfBusiness: String!
-    $entityNationality: String!
-    $entityPINNumber: String!
-    $entityTaxNumber: String!
-    $telephoneNumber: String!
-    $emailAddress: String!
-    $postalAddress: String!
-    $physicalAddress: String!
-    $riskRating: String!
-    $attachDocumentsField: String!
-    $modifiedBy: String!
-    $modifiedOn: String!
-  ) {
-    createBusinessKYC(
-      kycType: $kycType
-      legalEntityName: $legalEntityName
-      legalStatus: $legalStatus
-      dateOfIncorporation: $dateOfIncorporation
-      registrationNumber: $registrationNumber
-      natureOfBusiness: $natureOfBusiness
-      entityNationality: $entityNationality
-      entityPINNumber: $entityPINNumber
-      entityTaxNumber: $entityTaxNumber
-      telephoneNumber: $telephoneNumber
-      emailAddress: $emailAddress
-      postalAddress: $postalAddress
-      physicalAddress: $physicalAddress
-      riskRating: $riskRating
-      attachDocumentsField: $attachDocumentsField
-      modifiedBy: $modifiedBy
-      modifiedOn: $modifiedOn
-    ) {
-      kycType
-      legalEntityName
-      legalStatus
-      dateOfIncorporation
-      registrationNumber
-      natureOfBusiness
-      entityNationality
-      entityPINNumber
-      entityTaxNumber
-      telephoneNumber
-      emailAddress
-      postalAddress
-      physicalAddress
-      riskRating
-      attachDocumentsField
-      modifiedBy
-      modifiedOn
-    }
+  mutation CreateBusinessKYC($kycType: String!, $legalEntityName: String!, $legalStatus: String!, $dateOfIncorporation: String!, $registrationNumber: String!, $natureOfBusiness: String!, $entityNationality: String!, $entityPinNumber: String!, $entityTaxNumber: String!, $telephoneNumber: String!, $emailAddress: String!, $postalAddress: String!, $physicalAddress: String!, $riskRating: String!, $attachDocumentsField: String!, $modifiedBy: String!, $modifiedOn: String!) {
+  createBusinessKYC(kycType: $kycType, legalEntityName: $legalEntityName, legalStatus: $legalStatus, dateOfIncorporation: $dateOfIncorporation, registrationNumber: $registrationNumber, natureOfBusiness: $natureOfBusiness, entityNationality: $entityNationality, entityPINNumber: $entityPinNumber, entityTaxNumber: $entityTaxNumber, telephoneNumber: $telephoneNumber, emailAddress: $emailAddress, postalAddress: $postalAddress, physicalAddress: $physicalAddress, riskRating: $riskRating, attachDocumentsField: $attachDocumentsField, modifiedBy: $modifiedBy, modifiedOn: $modifiedOn) {
+    businessKYCId
+    kycType
+    legalEntityName
+    legalStatus
+    dateOfIncorporation
+    registrationNumber
+    natureOfBusiness
+    entityNationality
+    entityPinNumber
+    entityTaxNumber
+    telephoneNumber
+    emailAddress
+    postalAddress
+    physicalAddress
+    riskRating
+    attachDocumentsField
+    modifiedBy
+    modifiedOn
   }
+}
 `;
 export const CREATE_LEDGER_ACCOUNT_CATEGORIES = gql`
   mutation CreateAccountCategory(

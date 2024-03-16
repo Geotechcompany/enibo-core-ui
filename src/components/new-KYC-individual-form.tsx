@@ -17,27 +17,8 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_INDIVIDUAL_KYC } from "@/types/mutations";
 import queryKycTypesList from "./kyc-type-list/query";
+import { KYCType } from "@/types/global";
 
-/**
- * 
- *  designation: string;
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    phoneNumber: string;
-    emailAddress: string;
-    postalAddress: string;
-    physicalAddress: string;
-    country: string;
-    taxNumber: string;
-    idType: string;
-    idNumber: string;
-    sex: "Male" | "Female" | "Other";
-    nationality: string;
-    riskRating: string;
-    attachDocumentsField: string[];
-    signature: string;
- */
 const newKYCIndividualSchema = z.object({
   kycType: z.string().min(3, { message: "KYC Type is required" }),
   designation: z.string().min(2, { message: "Designation is required" }),
@@ -70,7 +51,7 @@ interface NewKYCIndividualFormProps {}
 const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
   const { toast } = useToast();
   const [createIndividualKyc] = useMutation(CREATE_INDIVIDUAL_KYC);
-  const [KYCTypes, setKycsTypes] = useState<any[]>([]); // State to track the selected KYC type
+  const [KYCTypes, setKycsTypes] = useState<KYCType[]>([]);
   const {
     register,
     handleSubmit,
@@ -80,7 +61,6 @@ const NewKYCIndividualForm: FC<NewKYCIndividualFormProps> = () => {
     resolver: zodResolver(newKYCIndividualSchema),
   });
   const onSubmit = (data: NewKYCIndividualInput) => {
-    console.log(data);
     const formInput = {
       kycType: data.kycType, //TODO: get kyc type id from context
       designation: data.designation,

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const queryKycList = gql`
+export const queryIndividualKYCs = gql`
 query IndividualKYCs {
   individualKYCs {
     IndividualKYCId

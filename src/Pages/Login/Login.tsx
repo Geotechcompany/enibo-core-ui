@@ -45,7 +45,7 @@ const Login: FC<LoginProps> = () => {
 
   const getUserData = async () => {
     //cors headers
-    const userData = await fetch("https://ifconfig.io/all.json", {
+    const userData = await fetch("http://ip-api.com/json/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +96,7 @@ const Login: FC<LoginProps> = () => {
   };
 
   return (
-    <section className="flex h-screen items-center justify-center align-middle">
+    <section className="flex items-center justify-center h-screen align-middle">
       <Card className="w-[30%]">
         <CardHeader></CardHeader>
         <CardContent>
@@ -122,7 +122,7 @@ const Login: FC<LoginProps> = () => {
                   {...register("email")}
                   placeholder="Your email"
                   type="email"
-                  className="h-12 bg-blue-50 text-base"
+                  className="h-12 text-base bg-blue-50"
                   autoComplete="false"
                 />
                 {errors.email && (
@@ -137,7 +137,7 @@ const Login: FC<LoginProps> = () => {
                   {...register("password")}
                   type="password"
                   placeholder="Password"
-                  className="h-12 bg-blue-50 text-base"
+                  className="h-12 text-base bg-blue-50"
                   autoComplete="false"
                 />
                 {errors.password && (
