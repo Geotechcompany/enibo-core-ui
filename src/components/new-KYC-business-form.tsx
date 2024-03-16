@@ -15,11 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_BUSINESS_KYC } from "@/types/mutations";
 
 import queryKycTypesList from "./kyc-type-list/query";
+import { queryBusinessKYC } from "@/types/queries";
 
 const newKYCBusinessSchema = z.object({
   kycType: z.string().min(3, { message: "KYC Type is required" }),
@@ -64,13 +65,19 @@ type NewKYCBusinessInput = z.infer<typeof newKYCBusinessSchema>;
 interface NewKYCBusinessFormProps {}
 
 const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
+  const { businessKYCId } = useParams()
+  const isEditMode = businessKYCId ? true : false
+  const storedBusinessKyc = localStorage.getItem("businessKyc");
+  const isCopyMode = storedBusinessKyc ? true : false;
   const { toast } = useToast();
   const [createBusinessKyc] = useMutation(CREATE_BUSINESS_KYC);
   const [KYCTypes, setKycsTypes] = useState<any[]>([]); // State to track the selected KYC type
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<NewKYCBusinessInput>({
     resolver: zodResolver(newKYCBusinessSchema),
@@ -85,7 +92,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
       registrationNumber: data.registrationNumber,
       natureOfBusiness: data.natureOfBusiness,
       entityNationality: data.entityNationality,
-      entityPINNumber: data.entityPINNumber,
+      entityPinNumber: data.entityPINNumber,
       entityTaxNumber: data.entityTaxNumber,
       telephoneNumber: data.telephoneNumber,
       emailAddress: data.emailAddress,
@@ -103,22 +110,103 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
       title: "New KYC Business Created",
       description: "Successfully created new business KYC",
     });
+    navigate("/customers/customer-kycs")
   };
   const {
     data,
     loading: queryLoading,
     error: queryError,
   } = useQuery(queryKycTypesList);
+  
+  const { data: businessKycData } = useQuery(queryBusinessKYC, {
+    variables: { businessKycId: businessKYCId },
+  });
 
   useEffect(() => {
     if (data) {
       setKycsTypes(data.kycTypes);
     }
   }, [data, queryLoading, queryError]);
+  
+  useEffect(() => {
+    if (isEditMode) {
+      if (businessKycData) {
+        const {
+          kycType,
+          legalEntityName,
+          legalStatus,
+          dateOfIncorporation,
+          registrationNumber,
+          natureOfBusiness,
+          entityNationality,
+          entityPinNumber,
+          entityTaxNumber,
+          telephoneNumber,
+          emailAddress,
+          postalAddress,
+          physicalAddress,
+          riskRating,
+          attachDocumentsField,
+        } = businessKycData.businessKYC;
+        setValue("kycType", kycType);
+        setValue("legalEntityName", legalEntityName);
+        setValue("legalStatus", legalStatus);
+        setValue("dateOfIncorporation", dateOfIncorporation);
+        setValue("registrationNumber", registrationNumber);
+        setValue("natureOfBusiness", natureOfBusiness);
+        setValue("entityNationality", entityNationality);
+        setValue("entityPINNumber", entityPinNumber);
+        setValue("entityTaxNumber", entityTaxNumber);
+        setValue("telephoneNumber", telephoneNumber);
+        setValue("emailAddress", emailAddress);
+        setValue("postalAddress", postalAddress);
+        setValue("physicalAddress", physicalAddress);
+        setValue("riskRating", riskRating);
+        setValue("attachDocumentsField", attachDocumentsField);
+      }
+    }
+    if (isCopyMode) {
+      if (storedBusinessKyc) {
+        const {
+          kycType,
+          legalEntityName,
+          legalStatus,
+          dateOfIncorporation,
+          registrationNumber,
+          natureOfBusiness,
+          entityNationality,
+          entityPinNumber,
+          entityTaxNumber,
+          telephoneNumber,
+          emailAddress,
+          postalAddress,
+          physicalAddress,
+          riskRating,
+          attachDocumentsField,
+        } = JSON.parse(storedBusinessKyc);
+        setValue("kycType", kycType);
+        setValue("legalEntityName", legalEntityName);
+        setValue("legalStatus", legalStatus);
+        setValue("dateOfIncorporation", dateOfIncorporation);
+        setValue("registrationNumber", registrationNumber);
+        setValue("natureOfBusiness", natureOfBusiness);
+        setValue("entityNationality", entityNationality);
+        setValue("entityPINNumber", entityPinNumber);
+        setValue("entityTaxNumber", entityTaxNumber);
+        setValue("telephoneNumber", telephoneNumber);
+        setValue("emailAddress", emailAddress);
+        setValue("postalAddress", postalAddress);
+        setValue("physicalAddress", physicalAddress);
+        setValue("riskRating", riskRating);
+        setValue("attachDocumentsField", attachDocumentsField);
+      }
+    }
+  }
+  ,[storedBusinessKyc, isEditMode, setValue, isCopyMode, businessKycData])
 
   return (
-    <section>
-      <div className="pt-2 ml-4">
+    <section className="px-4">
+      <div className="pt-2">
         <nav className="text-sm text-blue-500" aria-label="Breadcrumb">
           <ol className="inline-flex p-0 m-0 list-none">
             <li className="flex items-center m-0">
@@ -145,8 +233,8 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col">
-          <div className="flex flex-col gap-4 border border-b-0">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 border">
             <div className="p-4">
               <h3>BUSINESS DETAILS</h3>
             </div>
@@ -276,7 +364,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 border border-b-0 ">
+          <div className="flex flex-col gap-4 border">
             <div className="p-4">
               <h3>LOCATION DETAILS</h3>
             </div>
@@ -325,7 +413,7 @@ const NewKYCBusinessForm: FC<NewKYCBusinessFormProps> = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 border border-b-red-50">
+          <div className="flex flex-col gap-4 border">
             <div className="p-4">
               <h3>IDENTIFICATION DETAILS</h3>
             </div>

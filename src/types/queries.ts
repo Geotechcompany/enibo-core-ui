@@ -169,3 +169,53 @@ export const queryLedgerRule = gql`
     }
   }
 `;
+
+export const queryBusinessKYCs = gql`
+query BusinessKYCs {
+  businessKYCs {
+    businessKYCId
+    kycType
+    legalEntityName
+    legalStatus
+    dateOfIncorporation
+    registrationNumber
+    natureOfBusiness
+    entityNationality
+    entityPinNumber
+    entityTaxNumber
+    telephoneNumber
+    emailAddress
+    postalAddress
+    physicalAddress
+    riskRating
+    attachDocumentsField
+    modifiedBy
+    modifiedOn
+  }
+}
+`;
+
+export const queryBusinessKYC = gql`
+query BusinessKYC($businessKycId: String!) {
+  businessKYC(businessKYCId: $businessKycId) {
+    businessKYCId
+    kycType
+    legalEntityName
+    legalStatus
+    dateOfIncorporation
+    registrationNumber
+    natureOfBusiness
+    entityNationality
+    entityPinNumber
+    entityTaxNumber
+    telephoneNumber
+    emailAddress
+    postalAddress
+    physicalAddress
+    riskRating
+    attachDocumentsField
+    modifiedBy
+    modifiedOn
+  }
+}
+`

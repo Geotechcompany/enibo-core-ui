@@ -9,24 +9,27 @@ import { ApolloProvider } from "@apollo/client";
 import client from "./store/index.ts";
 import { UserProvider } from "./types/userContext.tsx";
 import { AppProvider } from "./store/state.tsx";
+import ErrorBoundary from "./components/errors/ErrorBoundary.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AppProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/*"
-              element={
-                <ApolloProvider client={client}>
-                  <App />
-                </ApolloProvider>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </UserProvider>
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <UserProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/*"
+                element={
+                  <ApolloProvider client={client}>
+                    <App />
+                  </ApolloProvider>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
+      </AppProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

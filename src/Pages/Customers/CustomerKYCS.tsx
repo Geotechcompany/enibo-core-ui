@@ -1,67 +1,59 @@
-import { FC, Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { FC, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
-import { Dialog, Transition } from "@headlessui/react";
-import { IoCloseOutline } from "react-icons/io5";
-import queryKycTypesList from "@/components/kyc-type-list/query";
+import { queryIndividualKYCs } from "@/components/individual-kyc/query";
 import { useQuery } from "@apollo/client";
-import { columns } from "@/components/kyc-type-list/columns";
-import { KYCType } from "@/types/global";
+import { columns as individualColumns } from "@/components/individual-kyc/columns";
+import { columns as businessColumns } from "@/components/business-kyc/columns";
+import { KYCBusiness, KYCIndividual } from "@/types/global";
 import { DataTable } from "@/components/datatable/data-table";
 import { Row } from "@tanstack/react-table";
+import { queryBusinessKYCs } from "@/types/queries";
 
 interface CustomerKYCSProps {}
 
 const CustomerKYCS: FC<CustomerKYCSProps> = () => {
-  const [kycsTypes, setKycsTypes] = useState<KYCType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [individualKycs, setIndividualKycs] = useState<KYCIndividual[]>([]);
+  const [businessKycs, setBusinessKycs] = useState<KYCBusiness[]>([]);
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<number>(0);
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-  const [kycType, setKycType] = useState(""); // State to track the selected KYC type
-
-  const handleSubmission = () => {
-    if (kycType === "business") {
-      window.location.href = "/customers/kyc-types/business-form";
-    } else if (kycType === "individual") {
-      window.location.href = "/customers/kyc-types/individual-form";
-    }
-  };
-
-  const {
-    data,
-    loading: queryLoading,
-    error: queryError,
-  } = useQuery(queryKycTypesList);
+  const { data: individualData } = useQuery(queryIndividualKYCs);
+  const { data: businessData } = useQuery(queryBusinessKYCs);
 
   useEffect(() => {
-    if (data) {
-      setKycsTypes(data.kycTypes);
+    if (individualData && businessData) {
+      setIndividualKycs(individualData.individualKYCs);
+      setBusinessKycs(businessData.businessKYCs);
     }
-    setLoading(queryLoading);
-    setError(queryError ? queryError.message : null);
-  }, [data, queryLoading, queryError]);
+  }, [individualData, businessData]);
 
   //void handle delete handle copy and handle edit
-  const handleEdit = (selectedRows: Row<KYCType>[]) => {
-    console.log("Edit", selectedRows);
+  const handleIndividualEdit = (selectedRows: Row<KYCIndividual>[]) => {
+    navigate(`/customers/kyc-types/individual-form/${selectedRows[0].original.IndividualKYCId}`);
   };
 
-  const handleDelete = (selectedRows: Row<KYCType>[]) => {
+  const handleIndividualDelete = (selectedRows: Row<KYCIndividual>[]) => {
     console.log("Delete", selectedRows);
   };
 
-  const handleCopy = (selectedRows: Row<KYCType>[]) => {
-    console.log("Copy", selectedRows);
+  const handleIndividualCopy = (selectedRows: Row<KYCIndividual>[]) => {
+    localStorage.setItem("individualKyc", JSON.stringify(selectedRows[0].original));
+    navigate("/customers/kyc-types/individual-form");
+  };
+
+  const handleBusinessEdit = (selectedRows: Row<KYCBusiness>[]) => {
+    navigate(`/customers/kyc-types/business-form/${selectedRows[0].original.businessKYCId}`);
+  };
+
+  const handleBusinessDelete = (selectedRows: Row<KYCBusiness>[]) => {
+    console.log("Delete", selectedRows);
+  };
+
+  const handleBusinessCopy = (selectedRows: Row<KYCBusiness>[]) => {
+    localStorage.setItem("businessKyc", JSON.stringify(selectedRows[0].original));
+    navigate("/customers/kyc-types/business-form");
   };
 
   return (
@@ -99,114 +91,82 @@ const CustomerKYCS: FC<CustomerKYCSProps> = () => {
               </ol>
             </nav>
           </div>
-          <div className="flex items-center justify-between my-4">
-            <div className="">
-              <h1 className="text-4xl text-[#36459C]">KYC</h1>
-            </div>
-            <div className="">
-              <Button
-                size="sm"
-                className="bg-[#36459C] text-white py-5 px-8"
-                onClick={openModal}
-              >
-                <FaPlus className="mr-1 text-white" /> Add
-              </Button>
-            </div>
+          <div className="flex my-4">
+            <Button
+              type="button"
+              onClick={() => setTab(0)}
+              variant="ghost"
+              className={`rounded-none border-b ${
+                tab === 0 ? " border-blue-500 bg-accent" : ""
+              }`}
+            >
+              Individual KYC
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setTab(1)}
+              variant="ghost"
+              className={`rounded-none border-b ${
+                tab === 1 ? " border-blue-500 bg-accent" : ""
+              }`}
+            >
+              Business KYC
+            </Button>
           </div>
+          {tab === 0 && (
+            <div className="flex items-center justify-between my-2">
+              <div className="">
+                <h1 className="text-4xl text-[#36459C]">Individual KYC</h1>
+              </div>
+              <div className="">
+                <Button
+                  size="sm"
+                  className="bg-[#36459C] text-white py-5 px-8"
+                  onClick={() => navigate("/customers/kyc-types/individual-form")}
+                >
+                  <FaPlus className="mr-1 text-white" /> Add
+                </Button>
+              </div>
+            </div>
+          )}
+          {tab === 1 && (
+            <div className="flex items-center justify-between my-2">
+              <div className="">
+                <h1 className="text-4xl text-[#36459C]">Business KYC</h1>
+              </div>
+              <div className="">
+                <Button
+                  size="sm"
+                  className="bg-[#36459C] text-white py-5 px-8"
+                  onClick={() => navigate("/customers/kyc-types/business-form")}
+                >
+                  <FaPlus className="mr-1 text-white" /> Add
+                </Button>
+              </div>
+            </div>
+          )}
           <div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error: {error}</p>
-            ) : (
+            {tab === 0 && (
               <DataTable
-                columns={columns}
-                data={kycsTypes}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-                handleCopy={handleCopy}
+                columns={individualColumns}
+                data={individualKycs}
+                handleEdit={handleIndividualEdit}
+                handleDelete={handleIndividualDelete}
+                handleCopy={handleIndividualCopy}
+              />
+            )}
+            {tab === 1 && (
+              <DataTable
+                columns={businessColumns}
+                data={businessKycs}
+                handleEdit={handleBusinessEdit}
+                handleDelete={handleBusinessDelete}
+                handleCopy={handleBusinessCopy}
               />
             )}
           </div>
         </div>
       </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => {}}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div></div>
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-full p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    <div className="flex items-center justify-between my-4 border-b">
-                      <h1 className="text-4xl text-[#36459C] mb-2">KYC Type</h1>
-                      <IoCloseOutline onClick={closeModal} />
-                    </div>
-                    <div>
-                      <div>
-                        <label
-                          htmlFor="kycType"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          KYC Type:
-                        </label>
-                        <select
-                          id="kycType"
-                          name="kycType"
-                          className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#36459C]"
-                          onChange={(e) => setKycType(e.target.value)}
-                          value={kycType}
-                        >
-                          <option value="">Select</option>
-                          <option value="business">Business</option>
-                          <option value="individual">Individual</option>
-                        </select>
-                      </div>
-                      <div className="flex gap-2 mt-6">
-                        <Button
-                          type="submit"
-                          size="lg"
-                          className="bg-[#36459C] hover:bg-[#253285]"
-                          onClick={handleSubmission}
-                        >
-                          Submit
-                        </Button>
-                        <Button size="lg" onClick={closeModal}>
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  </Dialog.Title>
-                  <section className="px-4 mt-4"></section>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
     </>
   );
 };

@@ -354,6 +354,14 @@ function App() {
           }
         />
         <Route
+          path="customers/kyc-types/business-form/:businessKYCId"
+          element={
+            <MainLayout>
+              <NewKYCBusinessForm />
+            </MainLayout>
+          }
+        />
+        <Route
           path="customers/kyc-types/new-kyc-type"
           element={
             <MainLayout>
