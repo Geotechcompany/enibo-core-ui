@@ -27,7 +27,7 @@ const transactionTypeSchema = z.object({
     .string()
     .min(3, { message: "Transaction Type Code is required" }),
   description: z.string().min(3, { message: "Description is required" }),
-  currency: z.string().min(3, { message: "Currency is required" }),
+  currency: z.string().optional(),
   modifiedBy: z.string().optional(),
   modifiedOn: z.string().optional(),
 });
@@ -258,7 +258,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
             <Label htmlFor="transactionTypeCode">Transaction Type Code</Label>
             <Input
               id="transactionTypeCode"
-              type="number"
+              type="text"
               {...register("transactionTypeCode", { required: true })}
             />
             {errors.transactionTypeCode && (
