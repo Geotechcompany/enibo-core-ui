@@ -4,7 +4,6 @@ import { DataTableColumnHeader } from "@/components/datatable/datatable-column-h
 import { ProductType } from "@/types/global";
 import { Badge } from "../ui/badge";
 
- 
 
 export const columns: ColumnDef<ProductType>[] = [
   {
@@ -109,7 +108,7 @@ export const columns: ColumnDef<ProductType>[] = [
     },
     {
         accessorKey: "feeTypes",
-        accessorFn: (row) => row.feeTypes?.map((feeType:string) => feeType).join(", "),
+        accessorFn: (row) => row.feeTypes?.map((feeType) => feeType.feeTypeName).join(", "),
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Fee Types" />
         ),
@@ -119,7 +118,6 @@ export const columns: ColumnDef<ProductType>[] = [
     },
     {
       accessorKey: "riskRating",
-      accessorFn: (row) => row.feeTypes?.map((feeType:string) => feeType).join(", "),
       header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Risk Rating" />
       ),

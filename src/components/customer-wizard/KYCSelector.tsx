@@ -1,6 +1,33 @@
 import { FC, useState } from "react";
 import { useQuery } from "@apollo/client";
-import queryKycList from "../KYC-list/query";
+import { gql } from "@apollo/client";
+
+const queryKycList = gql`
+query IndividualKYCs {
+  individualKYCs {
+    IndividualKYCId
+    kycType
+    designation
+    firstName
+    middleName
+    lastName
+    phoneNumber
+    emailAddress
+    postalAddress
+    physicalAddress
+    country
+    taxNumber
+    idType
+    idNumber
+    sex
+    nationality
+    riskRating
+    attachDocumentsField
+    signature
+    modifiedBy
+    modifiedOn
+  }
+}`
 import {
   Dialog,
   DialogContent,
@@ -48,7 +75,7 @@ interface KYCSelectorProps {
 }
 
 const KYCSelector: FC<KYCSelectorProps> = ({listType}) => {
-  const { state, setState } = useAppState();
+  const { appState, setAppState } = useAppState();
   const { data, loading, error } = useQuery(queryKycList);
   const [selected, setSelected] = useState<IndividualKYC | undefined>();
   const [value, setValue] = useState<string | null>(null);
@@ -62,7 +89,7 @@ const KYCSelector: FC<KYCSelectorProps> = ({listType}) => {
       status: "Pending",
     };
     //check if the selected kyc is already in the state
-    const isExist = state.individuals.find(
+    const isExist = appState.individuals.find(
       (individual) => individual.kycId === inputData.kycId
     );
     if (isExist) {
@@ -75,15 +102,15 @@ const KYCSelector: FC<KYCSelectorProps> = ({listType}) => {
       return;
     }
     if(listType === "retail") {
-      setState({
-        ...state,
-        individuals: [...state.individuals, inputData],
+      setAppState({
+        ...appState,
+        individuals: [...appState.individuals, inputData],
       });
       setOpen(false)
     } else if(listType === "business"){
-      setState({
-        ...state,
-        businesses: [...state.businesses, inputData],
+      setAppState({
+        ...appState,
+        businesses: [...appState.businesses, inputData],
       });
       setOpen(false)
     }

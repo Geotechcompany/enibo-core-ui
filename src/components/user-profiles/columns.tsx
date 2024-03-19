@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../datatable/datatable-column-header";
-import { UserProfiles } from "./schema";
 import { Checkbox } from "../ui/checkbox";
+import { UserProfile } from "@/Pages/Users.tsx/UserProfileList";
 
-export const columns: ColumnDef<UserProfiles>[] = [
+export const columns: ColumnDef<UserProfile>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -30,11 +30,11 @@ export const columns: ColumnDef<UserProfiles>[] = [
       enableHiding: true,
     },
     {
-      accessorKey: "profileName",
+      accessorKey: "name",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Profile Name" />
       ),
-      cell: ({ row }) => <div className="">{row.getValue("profileName")}</div>,
+      cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
       enableSorting: true,
       enableHiding: true,
     },
@@ -47,5 +47,31 @@ export const columns: ColumnDef<UserProfiles>[] = [
       enableSorting: true,
       enableHiding: true,
     },
-
+    {
+      accessorKey: "permissions",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Permissions" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("permissions")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "modifiedBy",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Modified By" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("modifiedBy")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "modifiedOn",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Modified On" />
+      ),
+      cell: ({ row }) => <div className="">{row.getValue("modifiedOn")}</div>,
+      enableSorting: true,
+      enableHiding: true,
+    },
   ];

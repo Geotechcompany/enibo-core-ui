@@ -61,7 +61,7 @@ const NewKYC: FC<NewKYCProps> = ({listType}) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const {state, setState} = useAppState();
+  const {appState, setAppState} = useAppState();
   const [createIndividualKyc] = useMutation(CREATE_INDIVIDUAL_KYC);
   const [KYCTypes, setKycsTypes] = useState<KYCType[]>([]); // State to track the selected KYC type
   const {
@@ -108,14 +108,14 @@ const NewKYC: FC<NewKYCProps> = ({listType}) => {
       status: "Pending",
     }
     if(listType === "business"){
-      setState({
-        ...state,
-        businesses: [...state.businesses, individualData]
+      setAppState({
+        ...appState,
+        businesses: [...appState.businesses, individualData]
       })
     } else if(listType === "retail") {
-      setState({
-        ...state,
-        individuals: [...state.individuals, individualData]
+      setAppState({
+        ...appState,
+        individuals: [...appState.individuals, individualData]
       })
     }
     

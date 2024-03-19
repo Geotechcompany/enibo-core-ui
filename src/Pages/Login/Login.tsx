@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,29 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/logo";
 import { useAppState } from "@/store/state";
-
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    authenticate(email: $email, password: $password) {
-      token
-      user {
-        id
-        username
-        firstName
-        middleName
-        lastName
-        email
-        phoneNumber
-        employeeNumber
-        branch
-        profile
-        documentAttachment
-        modifiedBy
-        modifiedOn
-      }
-    }
-  }
-`;
+import { LOGIN_MUTATION } from "@/types/mutations";
 
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
@@ -51,7 +29,7 @@ interface LoginProps {}
 const Login: FC<LoginProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null); // State to hold the error message
-  const {state,  setState } = useAppState();
+  const { appState, setAppState } = useAppState();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,14 +43,37 @@ const Login: FC<LoginProps> = () => {
     resolver: zodResolver(LoginSchema),
   });
 
+  // const getUserData = async () => {
+  //   //cors headers
+  //   const userData = await fetch("http://ip-api.com/json/", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       return data;
+  //     });
+  //   return userData;
+  // };
+
+  // useEffect(() => {
+  //   console.log(getUserData());
+  // }, []);
+
   const [loginMutation] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
       if (data && data.authenticate && data.authenticate.token) {
         localStorage.setItem("token", data.authenticate.token);
         localStorage.setItem("user", JSON.stringify(data.authenticate.user));
-        setState({
-          ...state,
-          user: data.authenticate.user
+        setAppState({
+          ...appState,
+          user: {
+            ...data.authenticate.user,
+          },
         });
         setIsLoading(false);
         navigate(from, { replace: true });
@@ -113,7 +114,7 @@ const Login: FC<LoginProps> = () => {
               <div>
                 <Label
                   htmlFor="email"
-                  className="text-[#36459C] text-base space-y-2"
+                  className="space-y-2 text-base text-[#36459C]"
                 >
                   Email
                 </Label>
@@ -129,7 +130,7 @@ const Login: FC<LoginProps> = () => {
                 )}
               </div>
               <div>
-                <Label htmlFor="password" className="text-[#36459C] text-base">
+                <Label htmlFor="password" className="text-base text-[#36459C]">
                   Password
                 </Label>
                 <Input
@@ -148,7 +149,7 @@ const Login: FC<LoginProps> = () => {
             </div>
             <div className="flex flex-col items-center justify-center">
               <Button
-                className="w-full uppercase text-base bg-[#36459C] hover:bg-[#253285] h-12"
+                className="h-12 w-full bg-[#36459C] text-base uppercase hover:bg-[#253285]"
                 type="submit"
                 disabled={isLoading}
               >

@@ -1,17 +1,17 @@
-import { CalendarFields } from "@/components/calendar/schema";
+// import { CalendarFields } from "@/components/calendar/schema";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import CalendarRecords from "@/components/calendar/calendar-records.json";
-import { DataTable } from "@/components/datatable/data-table";
-import { columns } from "@/components/calendar/columns";
+// import CalendarRecords from "@/components/calendar/calendar-records.json";
+// import { DataTable } from "@/components/datatable/data-table";
+// import { columns } from "@/components/calendar/columns";
 
 interface CalendarProps {}
 
 const CalendarList: FC<CalendarProps> = () => {
-  const calendar: CalendarFields[] = CalendarRecords;
+  // const calendar: CalendarFields[] = CalendarRecords;
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || { pathname: "/administration/static-data/calendar-list/calendar-details-form" };
@@ -62,11 +62,11 @@ const CalendarList: FC<CalendarProps> = () => {
           </Button></div>
         </div>
         <div>
-            {calendar && (
+            {/* {calendar && (
                 <DataTable
                 columns={columns}
                 data={calendar} />
-            )}
+            )} */}
 
         </div>
       </div>

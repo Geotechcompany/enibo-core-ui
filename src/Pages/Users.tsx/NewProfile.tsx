@@ -1,8 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import UserProfileForm from "@/components/user-profiles/user-profile-form";
-import { Tab } from "@headlessui/react";
-import ManageInput from "@/components/manage-user-profiles/permission-profile-list";
+import UserPermissions from "@/components/user-profiles/user-permissions";
 
 interface NewProfileProps {}
 
@@ -49,26 +47,7 @@ const NewProfile: FC<NewProfileProps> = () => {
         </div>
       </div>
       <div>
-        <Tab.Group defaultIndex={0}>
-          <Tab.List className=" w-1/4 bg-gray-500 mb-8 mt-8">
-            <Tab className="inline-block w-1/2 p-4 text-gray-900 bg-gray-100 border-r border-gray-200 active focus:bg-gray-500 dark:text-white">
-              General Information
-            </Tab>
-
-            <Tab className="inline-block w-1/2 p-4 bg-white border-r border-gray-200 dark:border-gray-700 hover:text-gray-700 hover:bg-gray-50 focus:bg-gray-500">
-              Module Permissions
-            </Tab>
-          </Tab.List>
-          <Tab.Panels>
-            <Tab.Panel>
-              <UserProfileForm />
-            </Tab.Panel>
-
-            <Tab.Panel>
-              <ManageInput />
-                 </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
+      <UserPermissions />
       </div>
     </section>
   );

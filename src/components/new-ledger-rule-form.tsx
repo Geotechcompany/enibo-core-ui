@@ -1,5 +1,6 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ErrorMessage } from "@hookform/error-message"
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -15,11 +16,13 @@ import {
 import { useToast } from "./ui/use-toast";
 import { Textarea } from "./ui/textarea";
 import { MultiSelect } from "./multi-select";
-import { Link, useNavigate } from "react-router-dom";
-
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_LEDGER_RULE, UPDATE_LEDGER_RULE } from "@/types/mutations";
+import { queryLedgerRule } from "@/types/queries";
 
 const NewLedgerRuleFormSchema = z.object({
-  priority: z.string().min(3, { message: "Priority is required" }),
+  priority: z.string().min(1, { message: "Priority is required" }),
   ruleName: z.string().min(3, { message: "Rule Name is required" }),
   description: z.string().min(3, { message: "Description is required" }),
   transactionType: z
@@ -28,23 +31,21 @@ const NewLedgerRuleFormSchema = z.object({
   transactionsDescriptionContains: z
     .string()
     .min(3, { message: "Transactions Description Contains is required" }),
-  transactionDescriptionDoesNotContain: z
-    .string()
-    .min(3, {
-      message: "Transaction Description Does Not Contain is required",
-    }),
+  transactionDescriptionDoesNotContain: z.string().min(3, {
+    message: "Transaction Description Does Not Contain is required",
+  }),
   from: z
     .array(z.object({ value: z.string(), label: z.string() }))
-    .min(3, { message: "From is required" }),
+    .min(1, { message: "From is required" }),
   to: z
     .array(z.object({ value: z.string(), label: z.string() }))
-    .min(3, { message: "To is required" }),
+    .min(1, { message: "To is required" }),
   debitLedgerAccount: z
     .string()
-    .min(3, { message: "Debit Ledger Account is required" }),
+    .min(1, { message: "Debit Ledger Account is required" }),
   creditLedgerAccount: z
     .string()
-    .min(3, { message: "Credit Ledger Account is required" }),
+    .min(1, { message: "Credit Ledger Account is required" }),
 });
 
 type NewLedgerRuleFormInput = z.infer<typeof NewLedgerRuleFormSchema>;
@@ -52,44 +53,241 @@ type NewLedgerRuleFormInput = z.infer<typeof NewLedgerRuleFormSchema>;
 interface NewLedgerRuleFormProps {}
 
 const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
+  const storedRule = localStorage.getItem("ledgerRule");
+  const isCopyMode = storedRule ? true : false;
+  const { id } = useParams();
+  const isEditMode = id ? true : false;
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const { toast } = useToast();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     control,
     formState: { errors },
   } = useForm<NewLedgerRuleFormInput>({
     resolver: zodResolver(NewLedgerRuleFormSchema),
   });
 
-  const onSubmit = (data: NewLedgerRuleFormInput) => {
-    try{
+  const { data } = useQuery(queryLedgerRule, {
+    variables: {
+      ledgerRuleId: id ? id : "",
+    },
+  });
+
+  useEffect(() => {
+    if (isEditMode) {
+      if (data) {
+        const {
+          priority,
+          name,
+          description,
+          transactionType,
+          contains,
+          doesNotContain,
+          from,
+          to,
+          debitAccount,
+          creditAccount,
+        } = data.ledgerRule;
+        const fromLabel = [{
+          label: from,
+          value: from
+        }]
+        const toLabel = [{
+          label: to,
+          value: to
+        }]
+        setValue("priority", priority);
+        setValue("ruleName", name);
+        setValue("description", description);
+        setValue("transactionType", transactionType);
+        setValue(
+          "transactionsDescriptionContains",
+          contains
+        );
+        setValue(
+          "transactionDescriptionDoesNotContain",
+          doesNotContain
+        );
+        setValue("from", fromLabel);
+        setValue("to", toLabel);
+        setValue("debitLedgerAccount", debitAccount);
+        setValue("creditLedgerAccount", creditAccount);
+      }
+
+      if (isCopyMode) {
+        const storedSettingString = localStorage.getItem("ledgerRule");
+        if (storedSettingString !== null) {
+          console.log(storedSettingString)
+          const {
+            priority,
+            name,
+            description,
+            transactionType,
+            contains,
+            doesNotContain,
+            from,
+            to,
+            debitLedgerAccount,
+            creditLedgerAccount,
+          } = JSON.parse(storedSettingString);
+          const fromLabel = [{
+            label: from,
+            value: from
+          }]
+          const toLabel = [{
+            label: to,
+            value: to
+          }]
+          setValue("priority", priority);
+          setValue("ruleName", name);
+          setValue("description", description);
+          setValue("transactionType", transactionType);
+          setValue(
+            "transactionsDescriptionContains",
+            contains
+          );
+          setValue(
+            "transactionDescriptionDoesNotContain",
+            doesNotContain
+          );
+          setValue("from", fromLabel);
+          setValue("to", toLabel);
+          setValue("debitLedgerAccount", debitLedgerAccount);
+          setValue("creditLedgerAccount", creditLedgerAccount);
+        }
+      }
+    }
+  }, [data, isEditMode, setValue, isCopyMode, storedRule]);
+
+  const [createLedgerRule] = useMutation(CREATE_LEDGER_RULE);
+  const [updateLedgerRule] = useMutation(UPDATE_LEDGER_RULE);
+  const handleCreate = async (data: NewLedgerRuleFormInput) => {
+    try {
+      const result = await createLedgerRule({
+        variables: {
+          priority: data.priority,
+          name: data.ruleName,
+          description: data.description,
+          transactionType: data.transactionType,
+          contains: data.transactionsDescriptionContains,
+          doesNotContain:
+            data.transactionDescriptionDoesNotContain,
+          from: data.from[0].value,
+          to: data.to[0].value,
+          debitAccount: data.debitLedgerAccount,
+          creditAccount: data.creditLedgerAccount,
+          modifiedBy: user.id
+        },
+      });
+
       toast({
         title: "Ledger Rule Created",
-        description: <div className="text-black">
-        <div className="text-lg">
-          New Ledger Rule Created {" "}
-          <Link to={`/administration/ledger-management/ledger-rules`} className="underline text-blue-500">
-            {data.ruleName}
-          </Link>
-           , has been successfully created
-        </div>
-      </div>,
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              New Ledger Rule Created{" "}
+              <Link
+                to={`/administration/ledger-management/ledger-rules`}
+                className="text-blue-500 underline"
+              >
+                {result.data.createLedgerRule.id}
+              </Link>
+              , has been successfully created
+            </div>
+          </div>
+        ),
       });
       reset();
-      navigate("/administration/ledger-management/ledger-rules"); 
-    } catch (error) {
-      console.error("Error creating ledger rule ", error);
+      localStorage.removeItem("ledgerRule");
+      navigate("/administration/ledger-management/ledger-rules");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorMessage =
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        "Unknown error";
       toast({
         title: "Error",
-        description: "Failed to create ledger rule. Please try again.",
+        description: errorMessage,
+        variant: "destructive",
       });
+    }
+  };
+
+  const handleEdit = async (data: NewLedgerRuleFormInput) => {
+    try {
+      const result = await updateLedgerRule({
+        variables: {
+          updateLedgerRuleId: id,
+          priority: data.priority,
+          name: data.ruleName,
+          description: data.description,
+          transactionType: data.transactionType,
+          contains: data.transactionsDescriptionContains,
+          doesNotContain:
+            data.transactionDescriptionDoesNotContain,
+          from: data.from[0].value,
+          to: data.to[0].value,
+          debitAccount: data.debitLedgerAccount,
+          creditAccount: data.creditLedgerAccount,
+          modifiedBy: user.id
+        },
+      });
+      toast({
+        title: "Ledger Rule Updated",
+        description: (
+          <div className="text-black">
+            <div className="text-lg">
+              Ledger Rule{" "}
+              <Link
+                to={`/administration/ledger-management/ledger-rules`}
+                className="text-blue-500 underline"
+              >
+                {result.data.updateLedgerRule.id}
+              </Link>
+              , has been successfully updated
+            </div>
+          </div>
+        ),
+      });
+      reset();
+      navigate("/administration/ledger-management/ledger-rules");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorMessage =
+        error.graphQLErrors?.[0]?.extensions?.response?.body?.message ||
+        "Unknown error";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const onSubmit = (data: NewLedgerRuleFormInput) => {
+    console.log(data)
+    if (isEditMode) {
+      handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
   return (
     <section>
+       <ErrorMessage
+        errors={errors}
+        name="multipleErrorInput"
+        render={({ messages }) =>
+          messages &&
+          Object.entries(messages).map(([type, message]) => (
+            <p key={type}>{message}</p>
+          ))
+        }
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 gap-4 w-[30%]">
           <div>
@@ -97,8 +295,11 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
             <Controller
               control={control}
               name="priority"
-              render={({ field }) => (
-                <Select {...field}>
+              render={({ field:{onChange, value} }) => (
+                <Select 
+                onValueChange={onChange}
+                value={value}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Priority" />
                   </SelectTrigger>
@@ -248,15 +449,18 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
             <Controller
               control={control}
               name="debitLedgerAccount"
-              render={({ field }) => (
-                <Select {...field}>
+              render={({ field: {onChange, value} }) => (
+                <Select 
+                onValueChange={onChange}
+                value={value}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Debit Ledger Account" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="122">1</SelectItem>
+                    <SelectItem value="2222">2</SelectItem>
+                    <SelectItem value="3222">3</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -272,15 +476,18 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
             <Controller
               control={control}
               name="creditLedgerAccount"
-              render={({ field }) => (
-                <Select {...field}>
+              render={({ field: {onChange, value} }) => (
+                <Select 
+                onValueChange={onChange}
+                value={value}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select Credit Ledger Account" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="1222">1</SelectItem>
+                    <SelectItem value="2222">2</SelectItem>
+                    <SelectItem value="3222">3</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -294,9 +501,7 @@ const NewLedgerRuleForm: FC<NewLedgerRuleFormProps> = () => {
         </div>
         <div className="mt-4">
           <Button type="submit">Submit</Button>
-          <Button  className="ml-2">
-            Cancel
-          </Button>
+          <Button className="ml-2" type="button" onClick={()=>navigate("/administration/ledger-management/ledger-rules")}>Cancel</Button>
         </div>
       </form>
     </section>

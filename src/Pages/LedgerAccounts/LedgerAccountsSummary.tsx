@@ -1,13 +1,13 @@
-import { DataTable } from "@/components/datatable/data-table";
+// import { DataTable } from "@/components/dataTable/data-table";
 import { FC } from "react";
 import { Link, useParams } from "react-router-dom";
-import entriesList from "@/components/entry-list/entries.json";
-import transactionList from "@/components/transaction-list/transactions.json";
-import { columns as entryColumns } from "@/components/entry-list/columns";
-import { columns as transactionColumns } from "@/components/transaction-list/columns";
-import { Entry } from "@/types/global";
-import { Transaction } from "@/types/global";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import entriesList from "@/components/entry-list/entries.json";
+// import transactionList from "@/components/transaction-list/transactions.json";
+// import { columns as entryColumns } from "@/components/entry-list/columns";
+// import { columns as transactionColumns } from "@/components/transaction-list/columns";
+// import { Entry } from "@/types/global";
+// import { Transaction } from "@/types/global";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface LedgerAccountsSummaryProps {}
@@ -15,8 +15,8 @@ interface LedgerAccountsSummaryProps {}
 const LedgerAccountsSummary: FC<LedgerAccountsSummaryProps> = () => {
   //get id from url
   const { accountId } = useParams();
-  const entries: Entry[] = entriesList as Entry[];
-  const transactions: Transaction[] = transactionList as Transaction[];
+  // const entries: Entry[] = entriesList as Entry[];
+  // const transactions: Transaction[] = transactionList as Transaction[];
   return (
     <div>
       <div className="mx-4">
@@ -55,7 +55,7 @@ const LedgerAccountsSummary: FC<LedgerAccountsSummaryProps> = () => {
               </li>
               <li className="m-0">
                 <Link to="#" className="text-gray-500" aria-current="page">
-                  Ledger Account Summary 
+                  Ledger Account Summary
                 </Link>
               </li>
             </ol>
@@ -63,7 +63,9 @@ const LedgerAccountsSummary: FC<LedgerAccountsSummaryProps> = () => {
         </div>
         <div className="flex items-center justify-between my-4">
           <div className="">
-            <h1 className="text-4xl text-[#36459C]">Ledger Account Summary for {accountId}</h1>
+            <h1 className="text-4xl text-[#36459C]">
+              Ledger Account Summary for {accountId}
+            </h1>
           </div>
           <div className=""></div>
         </div>
@@ -173,20 +175,20 @@ const LedgerAccountsSummary: FC<LedgerAccountsSummaryProps> = () => {
           </Card>
         </div>
         <div className="py-4">
-          <Tabs defaultValue="transactions">
-            <TabsList >
+          {/* <Tabs defaultValue="transactions">
+            <TabsList>
               <TabsTrigger value="transactions">Transactions</TabsTrigger>
               <TabsTrigger value="entries">Entries</TabsTrigger>
             </TabsList>
-            <TabsContent value="transactions">
+            {/* <TabsContent value="transactions">
               {transactions && (
                 <DataTable columns={transactionColumns} data={transactions} />
               )}
             </TabsContent>
             <TabsContent value="entries">
               {entries && <DataTable columns={entryColumns} data={entries} />}
-            </TabsContent>
-          </Tabs>
+            </TabsContent> */}
+          {/* </Tabs> */}
         </div>
       </div>
     </div>

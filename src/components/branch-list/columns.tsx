@@ -50,6 +50,7 @@ export const columns: ColumnDef<BranchForm>[] = [
   },
   {
     accessorKey: "branchType",
+    accessorFn: (row) => row.branchType.branchTypeName,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Branch Type" />
     ),

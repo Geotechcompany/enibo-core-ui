@@ -8,31 +8,47 @@ import { columns } from "@/components/customer-list/columns";
 import { FaPlus } from "react-icons/fa";
 import { useQuery } from "@apollo/client";
 import queryCustomersList from "@/components/customer-list/query";
+import { Row } from "@tanstack/react-table";
 
 interface CustomersProps {}
 
 const Customers: FC<CustomersProps> = () => {
-
   const [Customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const location = useLocation();
-    const navigate = useNavigate();
-    const from = location.state?.from || { pathname: "/customers/customer-wizard/" };
-   
-    const { data, loading: queryLoading, error: queryError } = useQuery(queryCustomersList);
+  const navigate = useNavigate();
+  const from = location.state?.from || {
+    pathname: "/customers/customer-wizard/",
+  };
 
-    useEffect(() => {
-      if (data) {
-        setCustomers(data.customers);
-      }
-      setLoading(queryLoading);
-      setError(queryError ? queryError.message : null);
-    }, [data, queryLoading, queryError]);
-    console.log(data)
-  
-    return (
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(queryCustomersList);
+
+  useEffect(() => {
+    if (data) {
+      setCustomers(data.customers);
+    }
+    setLoading(queryLoading);
+    setError(queryError ? queryError.message : null);
+  }, [data, queryLoading, queryError]);
+  const handleEdit = (selectedRows: Row<Customer>[]) => {
+    console.log("Edit", selectedRows);
+  };
+
+  const handleDelete = (selectedRows: Row<Customer>[]) => {
+    console.log("Delete", selectedRows);
+  };
+
+  const handleCopy = (selectedRows: Row<Customer>[]) => {
+    console.log("Copy", selectedRows);
+  };
+
+  return (
     <div>
       <div className="mx-4">
         <div className="pt-2">
@@ -61,65 +77,33 @@ const Customers: FC<CustomersProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Customers</h1>
           </div>
           <div className="">
-          <Button
+            <Button
               size="sm"
-              
               className="bg-[#36459C] text-white py-5 px-8"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
           </div>
         </div>
         <div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error: {error}</p>
-            ) : (
-              <DataTable
-                columns={columns}
-                data={Customers} 
-              />
-            )}
-              </div>
-        <div className="flex items-center my-4">
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Edit
-            </Button>
-          </div>
-          
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Copy
-            </Button>
-          </div>
-
-          <div className="mr-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-[#36459C]"
-              onClick={() => {}}
-            >
-              Delete
-            </Button>
-          </div>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={Customers}
+              handleCopy={handleCopy}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            />
+          )}
         </div>
       </div>
     </div>
   );
 };
-      
+
 export default Customers;

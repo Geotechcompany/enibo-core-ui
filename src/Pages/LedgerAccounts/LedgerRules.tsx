@@ -2,19 +2,82 @@ import { DataTable } from "@/components/datatable/data-table";
 import { columns } from "@/components/ledger-rules-list/columns";
 import { Button } from "@/components/ui/button";
 import { LedgerRule } from "@/types/global";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import ledgerRulesList from "@/components/ledger-rules-list/ledger-rules.json";
 import { FaPlus } from "react-icons/fa";
+import { useMutation, useQuery } from "@apollo/client";
+import { queryLedgerRules } from "@/types/queries";
+import { toast } from "@/components/ui/use-toast";
+import DeleteWarning from "@/components/deleteWarning";
+import { Row } from "@tanstack/react-table";
+import { DELETE_LEDGER_RULE } from "@/types/mutations";
 
 interface LedgerRulesProps {}
 
 const LedgerRules: FC<LedgerRulesProps> = () => {
-  const ledgerRules: LedgerRule[] = ledgerRulesList as LedgerRule[];
+  const { data } = useQuery(queryLedgerRules);
+  const [ledgerRules, setLedgerRules] = useState<LedgerRule[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from || {
     pathname: "/administration/ledger-management/ledger-rules/new-ledger-rule",
+  };
+
+  useEffect(() => {
+    if (data) {
+      setLedgerRules(data.ledgerRules);
+    }
+  }, [data]);
+
+  const handleEdit = (selectedRows: Row<LedgerRule>[]) => {
+    navigate(
+      `/administration/ledger-management/ledger-rules/${selectedRows[0].original.id}`
+    );
+  };
+
+  const handleCopy = (selectedRows: Row<LedgerRule>[]) => {
+    localStorage.setItem(
+      "ledgerRule",
+      JSON.stringify(selectedRows[0].original)
+    );
+    navigate(from, { replace: true });
+  };
+  const [deleteLedgerRule] = useMutation(DELETE_LEDGER_RULE);
+
+  const deleteRows = async (selectedRows: Row<LedgerRule>[]) => {
+    const deletePromises = selectedRows.map((row) => {
+      return deleteLedgerRule({
+        variables: {
+          deleteLedgerRuleId: row.original.id,
+        },
+      });
+    });
+
+    const result = await Promise.all(deletePromises);
+
+    if (result) {
+      window.location.reload();
+      toast({
+        title: "Record deleted successfully",
+        description: `${selectedRows.length} record(s) deleted successfully`,
+      });
+    }
+  };
+
+  const handleDelete = async (selectedRows: Row<LedgerRule>[]) => {
+    try {
+      toast({
+        title: "Are you sure? The operation is irreversible",
+        description: (
+          <DeleteWarning handleDeletion={() => deleteRows(selectedRows)} />
+        ),
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Error during deletion",
+      });
+    }
   };
   return (
     <div>
@@ -55,18 +118,25 @@ const LedgerRules: FC<LedgerRulesProps> = () => {
             <h1 className="text-4xl text-[#36459C]">Ledger Rules</h1>
           </div>
           <div className="">
-          <Button
+            <Button
               size="sm"
-              
-              className="bg-[#36459C] text-white py-5 px-8"
+              className="bg-[#36459C] px-8 py-5 text-white"
               onClick={() => navigate(from, { replace: true })}
             >
-              <FaPlus className="mr-1 text-white" />  Add
+              <FaPlus className="mr-1 text-white" /> Add
             </Button>
           </div>
         </div>
         <div>
-          {ledgerRules && <DataTable columns={columns} data={ledgerRules} />}
+          {ledgerRules && (
+            <DataTable
+              columns={columns}
+              data={ledgerRules}
+              handleCopy={handleCopy}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          )}
         </div>
       </div>
     </div>

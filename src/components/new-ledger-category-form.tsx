@@ -21,7 +21,6 @@ import {
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import { useLedgerState } from "@/store/ledger";
 import { useEffect, useState, FC } from "react";
 
 const LedgerCategorySchema = z.object({
@@ -41,13 +40,11 @@ interface NewLedgerCategoryFormProps {}
 
 const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   const { id } = useParams<{ id: string }>();
-  const { state, setState } = useLedgerState();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form")
+  const isEditMode = id ? true : false;
+  const storedLedgerCategory = localStorage.getItem("ledgerCategoryFormMode");
+  const isCopyMode = storedLedgerCategory ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
-  console.log(isCopyMode, "Copy Mode");
   const {
     register,
     handleSubmit,
@@ -72,17 +69,15 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   } = useQuery(queryaccountcategoriesList, {
     variables: { id: id }, //
   });
-  
+
   const [defaultModifiedOn, setDefaultModifiedOn] = useState(
     new Date().toISOString()
   );
- 
 
   const handleEdit = async (data: LedgerCategoryFormInputs) => {
     try {
-      console.log(data, "Checking");
       const input = {
-       updateAccountCategoryId: data.id,
+        updateAccountCategoryId: data.id,
         ledgerCategory: data.ledgerCategory,
         description: data.description,
         categoryNumber: data.categoryNumber,
@@ -136,7 +131,6 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
 
   const handleCreate = async (data: LedgerCategoryFormInputs) => {
     try {
-      console.log(data, "Checking");
       const input = {
         ledgerCategory: data.ledgerCategory,
         description: data.description,
@@ -144,11 +138,9 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
         modifiedBy: data.modifiedBy,
         modifiedOn: data.modifiedOn,
       };
-      console.log(input);
-      const response = await createledgerAccountCategoriesMutation({
+      await createledgerAccountCategoriesMutation({
         variables: input,
       });
-      console.log("Created Ledger Data:", response);
       reset();
       navigate(`/administration/ledger-management/ledger-account-categories`);
 
@@ -188,14 +180,11 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
     }
   };
 
-
-
   const onSubmit = async (data: LedgerCategoryFormInputs) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -210,51 +199,46 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
-      const { ledgerCategory, description, categoryNumber } = state;
+    if (isCopyMode && storedLedgerCategory !== null) {
+      const { ledgerCategory, description, categoryNumber } =
+        JSON.parse(storedLedgerCategory);
       setValue("ledgerCategory", ledgerCategory);
       setValue("categoryNumber", categoryNumber);
       setValue("description", description);
-    } else if (formMode === "EDIT") {
-      if (!LedgerAccountCategoriesLoading && LedgerAccountCategories) {
-        const {
-          id,
-          ledgerCategory,
-          description,
-          categoryNumber,
-          modifiedBy,
-          modifiedOn,
-        } = LedgerAccountCategories;
-        setValue("id", id);
-        setValue("ledgerCategory", ledgerCategory || "");
-        setValue("description", description || "");
-        setValue("categoryNumber", categoryNumber || "");
-        setValue("modifiedBy", modifiedBy || "");
-        setValue("modifiedOn", modifiedOn || new Date().toISOString());
-      }
+    }
+    if (isEditMode && LedgerAccountCategories) {
+      const {
+        id,
+        ledgerCategory,
+        description,
+        categoryNumber,
+        modifiedBy,
+        modifiedOn,
+      } = LedgerAccountCategories;
+      setValue("id", id);
+      setValue("ledgerCategory", ledgerCategory || "");
+      setValue("description", description || "");
+      setValue("categoryNumber", categoryNumber || "");
+      setValue("modifiedBy", modifiedBy || "");
+      setValue("modifiedOn", modifiedOn || new Date().toISOString());
     }
   }, [
-    formMode,
     reset,
     setValue,
-    state,
-    setState,
     LedgerAccountCategories,
     LedgerAccountCategoriesLoading,
+    isEditMode,
+    isCopyMode,
+    storedLedgerCategory,
   ]);
 
-
-
-
   const cancelForm = () => {
-    setState({
-      
-      ledgerCategory: "",
-      description: "",
-      categoryNumber: "",
-    });
+    localStorage.removeItem("ledgerCategory");
     toast({
       title: "LedgerCategories Form Cancelled",
+    });
+    navigate(`/administration/ledger-management/ledger-account-categories`, {
+      replace: true,
     });
   };
   return (
@@ -333,22 +317,18 @@ const NewLedgerCategoryForm: FC<NewLedgerCategoryFormProps> = () => {
             )}
           </div>
         </div>
-    
+
         <div className="flex gap-2 pt-4">
-        <Button
-              type="submit"
-              size="lg"
-              className="bg-[#36459C] hover:bg-[#253285]"
-            >
-              Submit
-            </Button>
-          <Link
-            to={`/administration/ledger-management/ledger-account-categories`}
+          <Button
+            type="submit"
+            size="lg"
+            className="bg-[#36459C] hover:bg-[#253285]"
           >
+            Submit
+          </Button>
             <Button size="lg" onClick={cancelForm}>
               Cancel
             </Button>
-          </Link>
         </div>
       </form>
     </section>

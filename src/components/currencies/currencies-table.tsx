@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { DataTable } from "../datatable/data-table";
 import { currenciesColumns } from "./columns";
+import { Row } from "@tanstack/react-table";
 
 
 interface Currency {
@@ -77,7 +78,19 @@ const CurrenciesTable = () => {
 
     fetchCurrencies();
   }, []);
-  return <DataTable data={currenciesData} columns={currenciesColumns} />;
+
+  const handleEdit = (selectedRows: Row<Currency>[]) => {
+    console.log("Edit", selectedRows);
+  };
+
+  const handleDelete = (selectedRows: Row<Currency>[]) => {
+    console.log("Delete", selectedRows);
+  };
+
+  const handleCopy = (selectedRows: Row<Currency>[]) => {
+    console.log("Copy", selectedRows);
+  };
+  return <DataTable data={currenciesData} columns={currenciesColumns} handleCopy={handleCopy} handleDelete={handleDelete} handleEdit={handleEdit} />;
 };
 
 export default CurrenciesTable;

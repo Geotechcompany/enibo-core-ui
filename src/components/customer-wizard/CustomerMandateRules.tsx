@@ -56,7 +56,7 @@ interface CustomerMandateRulesProps {}
 const CustomerMandateRules: FC<CustomerMandateRulesProps> = () => {
   const [mandateTypes, setMandateTypes] = useState<MandateType[]>([]);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const {state, setState} = useAppState();
+  const {appState, setAppState} = useAppState();
   const {
     register,
     control,
@@ -88,7 +88,7 @@ const CustomerMandateRules: FC<CustomerMandateRulesProps> = () => {
       data.signingRules.map(async (rule) => {
         const response = await createMandateRule({
           variables:{
-            customerId: state.customer,
+            customerId: appState.customer,
             mandateType: rule.signingMandateType,
             signingRule: rule.signingRule,
             minimumTransactionAmount: rule.minimumPaymentAmount,
@@ -103,8 +103,8 @@ const CustomerMandateRules: FC<CustomerMandateRulesProps> = () => {
         return response.data.createMandateRule
       })
     )
-    setState({
-      ...state,
+    setAppState({
+      ...appState,
       signingRules: rules
     })
     navigate("/customers")

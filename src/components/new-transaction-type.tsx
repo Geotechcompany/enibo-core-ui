@@ -14,7 +14,6 @@ import {
   CREATE_NEW_TRANSACTION_TYPE_MUTATION,
   UPDATE_TRANSACTION_TYPE_MUTATION,
 } from "@/Pages/Transactions/TransactionMutation";
-import { useTransactionTypeState } from "@/store/transactionTypesState";
 import queryTransactionTypesList from "./transaction-type-list/query";
 import CurrencySelector from "./currencies/currency-selector";
 
@@ -38,14 +37,11 @@ interface NewTransactionTypeFormProps {}
 
 const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
   const { transactionTypeId } = useParams<{ transactionTypeId: string }>();
-  const { state, setState } = useTransactionTypeState();
-  const isCopyMode = !state;
-  const formMode = state?.mode;
-  console.log(state, formMode, "Form");
+  const isEditMode = transactionTypeId ? true : false;
+  const storedTransactionType = localStorage.getItem("transactionType");
+  const isCopyMode = storedTransactionType ? true : false;
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  console.log(isCopyMode, "Copy Mode");
 
   const {
     register,
@@ -92,7 +88,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
               New Transaction Type{" "}
               <Link
                 to={`/administration/static-data/transaction-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.transactionTypeName}
               </Link>
@@ -102,7 +98,9 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
         ),
       });
       reset();
-      navigate("/administration/static-data/transaction-types");
+      navigate("/administration/static-data/transaction-types", {
+        replace: true,
+      });
     } catch (error: any) {
       const errorMessage =
         (error.graphQLErrors &&
@@ -143,7 +141,7 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
               Transaction Type{" "}
               <Link
                 to={`/administration/static-data/transaction-types`}
-                className="underline text-blue-500"
+                className="text-blue-500 underline"
               >
                 {data.transactionTypeName}
               </Link>
@@ -153,7 +151,9 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
         ),
       });
       reset();
-      navigate("/administration/static-data/transaction-types");
+      navigate("/administration/static-data/transaction-types", {
+        replace: true,
+      });
     } catch (error: any) {
       const errorMessage =
         (error.graphQLErrors &&
@@ -174,11 +174,10 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
   };
 
   const onSubmit = async (data: TransactionType) => {
-    if (formMode === "ADD" || formMode === "COPY") {
-      handleCreate(data);
-    } else if (formMode === "EDIT") {
-      console.log("edit mode");
+    if (isEditMode) {
       handleEdit(data);
+    } else {
+      handleCreate(data);
     }
   };
 
@@ -188,53 +187,47 @@ const NewTransactionTypeForm: FC<NewTransactionTypeFormProps> = () => {
   );
 
   useEffect(() => {
-    if (formMode === "COPY" && state) {
+    if (isCopyMode && storedTransactionType !== null) {
       const {
         transactionTypeName,
         transactionTypeCode,
         description,
         currency,
-      } = state;
+      } = JSON.parse(storedTransactionType);
       setValue("transactionTypeName", transactionTypeName);
       setValue("transactionTypeCode", transactionTypeCode);
       setValue("description", description);
       setValue("currency", currency);
-    } else if (formMode === "EDIT") {
-      if (!transactionLoading && transactionType) {
-        const {
-          transactionTypeId,
-          transactionTypeName,
-          transactionTypeCode,
-          description,
-          currency,
-        } = transactionType;
-        setValue("transactionTypeId", transactionTypeId);
-        setValue("transactionTypeName", transactionTypeName || "");
-        setValue("transactionTypeCode", transactionTypeCode || "");
-        setValue("description", description || "");
-        setValue("currency", currency || "");
-      }
-      console.log(transactionType, "TRANSACTION TYPE");
-    } else return;
+    }
+    if (isEditMode && transactionType) {
+      const {
+        transactionTypeId,
+        transactionTypeName,
+        transactionTypeCode,
+        description,
+        currency,
+      } = transactionType;
+      setValue("transactionTypeId", transactionTypeId);
+      setValue("transactionTypeName", transactionTypeName || "");
+      setValue("transactionTypeCode", transactionTypeCode || "");
+      setValue("description", description || "");
+      setValue("currency", currency || "");
+    }
   }, [
-    formMode,
-    setState,
     setValue,
-    state,
     transactionType,
     transactionLoading,
+    isEditMode,
+    isCopyMode,
+    storedTransactionType,
   ]);
 
   const cancelForm = () => {
-    setState({
-      transactionTypeId: "",
-      transactionTypeCode: "",
-      transactionTypeName: "",
-      description: "",
-      currency: "",
-      modifiedBy: "",
-      modifiedOn: "",
+    localStorage.removeItem("transactionType");
+    toast({
+      title: "Form Cancelled",
     });
+    navigate("/administration/static-data/transaction-types");
   };
 
   return (

@@ -32,11 +32,11 @@ export const columns: ColumnDef<LedgerRule>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "ruleName",
+    accessorKey: "name",
     header: ({ column }) => (
     <DataTableColumnHeader column={column} title="Rule Name" />
     ),
-    cell: ({ row }) => <div className="">{row.getValue("ruleName")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
     enableSorting: true,
     enableHiding: true,
 },
@@ -69,20 +69,20 @@ export const columns: ColumnDef<LedgerRule>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "transactionsDescriptionContains",
+        accessorKey: "contains",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Transactions Description Contains" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("transactionsDescriptionContains")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("contains")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-        accessorKey: "transactionDescriptionDoesNotContain",
+        accessorKey: "doesNotContain",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Transaction Description Does Not Contain" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("transactionDescriptionDoesNotContain")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("doesNotContain")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
@@ -105,20 +105,20 @@ export const columns: ColumnDef<LedgerRule>[] = [
         enableHiding: true,
     },
     {
-        accessorKey: "debitLedgerAccount",
+        accessorKey: "debitAccount",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Debit Ledger Account" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("debitLedgerAccount")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("debitAccount")}</div>,
         enableSorting: true,
         enableHiding: true,
     },
     {
-        accessorKey: "creditLedgerAccount",
+        accessorKey: "creditAccount",
         header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Credit Ledger Account" />
         ),
-        cell: ({ row }) => <div className="">{row.getValue("creditLedgerAccount")}</div>,
+        cell: ({ row }) => <div className="">{row.getValue("creditAccount")}</div>,
         enableSorting: true,
         enableHiding: true,
         
